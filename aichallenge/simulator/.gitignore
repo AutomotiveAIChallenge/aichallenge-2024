@@ -1,0 +1,4 @@
+# Download the simulator and place it in this directory.
+*
+!.gitignore
+!simulator.bash
