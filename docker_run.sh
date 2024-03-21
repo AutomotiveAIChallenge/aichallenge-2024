@@ -32,4 +32,4 @@ esac
 mkdir -p output
 
 # shellcheck disable=SC2086
-rocker ${opts} --x11 --user --net host --privileged --volume ${volume} -- "aichallenge-source-materials-${target}"
+rocker ${opts} --x11 --user --net host --privileged --volume ${volume} -- "aichallenge-2024-${target}"
