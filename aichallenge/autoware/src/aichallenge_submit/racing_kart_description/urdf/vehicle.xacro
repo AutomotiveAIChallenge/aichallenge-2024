@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="vehicle" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- load parameter -->
+  <xacro:property name="vehicle_info" value="${load_yaml('$(find racing_kart_description)/config/vehicle_info.param.yaml')}"/>
+
+  <!-- vehicle body -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://racing_kart_description/mesh/square.dae" scale="1 1 1"/>
+      </geometry>
+    </visual>
+  </link>
+
+</robot>

@@ -1,4 +1,5 @@
-FROM osrf/ros:humble-desktop AS common
+# FROM osrf/ros:humble-desktop AS common
+FROM ghcr.io/automotiveaichallenge/aichallenge2023-racing/autoware-universe-no-cuda:latest AS common
 
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx libgl1-mesa-dri
@@ -8,6 +9,7 @@ FROM common AS dev
 
 ENV ROS_LOCALHOST_ONLY 1
 ENV RCUTILS_COLORIZED_OUTPUT 1
+ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
 FROM common AS eval
 
