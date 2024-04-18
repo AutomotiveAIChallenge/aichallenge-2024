@@ -1,3 +1,4 @@
 #!/bin/bash
 
-echo "write the simulator command here"
+echo "Run AWSIM"
+/aichallenge/simulator/AWSIM.x86_64
