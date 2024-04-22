@@ -18,7 +18,7 @@ esac
 
 case "${device}" in
 "cpu")
-    opts="--device /dev/dri"
+    opts=""
     ;;
 "gpu")
     opts="--nvidia"
@@ -32,4 +32,4 @@ esac
 mkdir -p output
 
 # shellcheck disable=SC2086
-rocker ${opts} --x11 --user --net host --privileged --volume ${volume} -- "aichallenge-2024-${target}"
+rocker ${opts} --x11 --device /dev/dri　--user --net host --privileged --volume ${volume} -- "aichallenge-2024-${target}"
