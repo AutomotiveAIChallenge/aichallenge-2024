@@ -1,11 +1,5 @@
 #!/bin/bash
 
-export PATH="$PATH:/root/.local/bin"
-export PATH="/usr/local/cuda/bin:$PATH"
-export XDG_RUNTIME_DIR=/tmp/xdg
-export RCUTILS_COLORIZED_OUTPUT=0
-export ROS_LOCALHOST_ONLY=1
-
 # shellcheck disable=SC1091
 source /aichallenge/autoware/install/setup.bash
 sudo ip link set multicast on lo

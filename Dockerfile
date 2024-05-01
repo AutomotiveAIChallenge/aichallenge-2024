@@ -1,17 +1,23 @@
 # FROM osrf/ros:humble-desktop AS common
-FROM ghcr.io/automotiveaichallenge/aichallenge2023-racing/autoware-universe-no-cuda:latest AS common
+FROM ghcr.io/automotiveaichallenge/autoware-universe:humble-latest AS common
 
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx libgl1-mesa-dri
 RUN apt-get -y install iproute2
 
-FROM common AS dev
-
+# PATH="$PATH:/root/.local/bin"
+# PATH="/usr/local/cuda/bin:$PATH"
+ENV XDG_RUNTIME_DIR /tmp/xdg
 ENV ROS_LOCALHOST_ONLY 1
-ENV RCUTILS_COLORIZED_OUTPUT 1
 ENV RMW_IMPLEMENTATION rmw_cyclonedds_cpp
 
+FROM common AS dev
+
+ENV RCUTILS_COLORIZED_OUTPUT 1
+
 FROM common AS eval
+
+ENV RCUTILS_COLORIZED_OUTPUT 0
 
 RUN mkdir /ws
 RUN git clone --depth 1 https://github.com/AutomotiveAIChallenge/aichallenge-2024 /ws/repository
