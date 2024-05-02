@@ -27,7 +27,7 @@ RUN rm -rf /aichallenge/autoware/src/aichallenge_submit
 RUN chmod 757 /aichallenge
 
 COPY aichallenge/simulator/ /aichallenge/simulator/
-COPY output/aichallenge_submit.tar.gz /ws
+COPY submit/aichallenge_submit.tar.gz /ws
 RUN tar zxf /ws/aichallenge_submit.tar.gz -C /aichallenge/autoware/src
 
 RUN bash -c ' \
@@ -37,5 +37,5 @@ RUN bash -c ' \
   rosdep install -y -r -i --from-paths src --ignore-src --rosdistro $ROS_DISTRO; \
   colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release'
 
-# ENTRYPOINT []
-# CMD ["bash", "/ws/main.bash"]
+ENTRYPOINT []
+CMD ["bash", "/aichallenge/run_evaluation.bash"]
