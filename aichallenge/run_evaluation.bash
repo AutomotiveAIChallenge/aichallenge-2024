@@ -32,20 +32,17 @@ echo "Start rosbag"
 ros2 bag record -a -o rosbag2_autoware >/dev/null 2>&1 &
 PID_ROSBAG=$!
 
-# Waiting for screen capture (TODO: This will not wait if there is no service)
-echo "Waiting for screen capture"
+# Start recording rviz2 (TODO: This will not wait if there is no service)
+echo "Start screen capture"
 until (ros2 service type /debug/service/capture_screen >/dev/null); do
     sleep 5
 done
-
-# Start recording rviz2
-echo "Start screen capture"
 ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
 
 echo "Start driving"
 ros2 service call /localization/trigger_node std_srvs/srv/SetBool '{data: true}' >/dev/null
 
-echo "Waiting for the simulator: $PID_AWSIM"
+echo "Waiting for the simulation"
 wait $PID_AWSIM
 
 # Stop recording rviz2
@@ -56,16 +53,17 @@ ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
 sleep 10
 
 ## Stop rosbag and Autoware to finish writing logs
-echo "Stop rosbag: $PID_ROSBAG"
+echo "Stop rosbag"
 kill $PID_ROSBAG
-echo "Stop Autoware: $PID_AUTOWARE"
+echo "Stop Autoware"
 kill $PID_AUTOWARE
 
 # Waiting for the rosbag and logs
 sleep 10
 
 # Convert result
-phthon3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py
+echo "Convert result"
+python3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py
 
 # Compress rosbag
 echo "Compress rosbag"
