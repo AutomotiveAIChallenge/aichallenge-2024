@@ -29,6 +29,7 @@ RUN chmod 757 /aichallenge
 COPY aichallenge/simulator/ /aichallenge/simulator/
 COPY submit/aichallenge_submit.tar.gz /ws
 RUN tar zxf /ws/aichallenge_submit.tar.gz -C /aichallenge/autoware/src
+RUN rm -rf /ws
 
 RUN bash -c ' \
   source /autoware/install/setup.bash; \
