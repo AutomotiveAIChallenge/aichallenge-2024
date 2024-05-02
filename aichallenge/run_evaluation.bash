@@ -64,12 +64,10 @@ kill $PID_AUTOWARE
 # Waiting for the rosbag and logs
 sleep 10
 
-## Compress rosbag
+# Convert result
+phthon3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py
+
+# Compress rosbag
 echo "Compress rosbag"
 tar -czf rosbag2_autoware.tar.gz rosbag2_autoware
 rm -rf rosbag2_autoware
-sleep 10
-
-#until [ -f result-details.json ]; do
-#    sleep 5
-#done
