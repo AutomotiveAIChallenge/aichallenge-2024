@@ -1,71 +1,67 @@
 #!/bin/bash
 
-export PATH="$PATH:/root/.local/bin"
-export PATH="/usr/local/cuda/bin:$PATH"
-export XDG_RUNTIME_DIR=/tmp/xdg
-export RCUTILS_COLORIZED_OUTPUT=0
-export ROS_LOCALHOST_ONLY=1
+# Move working directory
+OUTPUT_DIRECTORY=$(date +%Y%m%d-%H%M%S)
+cd /output || exit
+mkdir "$OUTPUT_DIRECTORY"
+cd "$OUTPUT_DIRECTORY" || exit
 
 # shellcheck disable=SC1091
 source /aichallenge/autoware/install/setup.bash
 sudo ip link set multicast on lo
+sudo sysctl -w net.core.rmem_max=2147483647 >/dev/null
 
-# Move working directory
-cd /output || exit
+# Start AWSIM
+echo "Start AWSIM"
+/aichallenge/simulator/AWSIM.x86_64 >/dev/null &
+PID_AWSIM=$!
+sleep 20
 
-# Launch the simulator
-echo "Launch AWSIM"
-bash /aichallenge/simulator/simulator.bash &
-
-# Waiting for the simulator to start up
-sleep 3
-
-# Launch Autoware
-echo "Launch user Autoware code"
+# Start Autoware
+echo "Start Autoware"
 ros2 launch aichallenge_system_launch aichallenge_system.launch.xml >autoware.log 2>&1 &
-ROSLAUNCH_PID=$!
-
-# Waiting for Autoware to start up
-sleep 3
+PID_AUTOWARE=$!
+sleep 10
 
 # Start recording rosbag
-rm -r rosbag2_autoware
-ros2 bag record -a -o rosbag2_autoware &
-ROSBAG_RECORD_PID=$!
+echo "Start rosbag"
+ros2 bag record -a -o rosbag2_autoware >/dev/null 2>&1 &
+PID_ROSBAG=$!
+sleep 5
 
-# Waiting for screen capture (TODO: This will not wait if there is no service)
-# echo "Waiting for screen capture"
-# until (ros2 service type /debug/service/capture_screen); do
-#     sleep 5
-# done
+# Start recording rviz2 (TODO: This will not wait if there is no service)
+echo "Start screen capture"
+until (ros2 service type /debug/service/capture_screen >/dev/null); do
+    sleep 5
+done
+ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
+sleep 5
 
-# Start recording rviz2
-# ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger
-
-# Waiting for the simulator results
-# echo "Waiting for the simulator results"
-# until [ -f ~/awsim-logs/result.json ]; do
-#     sleep 5
-# done
+# Start driving and wait for the simulation to finish
+echo "Waiting for the simulation"
+ros2 service call /localization/trigger_node std_srvs/srv/SetBool '{data: true}' >/dev/null
+wait $PID_AWSIM
 
 # Stop recording rviz2
-# ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger
+echo "Stop screen capture"
+ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
+sleep 10
 
-# Waiting for the screen capture to finish
-sleep 3
+# Stop recording rosbag
+echo "Stop rosbag"
+kill $PID_ROSBAG
+wait $PID_ROSBAG
 
-## Stop rosbag and Autoware to finish writing logs
-kill $ROSBAG_RECORD_PID
-kill $ROSLAUNCH_PID
+# Stop Autoware
+echo "Stop Autoware"
+kill $PID_AUTOWARE
+wait $PID_AUTOWARE
 
-# Waiting for the rosbag and logs
-sleep 3
+# Convert result
+echo "Convert result"
+python3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py 60 11
 
-## Compress rosbag
+# Compress rosbag
+echo "Compress rosbag"
 tar -czf rosbag2_autoware.tar.gz rosbag2_autoware
-sleep 3
-
-## Copy the logs to output directory
-echo "Generation of result.json is completed."
-cp ~/awsim-logs/result.json /output
-cp ~/awsim-logs/verbose_result.json /output
+rm -rf rosbag2_autoware
