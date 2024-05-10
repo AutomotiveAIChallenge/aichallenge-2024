@@ -4,6 +4,8 @@ FROM ghcr.io/automotiveaichallenge/autoware-universe:humble-latest AS common
 RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx libgl1-mesa-dri
 RUN apt-get -y install iproute2
+RUN apt-get -y install ros-humble-rqt-tf-tree
+RUN apt-get -y install ros-humble-rqt-graph
 
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
