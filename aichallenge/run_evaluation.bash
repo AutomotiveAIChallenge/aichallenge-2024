@@ -17,6 +17,11 @@ echo "Start AWSIM"
 PID_AWSIM=$!
 sleep 20
 
+# Move AWSIM Window To Left
+wmctrl -l
+
+wmctrl -r "AWSIM" -e 0,0,0,960,1043
+
 # Start Autoware
 echo "Start Autoware"
 ros2 launch aichallenge_system_launch aichallenge_system.launch.xml >autoware.log 2>&1 &
