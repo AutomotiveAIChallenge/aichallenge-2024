@@ -17,9 +17,7 @@ echo "Start AWSIM"
 PID_AWSIM=$!
 sleep 20
 
-# Move AWSIM Window To Left
-wmctrl -l
-
+# Move AWSIM window
 wmctrl -r "AWSIM" -e 0,0,0,960,1043
 
 # Start Autoware
