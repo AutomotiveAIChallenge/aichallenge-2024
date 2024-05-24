@@ -24,6 +24,10 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 
 void GoalPosePublisher::on_timer()
 {
+    if (++delay_count_ <= 10) {
+        return;
+    }
+
     if (!stop_initializing_pose_) {
         if (ekf_trigger_client_->service_is_ready()) {
             const auto req = std::make_shared<std_srvs::srv::SetBool::Request>();
@@ -31,6 +35,7 @@ void GoalPosePublisher::on_timer()
             ekf_trigger_client_->async_send_request(req, [this](rclcpp::Client<std_srvs::srv::SetBool>::SharedFuture future)
             {
                 stop_initializing_pose_ = future.get()->success;
+                delay_count_ = 0;
                 RCLCPP_INFO(this->get_logger(), "Complete localization trigger");
             });
             RCLCPP_INFO(this->get_logger(), "Call localization trigger");

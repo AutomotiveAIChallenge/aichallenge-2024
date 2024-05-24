@@ -36,6 +36,7 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     bool stop_initializing_pose_ = false;
     bool stop_streaming_goal_pose_ = false;
+    int delay_count_ = 0;
 };
 
 #endif  // GOAL_POSE_SETTER_NODE_
