@@ -24,11 +24,6 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 
 void GoalPosePublisher::on_timer()
 {
-    if (delay_count_ <= 10) {
-        ++delay_count_;
-        return;
-    }
-
     if (!stop_initializing_pose_) {
         if (ekf_trigger_client_->service_is_ready()) {
             const auto req = std::make_shared<std_srvs::srv::SetBool::Request>();

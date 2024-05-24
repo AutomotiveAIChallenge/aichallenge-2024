@@ -34,7 +34,6 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_publisher_;
     rclcpp::Subscription<autoware_adapi_v1_msgs::msg::RouteState>::SharedPtr route_state_subscriber_;
     rclcpp::TimerBase::SharedPtr timer_;
-    int delay_count_ = 0;
     bool stop_initializing_pose_ = false;
     bool stop_streaming_goal_pose_ = false;
 };
