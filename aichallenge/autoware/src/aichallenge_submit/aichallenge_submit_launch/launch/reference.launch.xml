@@ -6,7 +6,7 @@
   <arg name="map_path" default="/aichallenge/mapfile"/>
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
   <arg name="sensor_model" description="sensor model name"/>
-  
+
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
@@ -200,7 +200,7 @@
     <param name="lookahead_gain" value="0.4"/>
     <param name="lookahead_min_distance" value="5.0"/>
     <param name="speed_proportional_gain" value="1.0"/>
-    
+
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
     <remap from="output/control_cmd" to="/control/command/control_cmd"/>
@@ -236,7 +236,7 @@
         <param name="viewer_frame" value="viewer" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
-     
+
     </node_container>
 
   </group> <!-- map -->

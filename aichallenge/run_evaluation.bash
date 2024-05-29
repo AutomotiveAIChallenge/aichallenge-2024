@@ -42,7 +42,7 @@ sleep 5
 
 # Start driving and wait for the simulation to finish
 echo "Waiting for the simulation"
-ros2 service call /localization/trigger_node std_srvs/srv/SetBool '{data: true}' >/dev/null
+ros2 topic pub --once /control/control_mode_request_topic std_msgs/msg/Bool '{data: true}' >/dev/null
 wait $PID_AWSIM
 
 # Stop recording rviz2
