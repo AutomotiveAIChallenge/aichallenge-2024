@@ -62,7 +62,7 @@ wait $PID_AUTOWARE
 
 # Convert result
 echo "Convert result"
-python3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py 60 11
+python3 /aichallenge/workspace/src/aichallenge_system/script/result-converter.py 60 11
 
 # Compress rosbag
 echo "Compress rosbag"
