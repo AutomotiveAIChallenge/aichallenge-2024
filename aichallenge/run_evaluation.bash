@@ -7,7 +7,7 @@ mkdir "$OUTPUT_DIRECTORY"
 cd "$OUTPUT_DIRECTORY" || exit
 
 # shellcheck disable=SC1091
-source /aichallenge/autoware/install/setup.bash
+source /aichallenge/workspace/install/setup.bash
 sudo ip link set multicast on lo
 sudo sysctl -w net.core.rmem_max=2147483647 >/dev/null
 
@@ -62,7 +62,7 @@ wait $PID_AUTOWARE
 
 # Convert result
 echo "Convert result"
-python3 /aichallenge/autoware/src/aichallenge_system/script/result-converter.py 60 11
+python3 /aichallenge/workspace/src/aichallenge_system/script/result-converter.py 60 11
 
 # Compress rosbag
 echo "Compress rosbag"
