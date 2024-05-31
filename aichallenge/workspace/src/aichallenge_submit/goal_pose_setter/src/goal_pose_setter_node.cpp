@@ -123,7 +123,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
     }
     // Publish goal pose for loop
     if (half_goal_pose_published_ == true &&
-        tier4_autoware_utils::calcDistance2d(msg->pose.pose, half_goal_position_ < goal_range_)) 
+        tier4_autoware_utils::calcDistance2d(msg->pose.pose, half_goal_position_) < goal_range_) 
     {
         auto goal_pose = std::make_shared<geometry_msgs::msg::PoseStamped>();
         goal_pose->header.stamp = this->get_clock()->now();
