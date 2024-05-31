@@ -7,3 +7,13 @@
     goal.orientation.y: 0.0
     goal.orientation.z: -0.971732
     goal.orientation.w: 0.236088
+
+    half_goal.position.x: 89657.0
+    half_goal.position.y: 43175.0
+    half_goal.position.z: -28.0
+    half_goal.orientation.x: 0.0
+    half_goal.orientation.y: 0.0
+    half_goal.orientation.z: -0.9
+    half_goal.orientation.w: 0.25
+
+    goal_range: 10.0
