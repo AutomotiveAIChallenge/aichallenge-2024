@@ -21,7 +21,7 @@
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <std_srvs/srv/set_bool.hpp>
-#include "nav_msgs/msg/odometry.hpp"
+#include <nav_msgs/msg/odometry.hpp>
 #include <tier4_autoware_utils/tier4_autoware_utils.hpp>
 
 class GoalPosePublisher : public rclcpp::Node
