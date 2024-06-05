@@ -9,6 +9,9 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
         "/planning/mission_planning/route_state",
         rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local(),
         std::bind(&GoalPosePublisher::route_state_callback, this, std::placeholders::_1));
+    odometry_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
+        "/localization/kinematic_state", 1,
+        std::bind(&GoalPosePublisher::odometry_callback, this, std::placeholders::_1));
     timer_ = this->create_wall_timer(
         std::chrono::milliseconds(300),
         std::bind(&GoalPosePublisher::on_timer, this));
@@ -20,6 +23,35 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
     this->declare_parameter("goal.orientation.y", 0.0);
     this->declare_parameter("goal.orientation.z", 0.645336);
     this->declare_parameter("goal.orientation.w", 0.763899);
+
+    this->declare_parameter("half_goal.position.x", 89657.0);
+    this->declare_parameter("half_goal.position.y", 43175.0);
+    this->declare_parameter("half_goal.position.z", -28.0);
+    this->declare_parameter("half_goal.orientation.x", 0.0);
+    this->declare_parameter("half_goal.orientation.y", 0.0);
+    this->declare_parameter("half_goal.orientation.z", -0.9);
+    this->declare_parameter("half_goal.orientation.w", 0.25);
+
+    this->declare_parameter("goal_range", 10.0);
+
+    goal_position_.position.x = this->get_parameter("goal.position.x").as_double();
+    goal_position_.position.y = this->get_parameter("goal.position.y").as_double();
+    goal_position_.position.z = this->get_parameter("goal.position.z").as_double();
+    goal_position_.orientation.x = this->get_parameter("goal.orientation.x").as_double();
+    goal_position_.orientation.y = this->get_parameter("goal.orientation.y").as_double();
+    goal_position_.orientation.z = this->get_parameter("goal.orientation.z").as_double();
+    goal_position_.orientation.w = this->get_parameter("goal.orientation.w").as_double();
+
+
+    half_goal_position_.position.x = this->get_parameter("half_goal.position.x").as_double();
+    half_goal_position_.position.y = this->get_parameter("half_goal.position.y").as_double();
+    half_goal_position_.position.z = this->get_parameter("half_goal.position.z").as_double();
+    half_goal_position_.orientation.x = this->get_parameter("half_goal.orientation.x").as_double();
+    half_goal_position_.orientation.y = this->get_parameter("half_goal.orientation.y").as_double();
+    half_goal_position_.orientation.z = this->get_parameter("half_goal.orientation.z").as_double();
+    half_goal_position_.orientation.w = this->get_parameter("half_goal.orientation.w").as_double();
+
+    goal_range_ = this->get_parameter("goal_range").as_double();
 }
 
 void GoalPosePublisher::on_timer()
@@ -67,6 +99,40 @@ void GoalPosePublisher::route_state_callback(const autoware_adapi_v1_msgs::msg::
     {
         stop_streaming_goal_pose_ = true;
         RCLCPP_INFO(this->get_logger(), "Stop streaming goal pose");
+    }
+    is_started_ = true;
+}
+
+void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
+{
+    if (!is_started_)
+        return;
+
+    // Publish half goal pose for loop
+    if(half_goal_pose_published_ == false &&
+        tier4_autoware_utils::calcDistance2d(msg->pose.pose, goal_position_) < goal_range_) 
+    {
+        auto goal_pose = std::make_shared<geometry_msgs::msg::PoseStamped>();
+        goal_pose->header.stamp = this->get_clock()->now();
+        goal_pose->header.frame_id = "map";
+        goal_pose->pose = half_goal_position_;
+
+        goal_publisher_->publish(*goal_pose);
+        RCLCPP_INFO(this->get_logger(), "Publishing half goal pose for loop");
+        half_goal_pose_published_ = true;
+    }
+    // Publish goal pose for loop
+    if (half_goal_pose_published_ == true &&
+        tier4_autoware_utils::calcDistance2d(msg->pose.pose, half_goal_position_) < goal_range_) 
+    {
+        auto goal_pose = std::make_shared<geometry_msgs::msg::PoseStamped>();
+        goal_pose->header.stamp = this->get_clock()->now();
+        goal_pose->header.frame_id = "map";
+        goal_pose->pose = goal_position_;
+
+        goal_publisher_->publish(*goal_pose);
+        RCLCPP_INFO(this->get_logger(), "Publishing goal pose for loop");
+        half_goal_pose_published_ = false;
     }
 }
 

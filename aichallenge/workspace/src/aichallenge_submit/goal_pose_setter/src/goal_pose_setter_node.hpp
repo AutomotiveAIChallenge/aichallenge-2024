@@ -19,7 +19,10 @@
 
 #include <autoware_adapi_v1_msgs/msg/route_state.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/pose.hpp>
 #include <std_srvs/srv/set_bool.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <tier4_autoware_utils/tier4_autoware_utils.hpp>
 
 class GoalPosePublisher : public rclcpp::Node
 {
@@ -29,14 +32,21 @@ public:
 private:
     void on_timer();
     void route_state_callback(const autoware_adapi_v1_msgs::msg::RouteState::SharedPtr msg);
+    void odometry_callback(const nav_msgs::msg::Odometry::SharedPtr msg);
 
     rclcpp::Client<std_srvs::srv::SetBool>::SharedPtr ekf_trigger_client_;
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_publisher_;
     rclcpp::Subscription<autoware_adapi_v1_msgs::msg::RouteState>::SharedPtr route_state_subscriber_;
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscriber_;
     rclcpp::TimerBase::SharedPtr timer_;
     bool stop_initializing_pose_ = false;
     bool stop_streaming_goal_pose_ = false;
+    bool half_goal_pose_published_ = false;
+    bool is_started_ = false;
     int delay_count_ = 0;
+    float goal_range_;
+    geometry_msgs::msg::Pose goal_position_;
+    geometry_msgs::msg::Pose half_goal_position_;
 };
 
 #endif  // GOAL_POSE_SETTER_NODE_
