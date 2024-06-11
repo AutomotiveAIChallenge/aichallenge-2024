@@ -4,6 +4,7 @@
 OUTPUT_DIRECTORY=$(date +%Y%m%d-%H%M%S)
 cd /output || exit
 mkdir "$OUTPUT_DIRECTORY"
+ln -nfs "$OUTPUT_DIRECTORY" latest
 cd "$OUTPUT_DIRECTORY" || exit
 
 # shellcheck disable=SC1091
@@ -23,10 +24,6 @@ ros2 launch aichallenge_system_launch aichallenge_system.launch.xml >autoware.lo
 PID_AUTOWARE=$!
 sleep 10
 
-# Move AWSIM window
-wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,960,1043
-
-
 # Start recording rosbag
 echo "Start rosbag"
 ros2 bag record -a -o rosbag2_autoware >/dev/null 2>&1 &
@@ -40,6 +37,10 @@ until (ros2 service type /debug/service/capture_screen >/dev/null); do
 done
 ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
 sleep 5
+
+# Move windows
+wmctrl -a "RViz" && wmctrl -r "RViz" -e 0,0,0,1600,900
+wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,700,960
 
 # Start driving and wait for the simulation to finish
 echo "Waiting for the simulation"
