@@ -1,4 +1,5 @@
 #!/bin/bash
+AWSIM_DIRECTORY=/aichallenge/simulator/AWSIM
 
 # Move working directory
 OUTPUT_DIRECTORY=$(date +%Y%m%d-%H%M%S)
@@ -13,7 +14,7 @@ sudo sysctl -w net.core.rmem_max=2147483647 >/dev/null
 
 # Start AWSIM
 echo "Start AWSIM"
-/aichallenge/simulator/AWSIM.x86_64 >/dev/null &
+$AWSIM_DIRECTORY/AWSIM.x86_64 >/dev/null &
 PID_AWSIM=$!
 sleep 20
 
