@@ -40,8 +40,8 @@ ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
 sleep 5
 
 # Move windows
-wmctrl -a "RViz" && wmctrl -r "RViz" -e 0,0,0,1600,900
-wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,700,960
+wmctrl -a "RViz" && wmctrl -r "RViz" -e 0,0,0,1920,1043
+wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,700,1043
 
 # Start driving and wait for the simulation to finish
 echo "Waiting for the simulation"
