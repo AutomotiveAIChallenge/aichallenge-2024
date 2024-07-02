@@ -31,17 +31,18 @@ ros2 bag record -a -o rosbag2_autoware >/dev/null 2>&1 &
 PID_ROSBAG=$!
 sleep 5
 
-# Start recording rviz2 (TODO: This will not wait if there is no service)
+# Start recording rviz2
 echo "Start screen capture"
 until (ros2 service type /debug/service/capture_screen >/dev/null); do
     sleep 5
 done
-ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
-sleep 5
 
 # Move windows
 wmctrl -a "RViz" && wmctrl -r "RViz" -e 0,0,0,1920,1043
 wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,900,1043
+
+ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
+sleep 1
 
 # Start driving and wait for the simulation to finish
 echo "Waiting for the simulation"
