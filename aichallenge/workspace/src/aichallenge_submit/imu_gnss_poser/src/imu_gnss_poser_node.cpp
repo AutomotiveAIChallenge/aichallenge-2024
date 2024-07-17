@@ -30,12 +30,12 @@ private:
         msg->pose.pose.orientation.y = imu_msg_.orientation.y;
         msg->pose.pose.orientation.z = imu_msg_.orientation.z;
         msg->pose.pose.orientation.w = imu_msg_.orientation.w;
-        msg->pose.covariance[7*0] = 10.0;
-        msg->pose.covariance[7*1] = 10.0;
-        msg->pose.covariance[7*2] = 10.0;
-        msg->pose.covariance[7*3] = 0.1;
-        msg->pose.covariance[7*4] = 0.1;
-        msg->pose.covariance[7*5] = 1.0;
+        msg->pose.covariance[7*0] = 0.1;
+        msg->pose.covariance[7*1] = 0.1;
+        msg->pose.covariance[7*2] = 0.1;
+        msg->pose.covariance[7*3] = 0.01;
+        msg->pose.covariance[7*4] = 0.01;
+        msg->pose.covariance[7*5] = 0.1;
         pub_pose_->publish(*msg);
         if (!is_ekf_initialized_)
             pub_initial_pose_3d_->publish(*msg);
