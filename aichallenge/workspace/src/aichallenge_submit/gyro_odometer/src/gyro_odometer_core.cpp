@@ -29,7 +29,6 @@ std::array<double, 9> transformCovariance(const std::array<double, 9> & cov)
 {
   using COV_IDX = tier4_autoware_utils::xyz_covariance_index::XYZ_COV_IDX;
 
-  double max_cov = std::max({cov[COV_IDX::X_X], cov[COV_IDX::Y_Y], cov[COV_IDX::Z_Z], 0.0009});
 
   std::array<double, 9> cov_transformed;
   cov_transformed.fill(0.);
