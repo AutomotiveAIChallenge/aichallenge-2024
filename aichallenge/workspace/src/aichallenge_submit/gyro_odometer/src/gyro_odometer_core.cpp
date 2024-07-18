@@ -263,6 +263,10 @@ void GyroOdometer::publishData(
     twist_with_covariance.twist.twist.angular.z = 0.0;
   }
 
+  twist.twist.angular.x = 0.0;
+  twist.twist.angular.y = 0.0;
+  twist_with_covariance.twist.twist.angular.x = 0.00001;
+  twist_with_covariance.twist.twist.angular.y = 0.00001;
   twist_pub_->publish(twist);
   twist_with_covariance_pub_->publish(twist_with_covariance);
 }
