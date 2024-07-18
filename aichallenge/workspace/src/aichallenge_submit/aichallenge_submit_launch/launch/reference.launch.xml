@@ -41,6 +41,15 @@
       <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
     </include>
+    <group>
+      <push-ros-namespace namespace="imu"/>
+      <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
+        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+          <arg name="input_topic" value="imu_raw"/>
+          <arg name="output_topic" value="imu_data"/>
+          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+        </include>
+    </group>
   </group>
 
   <!-- Localization -->
@@ -48,7 +57,7 @@
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
       <arg name="input_vehicle_twist_with_covariance_topic" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
-      <arg name="input_imu_topic" value="/sensing/imu/imu_raw"/>
+      <arg name="input_imu_topic" value="/sensing/imu/imu_data"/>
       <arg name="output_twist_with_covariance_topic" value="/localization/twist_estimator/twist_with_covariance"/>
       <arg name="output_twist_with_covariance_raw_topic" value="/localization/twist_estimator/twist_with_covariance_raw"/>
     </include>
@@ -58,8 +67,8 @@
     <include file="$(find-pkg-share ekf_localizer)/launch/ekf_localizer.launch.xml">
       <arg name="enable_yaw_bias_estimation" value="false"/>
       <arg name="tf_rate" value="50.0"/>
-      <arg name="twist_smoothing_steps" value="2"/>
-      <arg name="input_initial_pose_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
+      <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
       <arg name="output_odom_name" value="kinematic_state"/>
@@ -197,8 +206,8 @@
   <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="true"/>
     <param name="external_target_vel" value="8.0"/>
-    <param name="lookahead_gain" value="0.4"/>
-    <param name="lookahead_min_distance" value="5.0"/>
+    <param name="lookahead_gain" value="0.3"/>
+    <param name="lookahead_min_distance" value="4.0"/>
     <param name="speed_proportional_gain" value="1.0"/>
 
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
