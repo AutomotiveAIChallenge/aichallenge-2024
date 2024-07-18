@@ -81,7 +81,6 @@ def main(args=None):
     executor.add_node(ObjectMarkerNode())
     executor.add_node(PitStopMarkerNode())
     executor.spin()
-    rclpy.spin(ObjectMarkerNode())
     rclpy.shutdown()
 
 if __name__ == "__main__":
