@@ -41,12 +41,15 @@
       <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
     </include>
-    <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
-      <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-        <arg name="input_topic" value="imu_raw"/>
-        <arg name="output_topic" value="imu_data"/>
-        <arg name="param_file" value="$(var imu_corrector_param_file)"/>
-      </include>
+    <group>
+      <push-ros-namespace namespace="imu"/>
+      <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
+        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+          <arg name="input_topic" value="imu_raw"/>
+          <arg name="output_topic" value="imu_data"/>
+          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+        </include>
+    </group>
   </group>
 
   <!-- Localization -->
