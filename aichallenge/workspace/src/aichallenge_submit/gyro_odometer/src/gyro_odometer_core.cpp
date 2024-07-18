@@ -29,7 +29,6 @@ std::array<double, 9> transformCovariance(const std::array<double, 9> & cov)
 {
   using COV_IDX = tier4_autoware_utils::xyz_covariance_index::XYZ_COV_IDX;
 
-  double max_cov = std::max({cov[COV_IDX::X_X], cov[COV_IDX::Y_Y], cov[COV_IDX::Z_Z], 0.0009});
 
   std::array<double, 9> cov_transformed;
   cov_transformed.fill(0.);
@@ -265,8 +264,8 @@ void GyroOdometer::publishData(
 
   twist.twist.angular.x = 0.0;
   twist.twist.angular.y = 0.0;
-  twist_with_covariance.twist.twist.angular.x = 0.00001;
-  twist_with_covariance.twist.twist.angular.y = 0.00001;
+  twist_with_covariance.twist.twist.angular.x = 0.0;
+  twist_with_covariance.twist.twist.angular.y = 0.0;
   twist_pub_->publish(twist);
   twist_with_covariance_pub_->publish(twist_with_covariance);
 }
