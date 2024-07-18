@@ -44,30 +44,30 @@ class PitStopMarkerNode(rclpy.node.Node):
     def __init__(self):
         super().__init__("pitstop_marker")
         qos = rclpy.qos.QoSProfile(depth=1, reliability=rclpy.qos.QoSReliabilityPolicy.RELIABLE, durability=rclpy.qos.QoSDurabilityPolicy.TRANSIENT_LOCAL)
+        self.sub = self.create_subscription(Float64MultiArray, "/aichallenge/pitstop/area", self.callback, qos)
         self.pub = self.create_publisher(MarkerArray, "/aichallenge/pitstop/area_marker", qos)
-        self.callback(None)
 
     def callback(self, msg):
         markers = MarkerArray()
-        markers.markers = [self.create_marker()]
+        markers.markers = [self.create_marker(msg.data)]
         self.pub.publish(markers)
 
-    def create_marker(self):
+    def create_marker(self, data):
         marker = Marker()
         marker.header.frame_id = "map"
         marker.header.stamp = self.get_clock().now().to_msg()
         marker.id = 0
         marker.type = Marker.CUBE
         marker.action = Marker.ADD
-        marker.pose.position.x = 89626.3671875
-        marker.pose.position.y = 43134.921875
-        marker.pose.position.z = -29.700000762939453
-        marker.pose.orientation.x = 0.0
-        marker.pose.orientation.y = 0.0
-        marker.pose.orientation.z = -0.8788172006607056
-        marker.pose.orientation.w = -0.47715866565704346
-        marker.scale.x = 4.0
-        marker.scale.y = 2.0
+        marker.pose.position.x = data[0]
+        marker.pose.position.y = data[1]
+        marker.pose.position.z = data[2]
+        marker.pose.orientation.x = data[3]
+        marker.pose.orientation.y = data[4]
+        marker.pose.orientation.z = data[5]
+        marker.pose.orientation.w = data[6]
+        marker.scale.x = data[7]
+        marker.scale.y = data[8]
         marker.scale.z = 0.1
         marker.color.r = 0.0
         marker.color.g = 1.0
@@ -81,7 +81,6 @@ def main(args=None):
     executor.add_node(ObjectMarkerNode())
     executor.add_node(PitStopMarkerNode())
     executor.spin()
-    rclpy.spin(ObjectMarkerNode())
     rclpy.shutdown()
 
 if __name__ == "__main__":
