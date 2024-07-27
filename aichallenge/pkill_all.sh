@@ -15,3 +15,5 @@ pkill -9 component_conta
 pkill -9 simple_pure_pur
 pkill -9 initial_pose_ad
 pkill -9 routing_adaptor
+pkill -9 imu_corrector
+pkill -9 gyro_odometer
