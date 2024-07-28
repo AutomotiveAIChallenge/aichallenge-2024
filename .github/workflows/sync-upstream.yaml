@@ -26,6 +26,6 @@ jobs:
           sync-target-branch: main
           pr-title: "chore: sync upstream"
           pr-labels: |
-            ci
+            bot
             sync-upstream
           auto-merge-method: merge
