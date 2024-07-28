@@ -1,0 +1,47 @@
+{
+  "ignorePaths": [
+    "**/*.cspell.json",
+    "**/*.dae",
+    "**/*.html",
+    "**/*.mp3",
+    "**/*.mp4",
+    "**/*.pcd",
+    "**/*.stl",
+    "**/*.svg",
+    "**/*.wav",
+    "**/*.zip",
+    "**/.git/**",
+    "**/.gitignore",
+    "**/.vscode/**",
+    "**/build/**",
+    "**/CHANGELOG.rst",
+    "**/CPPLINT.cfg",
+    "**/Doxyfile",
+    "**/install/**",
+    "**/log/**",
+    "**/package-lock.json"
+  ],
+  "ignoreRegExpList": [
+    "\\[.*/.*\\]\\(https://github.com",
+    "Copyright .*[0-9]{4}.+",
+    "github.com[/:][\\w._\\-]+(/[\\w._\\-]+)?",
+    "ppa:.+/[^\\s]+",
+    "@[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.yaml",
+      "ignoreRegExpList": ["author: .+$", "git_email: .+$", "git_user: .+$", "uses: .+$"]
+    },
+    {
+      "filename": "**/package.xml",
+      "ignoreRegExpList": ["<author.*?</author>", "<maintainer.*?</maintainer>"]
+    },
+    {
+      "filename": "**/{*.cpp,*.hpp}",
+      "ignoreRegExpList": ["@author .*$", "[\\@]tparam", "\\author .*$", "Author(s)?( )?: .*$"]
+    }
+  ],
+  "words": [
+  ]
+}
