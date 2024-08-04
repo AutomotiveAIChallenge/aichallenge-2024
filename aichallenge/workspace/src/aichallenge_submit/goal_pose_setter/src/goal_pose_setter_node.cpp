@@ -69,6 +69,9 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 
     this->declare_parameter("goal_range", 10.0);
 
+    this->declare_parameter("enable_pit", true);
+    this->declare_parameter("pit_in_threshold", 1000);
+
     goal_position_.position.x = this->get_parameter("goal.position.x").as_double();
     goal_position_.position.y = this->get_parameter("goal.position.y").as_double();
     goal_position_.position.z = this->get_parameter("goal.position.z").as_double();
@@ -96,6 +99,9 @@ GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 
 
     goal_range_ = this->get_parameter("goal_range").as_double();
+
+    enable_pit_ = this->get_parameter("enable_pit").as_bool();
+    pit_in_threshold_ = this->get_parameter("pit_in_threshold").as_int();
 }
 
 void GoalPosePublisher::on_timer()
@@ -160,7 +166,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
         auto goal_pose = std::make_shared<geometry_msgs::msg::PoseStamped>();
         goal_pose->header.stamp = this->get_clock()->now();
         goal_pose->header.frame_id = "map";
-        if(pit_condition_ >1000){
+        if(pit_condition_ > pit_in_threshold_ && enable_pit_ == true){
             goal_pose->pose = pit_position_;
             pit_in_flag_ = true;
         }

@@ -63,6 +63,9 @@ private:
     int pit_condition_;
     float pit_stop_time_;
     bool pit_in_flag_ = false;
+
+    bool enable_pit_ = true;
+    int pit_in_threshold_ = 1000;
 };
 
 #endif  // GOAL_POSE_SETTER_NODE_
