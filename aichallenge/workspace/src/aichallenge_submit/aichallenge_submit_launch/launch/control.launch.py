@@ -64,7 +64,7 @@ def launch_setup(context, *args, **kwargs):
         package="trajectory_follower_node",
         plugin="autoware::motion::control::trajectory_follower_node::Controller",
         name="controller_node_exe",
-        namespace="trajectory_follower",
+        namespace="command",
         remappings=[
             ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
             ("~/input/current_odometry", "/localization/kinematic_state"),
@@ -90,167 +90,167 @@ def launch_setup(context, *args, **kwargs):
         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
     )
 
-    # lane departure checker
-    lane_departure_component = ComposableNode(
-        package="lane_departure_checker",
-        plugin="lane_departure_checker::LaneDepartureCheckerNode",
-        name="lane_departure_checker_node",
-        namespace="trajectory_follower",
-        remappings=[
-            ("~/input/odometry", "/localization/kinematic_state"),
-            ("~/input/lanelet_map_bin", "/map/vector_map"),
-            ("~/input/route", "/planning/mission_planning/route"),
-            ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
-            (
-                "~/input/predicted_trajectory",
-                "/control/trajectory_follower/lateral/predicted_trajectory",
-            ),
-        ],
-        parameters=[nearest_search_param, lane_departure_checker_param, vehicle_info_param],
-        extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    )
+    # # lane departure checker
+    # lane_departure_component = ComposableNode(
+    #     package="lane_departure_checker",
+    #     plugin="lane_departure_checker::LaneDepartureCheckerNode",
+    #     name="lane_departure_checker_node",
+    #     namespace="trajectory_follower",
+    #     remappings=[
+    #         ("~/input/odometry", "/localization/kinematic_state"),
+    #         ("~/input/lanelet_map_bin", "/map/vector_map"),
+    #         ("~/input/route", "/planning/mission_planning/route"),
+    #         ("~/input/reference_trajectory", "/planning/scenario_planning/trajectory"),
+    #         (
+    #             "~/input/predicted_trajectory",
+    #             "/control/trajectory_follower/lateral/predicted_trajectory",
+    #         ),
+    #     ],
+    #     parameters=[nearest_search_param, lane_departure_checker_param, vehicle_info_param],
+    #     extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    # )
 
-    # shift decider
-    shift_decider_component = ComposableNode(
-        package="shift_decider",
-        plugin="ShiftDecider",
-        name="shift_decider",
-        remappings=[
-            ("input/control_cmd", "/control/trajectory_follower/control_cmd"),
-            ("input/state", "/autoware/state"),
-            ("output/gear_cmd", "/control/shift_decider/gear_cmd"),
-        ],
-        parameters=[
-            shift_decider_param,
-        ],
-        extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    )
+    # # shift decider
+    # shift_decider_component = ComposableNode(
+    #     package="shift_decider",
+    #     plugin="ShiftDecider",
+    #     name="shift_decider",
+    #     remappings=[
+    #         ("input/control_cmd", "/control/trajectory_follower/control_cmd"),
+    #         ("input/state", "/autoware/state"),
+    #         ("output/gear_cmd", "/control/shift_decider/gear_cmd"),
+    #     ],
+    #     parameters=[
+    #         shift_decider_param,
+    #     ],
+    #     extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    # )
 
-    # vehicle cmd gate
-    vehicle_cmd_gate_component = ComposableNode(
-        package="vehicle_cmd_gate",
-        plugin="vehicle_cmd_gate::VehicleCmdGate",
-        name="vehicle_cmd_gate",
-        remappings=[
-            ("input/steering", "/vehicle/status/steering_status"),
-            ("input/operation_mode", "/system/operation_mode/state"),
-            ("input/auto/control_cmd", "/control/trajectory_follower/control_cmd"),
-            ("input/auto/turn_indicators_cmd", "/planning/turn_indicators_cmd"),
-            ("input/auto/hazard_lights_cmd", "/planning/hazard_lights_cmd"),
-            ("input/auto/gear_cmd", "/control/shift_decider/gear_cmd"),
-            ("input/external/control_cmd", "/external/selected/control_cmd"),
-            ("input/external/turn_indicators_cmd", "/external/selected/turn_indicators_cmd"),
-            ("input/external/hazard_lights_cmd", "/external/selected/hazard_lights_cmd"),
-            ("input/external/gear_cmd", "/external/selected/gear_cmd"),
-            ("input/external_emergency_stop_heartbeat", "/external/selected/heartbeat"),
-            ("input/gate_mode", "/control/gate_mode_cmd"),
-            ("input/emergency/control_cmd", "/system/emergency/control_cmd"),
-            ("input/emergency/hazard_lights_cmd", "/system/emergency/hazard_lights_cmd"),
-            ("input/emergency/gear_cmd", "/system/emergency/gear_cmd"),
-            ("input/mrm_state", "/system/fail_safe/mrm_state"),
-            ("input/gear_status", "/vehicle/status/gear_status"),
-            ("input/kinematics", "/localization/kinematic_state"),
-            ("input/acceleration", "/localization/acceleration"),
-            ("output/vehicle_cmd_emergency", "/control/command/emergency_cmd"),
-            ("output/control_cmd", "/control/command/control_cmd"),
-            ("output/gear_cmd", "/control/command/gear_cmd"),
-            ("output/turn_indicators_cmd", "/control/command/turn_indicators_cmd"),
-            ("output/hazard_lights_cmd", "/control/command/hazard_lights_cmd"),
-            ("output/gate_mode", "/control/current_gate_mode"),
-            ("output/engage", "/api/autoware/get/engage"),
-            ("output/external_emergency", "/api/autoware/get/emergency"),
-            ("output/operation_mode", "/control/vehicle_cmd_gate/operation_mode"),
-            ("~/service/engage", "/api/autoware/set/engage"),
-            ("~/service/external_emergency", "/api/autoware/set/emergency"),
-            # TODO(Takagi, Isamu): deprecated
-            ("input/engage", "/autoware/engage"),
-            ("~/service/external_emergency_stop", "~/external_emergency_stop"),
-            ("~/service/clear_external_emergency_stop", "~/clear_external_emergency_stop"),
-        ],
-        parameters=[
-            vehicle_cmd_gate_param,
-            vehicle_info_param,
-        ],
-        extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    )
+    # # vehicle cmd gate
+    # vehicle_cmd_gate_component = ComposableNode(
+    #     package="vehicle_cmd_gate",
+    #     plugin="vehicle_cmd_gate::VehicleCmdGate",
+    #     name="vehicle_cmd_gate",
+    #     remappings=[
+    #         ("input/steering", "/vehicle/status/steering_status"),
+    #         ("input/operation_mode", "/system/operation_mode/state"),
+    #         ("input/auto/control_cmd", "/control/trajectory_follower/control_cmd"),
+    #         ("input/auto/turn_indicators_cmd", "/planning/turn_indicators_cmd"),
+    #         ("input/auto/hazard_lights_cmd", "/planning/hazard_lights_cmd"),
+    #         ("input/auto/gear_cmd", "/control/shift_decider/gear_cmd"),
+    #         ("input/external/control_cmd", "/external/selected/control_cmd"),
+    #         ("input/external/turn_indicators_cmd", "/external/selected/turn_indicators_cmd"),
+    #         ("input/external/hazard_lights_cmd", "/external/selected/hazard_lights_cmd"),
+    #         ("input/external/gear_cmd", "/external/selected/gear_cmd"),
+    #         ("input/external_emergency_stop_heartbeat", "/external/selected/heartbeat"),
+    #         ("input/gate_mode", "/control/gate_mode_cmd"),
+    #         ("input/emergency/control_cmd", "/system/emergency/control_cmd"),
+    #         ("input/emergency/hazard_lights_cmd", "/system/emergency/hazard_lights_cmd"),
+    #         ("input/emergency/gear_cmd", "/system/emergency/gear_cmd"),
+    #         ("input/mrm_state", "/system/fail_safe/mrm_state"),
+    #         ("input/gear_status", "/vehicle/status/gear_status"),
+    #         ("input/kinematics", "/localization/kinematic_state"),
+    #         ("input/acceleration", "/localization/acceleration"),
+    #         ("output/vehicle_cmd_emergency", "/control/command/emergency_cmd"),
+    #         ("output/control_cmd", "/control/command/control_cmd"),
+    #         ("output/gear_cmd", "/control/command/gear_cmd"),
+    #         ("output/turn_indicators_cmd", "/control/command/turn_indicators_cmd"),
+    #         ("output/hazard_lights_cmd", "/control/command/hazard_lights_cmd"),
+    #         ("output/gate_mode", "/control/current_gate_mode"),
+    #         ("output/engage", "/api/autoware/get/engage"),
+    #         ("output/external_emergency", "/api/autoware/get/emergency"),
+    #         ("output/operation_mode", "/control/vehicle_cmd_gate/operation_mode"),
+    #         ("~/service/engage", "/api/autoware/set/engage"),
+    #         ("~/service/external_emergency", "/api/autoware/set/emergency"),
+    #         # TODO(Takagi, Isamu): deprecated
+    #         ("input/engage", "/autoware/engage"),
+    #         ("~/service/external_emergency_stop", "~/external_emergency_stop"),
+    #         ("~/service/clear_external_emergency_stop", "~/clear_external_emergency_stop"),
+    #     ],
+    #     parameters=[
+    #         vehicle_cmd_gate_param,
+    #         vehicle_info_param,
+    #     ],
+    #     extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    # )
 
-    # operation mode transition manager
-    operation_mode_transition_manager_component = ComposableNode(
-        package="operation_mode_transition_manager",
-        plugin="operation_mode_transition_manager::OperationModeTransitionManager",
-        name="operation_mode_transition_manager",
-        remappings=[
-            # input
-            ("kinematics", "/localization/kinematic_state"),
-            ("steering", "/vehicle/status/steering_status"),
-            ("trajectory", "/planning/scenario_planning/trajectory"),
-            ("control_cmd", "/control/command/control_cmd"),
-            ("control_mode_report", "/vehicle/status/control_mode"),
-            ("gate_operation_mode", "/control/vehicle_cmd_gate/operation_mode"),
-            # output
-            ("is_autonomous_available", "/control/is_autonomous_available"),
-            ("control_mode_request", "/control/control_mode_request"),
-        ],
-        parameters=[
-            nearest_search_param,
-            operation_mode_transition_manager_param,
-            vehicle_info_param,
-        ],
-    )
+    # # operation mode transition manager
+    # operation_mode_transition_manager_component = ComposableNode(
+    #     package="operation_mode_transition_manager",
+    #     plugin="operation_mode_transition_manager::OperationModeTransitionManager",
+    #     name="operation_mode_transition_manager",
+    #     remappings=[
+    #         # input
+    #         ("kinematics", "/localization/kinematic_state"),
+    #         ("steering", "/vehicle/status/steering_status"),
+    #         ("trajectory", "/planning/scenario_planning/trajectory"),
+    #         ("control_cmd", "/control/command/control_cmd"),
+    #         ("control_mode_report", "/vehicle/status/control_mode"),
+    #         ("gate_operation_mode", "/control/vehicle_cmd_gate/operation_mode"),
+    #         # output
+    #         ("is_autonomous_available", "/control/is_autonomous_available"),
+    #         ("control_mode_request", "/control/control_mode_request"),
+    #     ],
+    #     parameters=[
+    #         nearest_search_param,
+    #         operation_mode_transition_manager_param,
+    #         vehicle_info_param,
+    #     ],
+    # )
 
-    # external cmd selector
-    external_cmd_selector_loader = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [FindPackageShare("external_cmd_selector"), "/launch/external_cmd_selector.launch.py"]
-        ),
-        launch_arguments=[
-            ("use_intra_process", LaunchConfiguration("use_intra_process")),
-            ("target_container", "/control/control_container"),
-            (
-                "external_cmd_selector_param_path",
-                LaunchConfiguration("external_cmd_selector_param_path"),
-            ),
-        ],
-    )
+    # # external cmd selector
+    # external_cmd_selector_loader = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         [FindPackageShare("external_cmd_selector"), "/launch/external_cmd_selector.launch.py"]
+    #     ),
+    #     launch_arguments=[
+    #         ("use_intra_process", LaunchConfiguration("use_intra_process")),
+    #         ("target_container", "/control/control_container"),
+    #         (
+    #             "external_cmd_selector_param_path",
+    #             LaunchConfiguration("external_cmd_selector_param_path"),
+    #         ),
+    #     ],
+    # )
 
-    # external cmd converter
-    external_cmd_converter_loader = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            [FindPackageShare("external_cmd_converter"), "/launch/external_cmd_converter.launch.py"]
-        ),
-        launch_arguments=[
-            ("use_intra_process", LaunchConfiguration("use_intra_process")),
-            ("target_container", "/control/control_container"),
-        ],
-    )
+    # # external cmd converter
+    # external_cmd_converter_loader = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource(
+    #         [FindPackageShare("external_cmd_converter"), "/launch/external_cmd_converter.launch.py"]
+    #     ),
+    #     launch_arguments=[
+    #         ("use_intra_process", LaunchConfiguration("use_intra_process")),
+    #         ("target_container", "/control/control_container"),
+    #     ],
+    # )
 
-    # obstacle collision checker
-    obstacle_collision_checker_component = ComposableNode(
-        package="obstacle_collision_checker",
-        plugin="obstacle_collision_checker::ObstacleCollisionCheckerNode",
-        name="obstacle_collision_checker",
-        remappings=[
-            ("input/lanelet_map_bin", "/map/vector_map"),
-            ("input/obstacle_pointcloud", "/perception/obstacle_segmentation/pointcloud"),
-            ("input/reference_trajectory", "/planning/scenario_planning/trajectory"),
-            (
-                "input/predicted_trajectory",
-                "/control/trajectory_follower/lateral/predicted_trajectory",
-            ),
-            ("input/odometry", "/localization/kinematic_state"),
-        ],
-        parameters=[
-            obstacle_collision_checker_param,
-            vehicle_info_param,
-        ],
-        extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    )
+    # # obstacle collision checker
+    # obstacle_collision_checker_component = ComposableNode(
+    #     package="obstacle_collision_checker",
+    #     plugin="obstacle_collision_checker::ObstacleCollisionCheckerNode",
+    #     name="obstacle_collision_checker",
+    #     remappings=[
+    #         ("input/lanelet_map_bin", "/map/vector_map"),
+    #         ("input/obstacle_pointcloud", "/perception/obstacle_segmentation/pointcloud"),
+    #         ("input/reference_trajectory", "/planning/scenario_planning/trajectory"),
+    #         (
+    #             "input/predicted_trajectory",
+    #             "/control/trajectory_follower/lateral/predicted_trajectory",
+    #         ),
+    #         ("input/odometry", "/localization/kinematic_state"),
+    #     ],
+    #     parameters=[
+    #         obstacle_collision_checker_param,
+    #         vehicle_info_param,
+    #     ],
+    #     extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    # )
 
-    obstacle_collision_checker_loader = LoadComposableNodes(
-        condition=IfCondition(LaunchConfiguration("enable_obstacle_collision_checker")),
-        composable_node_descriptions=[obstacle_collision_checker_component],
-        target_container="/control/control_container",
-    )
+    # obstacle_collision_checker_loader = LoadComposableNodes(
+    #     condition=IfCondition(LaunchConfiguration("enable_obstacle_collision_checker")),
+    #     composable_node_descriptions=[obstacle_collision_checker_component],
+    #     target_container="/control/control_container",
+    # )
 
     # set container to run all required components in the same process
     container = ComposableNodeContainer(
@@ -260,10 +260,10 @@ def launch_setup(context, *args, **kwargs):
         executable=LaunchConfiguration("container_executable"),
         composable_node_descriptions=[
             controller_component,
-            lane_departure_component,
-            shift_decider_component,
-            vehicle_cmd_gate_component,
-            operation_mode_transition_manager_component,
+            #lane_departure_component,
+            #shift_decider_component,
+            #vehicle_cmd_gate_component,
+            #operation_mode_transition_manager_component,
         ],
     )
 
@@ -271,9 +271,9 @@ def launch_setup(context, *args, **kwargs):
         [
             PushRosNamespace("control"),
             container,
-            external_cmd_selector_loader,
-            external_cmd_converter_loader,
-            obstacle_collision_checker_loader,
+            #external_cmd_selector_loader,
+            #external_cmd_converter_loader,
+            #obstacle_collision_checker_loader,
         ]
     )
 
