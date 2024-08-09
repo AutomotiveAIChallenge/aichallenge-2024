@@ -15,6 +15,7 @@
   <depend>std_srvs</depend>
   <depend>nav2_msgs</depend>
   <depend>tier4_autoware_utils</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

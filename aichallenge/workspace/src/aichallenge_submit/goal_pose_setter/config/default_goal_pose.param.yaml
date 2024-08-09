@@ -16,4 +16,15 @@
     half_goal.orientation.z: -0.9
     half_goal.orientation.w: 0.25
 
+    pit_goal.position.x: 89626.3671875
+    pit_goal.position.y: 43134.921875
+    pit_goal.position.z: 42.10000228881836
+    pit_goal.orientation.x: 0.0
+    pit_goal.orientation.y: 0.0
+    pit_goal.orientation.z: -0.8788172006607056
+    pit_goal.orientation.w: -0.47715866565704346
+
     goal_range: 10.0
+
+    enable_pit: true
+    pit_in_threshold: 10

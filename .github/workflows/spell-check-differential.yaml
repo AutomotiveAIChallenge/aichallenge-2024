@@ -1,0 +1,18 @@
+name: spell-check-differential
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  spell-check-differential:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run spell check
+        uses: streetsidesoftware/cspell-action@v6
+        with:
+          config: .cspell.json
+          incremental_files_only: true
