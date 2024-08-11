@@ -18,6 +18,7 @@
     "**/.vscode/**",
     "**/build/**",
     "**/CHANGELOG.rst",
+    "**/.clang-format",
     "**/CPPLINT.cfg",
     "**/Doxyfile",
     "**/install/**",
