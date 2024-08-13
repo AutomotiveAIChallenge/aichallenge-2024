@@ -16,7 +16,7 @@
     <arg name="trajectory_follower_node_param_path" value="$(find-pkg-share autoware_launch)/config/control/trajectory_follower/trajectory_follower_node.param.yaml"/>
     <arg
       name="lat_controller_param_path"
-      value="$(find-pkg-share autoware_launch)/config/control/trajectory_follower/$(var latlon_controller_param_path_dir)/lateral/$(var lateral_controller_mode).param.yaml"
+      value="$(find-pkg-share aichallenge_submit_launch)/config/control/trajectory_follower/$(var latlon_controller_param_path_dir)/lateral/mpc.param.yaml"
     />
     <arg
       name="lon_controller_param_path"
