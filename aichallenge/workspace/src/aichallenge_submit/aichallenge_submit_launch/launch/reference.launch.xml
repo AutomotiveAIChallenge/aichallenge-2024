@@ -253,9 +253,9 @@
   <!-- vehicle -->
   <group if="$(var launch_vehicle_interface)">
     <include file="$(find-pkg-share raw_vehicle_cmd_converter)/launch/raw_vehicle_converter.launch.xml">
-      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_launch)/config/converter.param.yaml"/>
-      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_launch)/data/accel_map.csv"/>
-      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_launch)/data/brake_map.csv"/>
+      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_submit_launch)/config/converter.param.yaml"/>
+      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_submit_launch)/data/accel_map.csv"/>
+      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_submit_launch)/data/brake_map.csv"/>
 
       <arg name="max_throttle" value="1.0"/>
       <arg name="max_brake" value="1.0"/>
