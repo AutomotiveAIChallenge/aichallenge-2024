@@ -2,10 +2,15 @@
 <launch>
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
     <log message="This is aichallenge_system_launch."/>
-    <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" />
+    <arg name="launch_automatic_operation" default="true"/>
+    <log message="echo launch param launch_automatic_operation: $(var launch_automatic_operation)"/>
 
-    <!-- Workaround because the simulator cannot use the service. -->
-    <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
+    <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" />
+    
+    <!-- Workaround for automatic operaion. -->
+    <group if="$(var launch_automatic_operation)">
+        <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
+    </group>
 
     <!-- RViz -->
     <group>
