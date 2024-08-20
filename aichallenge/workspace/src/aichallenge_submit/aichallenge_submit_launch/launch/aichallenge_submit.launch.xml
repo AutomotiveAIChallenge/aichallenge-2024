@@ -5,8 +5,6 @@
     <arg name="vehicle_model" value="racing_kart"/>
     <arg name="sensor_model" value="racing_kart_sensor_kit"/>
     <arg name="map_path" value="$(find-pkg-share aichallenge_submit_launch)/map"/>
-    <arg name="use_sim_time" value="true"/>
-    <arg name="launch_vehicle_interface" value="false"/>
   </include>
 
   <!-- place a goal pose anywhere you like-->
