@@ -3,9 +3,17 @@
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
     <log message="This is aichallenge_system_launch."/>
     <arg name="launch_automatic_operation" default="true"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="launch_vehicle_interface" default="false"/>
+    <arg name="sensor_model" default="racing_kart_sensor_kit"/>
+    <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
     <log message="echo launch param launch_automatic_operation: $(var launch_automatic_operation)"/>
 
-    <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" />
+    <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" >
+        <arg name="sensor_model" value="$(var sensor_model)"/>
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+    </include>
     
     <!-- Workaround for automatic operaion. -->
     <group if="$(var launch_automatic_operation)">
