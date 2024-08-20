@@ -2,7 +2,7 @@
 <launch>
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
     <log message="This is aichallenge_system_launch."/>
-    <arg name="launch_automatic_operation" default="true"/>
+    <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="launch_vehicle_interface" default="false"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
@@ -16,7 +16,7 @@
     </include>
     
     <!-- Workaround for automatic operaion. -->
-    <group if="$(var launch_automatic_operation)">
+    <group if="$(var simulation)">
         <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
     </group>
 
