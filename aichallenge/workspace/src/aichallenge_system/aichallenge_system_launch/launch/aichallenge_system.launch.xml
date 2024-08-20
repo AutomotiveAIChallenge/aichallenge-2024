@@ -7,7 +7,7 @@
     <arg name="launch_vehicle_interface" default="false"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
-    <log message="echo launch param launch_automatic_operation: $(var launch_automatic_operation)"/>
+    <log message="echo launch param simulation: $(var simulation)"/>
 
     <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" >
         <arg name="sensor_model" value="$(var sensor_model)"/>
