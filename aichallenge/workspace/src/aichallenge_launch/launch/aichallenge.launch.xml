@@ -103,7 +103,7 @@
       <composable_node pkg="map_loader" plugin="Lanelet2MapLoaderNode" name="lanelet2_map_loader" namespace="">
         <remap from="output/lanelet2_map" to="vector_map" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share aichallenge_launch)/config/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
@@ -112,7 +112,7 @@
         <remap from="input/lanelet2_map" to="vector_map" />
         <remap from="output/lanelet2_map_marker" to="vector_map_marker" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share aichallenge_launch)/config/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
@@ -129,9 +129,9 @@
 
   <group if="$(var launch_vehicle_interface)">
     <include file="$(find-pkg-share raw_vehicle_cmd_converter)/launch/raw_vehicle_converter.launch.xml">
-      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_launch)/config/converter.param.yaml"/>
-      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_launch)/data/accel_map.csv"/>
-      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_launch)/data/brake_map.csv"/>
+      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_submit_launch)/config/converter.param.yaml"/>
+      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_submit_launch)/data/accel_map.csv"/>
+      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_submit_launch)/data/brake_map.csv"/>
 
       <arg name="max_throttle" value="1.0"/>
       <arg name="max_brake" value="1.0"/>
