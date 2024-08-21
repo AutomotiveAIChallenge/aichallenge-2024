@@ -45,6 +45,19 @@ OccupancyGrid::SharedPtr create_occupancy_grid(
   return occupancy_grid;
 }
 
+void update_origin(
+  OccupancyGrid::SharedPtr occupancy_grid, const OccupancyGridParameters::SharedPtr parameters,
+  const geometry_msgs::msg::Vector3 & translation)
+{
+  occupancy_grid->info.origin.position.x = -parameters->width_2() + translation.x;
+  occupancy_grid->info.origin.position.y = -parameters->width_2() + translation.y;
+  occupancy_grid->info.origin.position.z = translation.z;
+  occupancy_grid->info.origin.orientation.x = 0.0;
+  occupancy_grid->info.origin.orientation.y = 0.0;
+  occupancy_grid->info.origin.orientation.z = 0.0;
+  occupancy_grid->info.origin.orientation.w = 1.0;
+}
+
 tier4_autoware_utils::Point2d index_to_point(
   const OccupancyGridParameters::SharedPtr parameters, const int index)
 {
