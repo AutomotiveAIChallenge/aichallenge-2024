@@ -15,7 +15,7 @@
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
     </include>
     
-    <!-- Workaround for automatic operaion. -->
+    <!-- Workaround for automatic operation. -->
     <group if="$(var simulation)">
         <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
     </group>
