@@ -42,6 +42,17 @@ geometry_msgs::msg::Vector3 transformVector3(
   return vec_stamped_transformed.vector;
 }
 
+geometry_msgs::msg::Quaternion transformQuaternion(
+  const geometry_msgs::msg::Quaternion & quat, const geometry_msgs::msg::TransformStamped & transform)
+{
+  geometry_msgs::msg::QuaternionStamped quat_stamped;
+  quat_stamped.quaternion = quat;
+
+  geometry_msgs::msg::QuaternionStamped quat_stamped_transformed;
+  tf2::doTransform(quat_stamped, quat_stamped_transformed, transform);
+  return quat_stamped_transformed.quaternion;
+}
+
 namespace imu_corrector
 {
 ImuCorrector::ImuCorrector(const rclcpp::NodeOptions & node_options)
@@ -103,6 +114,7 @@ void ImuCorrector::callbackImu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_m
   sensor_msgs::msg::Imu imu_msg_base_link;
   imu_msg_base_link.header.stamp = imu_msg_ptr->header.stamp;
   imu_msg_base_link.header.frame_id = output_frame_;
+  imu_msg_base_link.orientation = transformQuaternion(imu_msg.orientation, *tf_imu2base_ptr); 
   imu_msg_base_link.linear_acceleration =
     transformVector3(imu_msg.linear_acceleration, *tf_imu2base_ptr);
   imu_msg_base_link.linear_acceleration_covariance =
