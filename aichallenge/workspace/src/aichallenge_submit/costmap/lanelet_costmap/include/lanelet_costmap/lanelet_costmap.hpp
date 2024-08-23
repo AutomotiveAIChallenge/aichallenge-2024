@@ -48,6 +48,8 @@ private:
   tf2_ros::Buffer tf_buffer_;
   tf2_ros::TransformListener tf_listener_;
 
+  rclcpp::Subscription<HADMapBin>::SharedPtr map_sub_;
+
   std::string map_frame_id_;
   lanelet::LaneletMapPtr map_;
   lanelet::ConstLanelets roads_;
