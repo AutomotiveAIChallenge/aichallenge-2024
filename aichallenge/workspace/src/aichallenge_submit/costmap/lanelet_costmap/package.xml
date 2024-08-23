@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>lanelet_costmap</name>
+  <version>0.0.0</version>
+  <description>The lanelet_costmap pkg</description>
+  <maintainer email="harada.akiro@gmail.com">Akiro Harada</maintainer>
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
+
+  <depend>autoware_auto_mapping_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>lanelet2_extension</depend>
+  <depend>multi_layered_costmap</depend>
+  <depend>rclcpp</depend>
+  <depend>tier4_autoware_utils</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
