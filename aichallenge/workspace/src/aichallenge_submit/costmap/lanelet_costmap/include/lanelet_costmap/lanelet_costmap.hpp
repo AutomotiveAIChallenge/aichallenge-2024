@@ -34,7 +34,12 @@ class LaneletCostmap : public multi_layered_costmap::CostmapBase
 {
 public:
   using SharedPtr = std::shared_ptr<LaneletCostmap>;
-  explicit LaneletCostmap(const rclcpp::Node::SharedPtr & node);
+  explicit LaneletCostmap(rclcpp::Node & node, const std::string & layer_name);
+
+  static CostmapBase::SharedPtr create_costmap(rclcpp::Node & node, const std::string & layer_name)
+  {
+    return std::make_shared<LaneletCostmap>(node, layer_name);
+  }
 
   bool is_ready() override;
   bool is_occupied(const geometry_msgs::msg::PointStamped & point) override;

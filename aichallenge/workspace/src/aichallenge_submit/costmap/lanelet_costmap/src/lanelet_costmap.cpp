@@ -24,8 +24,8 @@
 
 namespace lanelet_costmap
 {
-LaneletCostmap::LaneletCostmap(const rclcpp::Node::SharedPtr & node)
-: tf_buffer_(node->get_clock()), tf_listener_(tf_buffer_)
+LaneletCostmap::LaneletCostmap(rclcpp::Node & node, const std::string & layer_name)
+: tf_buffer_(node.get_clock()), tf_listener_(tf_buffer_)
 {
   // map_sub_ = node->create_subscription<HADMapBin>(
   //   "map, 1", rclcpp::QoS(10),
