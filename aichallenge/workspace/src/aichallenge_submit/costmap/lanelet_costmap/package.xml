@@ -14,6 +14,7 @@
   <depend>lanelet2_extension</depend>
   <depend>multi_layered_costmap</depend>
   <depend>rclcpp</depend>
+  <depend>tf2_ros</depend>
   <depend>tier4_autoware_utils</depend>
 
   <export>
