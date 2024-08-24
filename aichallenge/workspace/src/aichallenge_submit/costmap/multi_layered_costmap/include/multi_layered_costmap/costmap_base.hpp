@@ -27,8 +27,8 @@ class CostmapBase
 {
 public:
   using SharedPtr = std::shared_ptr<CostmapBase>;
-  virtual bool is_ready();
-  virtual bool is_occupied(const geometry_msgs::msg::PointStamped & point);
+  virtual bool is_ready() = 0;
+  virtual bool is_occupied(const geometry_msgs::msg::PointStamped & point) = 0;
 };
 }  // namespace multi_layered_costmap
 
