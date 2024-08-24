@@ -34,7 +34,12 @@ class PredictedObjectCostmap : public multi_layered_costmap::CostmapBase
 {
 public:
   using SharedPtr = std::shared_ptr<PredictedObjectCostmap>;
-  explicit PredictedObjectCostmap(const rclcpp::Node::SharedPtr & node);
+  explicit PredictedObjectCostmap(rclcpp::Node & node, const std::string & layer_name);
+  static multi_layered_costmap::CostmapBase::SharedPtr create_costmap(
+    rclcpp::Node & node, const std::string & layer_name)
+  {
+    return std::make_shared<PredictedObjectCostmap>(node, layer_name);
+  }
 
   bool is_ready() override;
   bool is_occupied(const geometry_msgs::msg::PointStamped & point) override;

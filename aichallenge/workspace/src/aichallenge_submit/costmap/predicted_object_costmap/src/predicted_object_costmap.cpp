@@ -18,8 +18,8 @@
 
 namespace predicted_object_costmap
 {
-PredictedObjectCostmap::PredictedObjectCostmap(const rclcpp::Node::SharedPtr & node)
-: tf_buffer_(node->get_clock()), tf_listener_(tf_buffer_)
+PredictedObjectCostmap::PredictedObjectCostmap(rclcpp::Node & node, const std::string & layer_name)
+: tf_buffer_(node.get_clock()), tf_listener_(tf_buffer_)
 {
   // objects_sub_ = node->create_subscription<PredictedObjects>(
   //   "predicted_objects", rclcpp::QoS(10),
