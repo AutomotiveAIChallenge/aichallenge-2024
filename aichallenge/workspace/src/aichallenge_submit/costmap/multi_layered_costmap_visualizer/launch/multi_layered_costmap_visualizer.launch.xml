@@ -1,0 +1,7 @@
+<launch>
+  <arg name="config_file" default="$(find-pkg-share multi_layered_costmap_visualizer)/config/multi_layered_costmap_visualizer.param.yaml"/>
+
+  <node pkg="multi_layered_costmap_visualizer" exec="multi_layered_costmap_visualizer_node" name="multi_layered_costmap_visualizer" output="screen">
+    <param from="$(var config_file)"/>
+  </node>
+</launch>

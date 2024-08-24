@@ -1,0 +1,19 @@
+/**:
+  ros__parameters:
+    multi_layered_costmap:
+      layers:
+        - "lanelet_layer"
+        - "predicted_object_layer"
+        - "obstacle_points_layer"
+      lanelet_layer:
+        type: "lanelet"
+        map_topic: "/map/vector_map"
+      predicted_object_layer:
+        type: "predicted_object"
+        predicted_objects_topic: "/perception/object_recognition/objects"
+        distance_threshold: 3.0
+      obstacle_points_layer:
+        type: "pointcloud"
+        pointcloud_topic: "/perception/obstacle_segmentation/pointcloud"
+        distance_threshold: 3.0
+      
