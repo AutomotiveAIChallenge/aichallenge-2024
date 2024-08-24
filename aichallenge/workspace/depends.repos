@@ -1,0 +1,27 @@
+repositories:
+  # used for autoware cmake and lanelet2 related packages
+  autoware_common:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_common.git
+    version: awsim-stable
+  # used for goal pose setter
+  autoware_adapi_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_adapi_msgs.git
+    version: 9679b5a7a1f4cfff2fa50b80d2759d3937f2f953
+  autoware_auto_msgs:
+    type: git
+    url: https://github.com/tier4/autoware_auto_msgs.git
+    version: f6642370c6f4f42a5dc0b6c1fc4a21396d4dc34c
+  autoware_msgs:
+    type: git
+    url: https://github.com/autowarefoundation/autoware_msgs.git
+    version: 90ed3f1f3371d75eb30b6e7d2acb88ccec4e8030
+  tier4_autoware_msgs:
+    type: git
+    url: https://github.com/tier4/tier4_autoware_msgs.git
+    version: 87febc35abc9310eaec0b6dd3ce2a4845ce515aa
+  autoware.universe:
+    type: git
+    url: https://github.com/autowarefoundation/autoware.universe.git
+    version: awsim-stable

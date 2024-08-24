@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>aichallenge_launch</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="isamu.takagi@tier4.jp">Takagi, Isamu</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
+  <buildtool_depend>autoware_cmake</buildtool_depend>
+  <exec_depend>aichallenge_submit_launch</exec_depend>
+  <exec_depend>tier4_vehicle_launch</exec_depend>
+  <exec_depend>global_parameter_loader</exec_depend>
+  <exec_depend>goal_pose_setter</exec_depend>
+  <exec_depend>map_loader</exec_depend>
+  <exec_depend>map_tf_generator</exec_depend>
+  <exec_depend>imu_corrector</exec_depend>
+  <exec_depend>imu_gnss_poser</exec_depend>
+  <exec_depend>gyro_odometer</exec_depend>
+  <exec_depend>ekf_localizer</exec_depend>
+  <exec_depend>twist2accel</exec_depend>
+  <exec_depend>raw_vehicle_cmd_converter</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>vehicle_velocity_converter</exec_depend>
+  <exec_depend>racing_kart_description</exec_depend>
+  <exec_depend>racing_kart_sensor_kit_description</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
