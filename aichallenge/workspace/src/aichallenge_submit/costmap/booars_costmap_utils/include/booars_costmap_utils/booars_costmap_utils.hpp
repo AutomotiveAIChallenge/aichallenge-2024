@@ -36,8 +36,8 @@ MultiLayeredCostmap::SharedPtr create_multi_layered_costmap(
     auto type = node.declare_parameter(namespace_name + "." + layer + ".type", std::string());
 
     if (type == "lanelet") {
-      // auto lanelet_costmap = LaneletCostmap::create_costmap(node, layer);
-      // costmap->add_costmap_layer(lanelet_costmap);
+      auto lanelet_costmap = LaneletCostmap::create_costmap(node, layer);
+      costmap->add_costmap_layer(lanelet_costmap);
     } else if (type == "predicted_object") {
       auto predicted_object_costmap = PredictedObjectCostmap::create_costmap(node, layer);
       costmap->add_costmap_layer(predicted_object_costmap);
