@@ -4,7 +4,6 @@
       layers:
         - "lanelet_layer"
         - "predicted_object_layer"
-        - "obstacle_points_layer"
       lanelet_layer:
         type: "lanelet"
         map_topic: "/map/vector_map"
