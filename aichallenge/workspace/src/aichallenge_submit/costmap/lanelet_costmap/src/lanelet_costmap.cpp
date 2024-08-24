@@ -24,12 +24,12 @@
 
 namespace lanelet_costmap
 {
-LaneletCostmap::LaneletCostmap(rclcpp::Node & node, const std::string & layer_name)
+LaneletCostmap::LaneletCostmap(rclcpp::Node & node, const std::string & layer_namespace)
 : tf_buffer_(node.get_clock()), tf_listener_(tf_buffer_)
 {
-  // map_sub_ = node->create_subscription<HADMapBin>(
-  //   "map, 1", rclcpp::QoS(10),
-  //   std::bind(&LaneletCostmap::map_callback, this, std::placeholders::_1));
+  std::string map_topic = node.declare_parameter(layer_namespace + ".map_topic", "~/input/map");
+  map_sub_ = node.create_subscription<HADMapBin>(
+    map_topic, 1, std::bind(&LaneletCostmap::map_callback, this, std::placeholders::_1));
 }
 
 bool LaneletCostmap::is_ready()

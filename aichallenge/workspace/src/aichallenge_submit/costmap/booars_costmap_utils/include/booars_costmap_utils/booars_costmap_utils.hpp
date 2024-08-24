@@ -26,20 +26,21 @@ using MultiLayeredCostmap = multi_layered_costmap::MultiLayeredCostmap;
 using PredictedObjectCostmap = predicted_object_costmap::PredictedObjectCostmap;
 
 MultiLayeredCostmap::SharedPtr create_multi_layered_costmap(
-  rclcpp::Node & node, const std::string & namespace_name)
+  rclcpp::Node & node, const std::string & costmap_namespace)
 {
   auto costmap = std::make_shared<MultiLayeredCostmap>();
 
-  auto layers = node.declare_parameter(namespace_name + ".layers", std::vector<std::string>());
-  // Print layers
+  auto layers = node.declare_parameter(costmap_namespace + ".layers", std::vector<std::string>());
+
   for (const auto & layer : layers) {
-    auto type = node.declare_parameter(namespace_name + "." + layer + ".type", std::string());
+    std::string layer_namespace = costmap_namespace + "." + layer;
+    auto type = node.declare_parameter(layer_namespace + ".type", std::string());
 
     if (type == "lanelet") {
-      auto lanelet_costmap = LaneletCostmap::create_costmap(node, layer);
+      auto lanelet_costmap = LaneletCostmap::create_costmap(node, layer_namespace);
       costmap->add_costmap_layer(lanelet_costmap);
     } else if (type == "predicted_object") {
-      auto predicted_object_costmap = PredictedObjectCostmap::create_costmap(node, layer);
+      auto predicted_object_costmap = PredictedObjectCostmap::create_costmap(node, layer_namespace);
       costmap->add_costmap_layer(predicted_object_costmap);
     } else {
       RCLCPP_ERROR(node.get_logger(), "Unknown layer type: %s", type.c_str());

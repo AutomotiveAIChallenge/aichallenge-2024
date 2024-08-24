@@ -18,12 +18,17 @@
 
 namespace predicted_object_costmap
 {
-PredictedObjectCostmap::PredictedObjectCostmap(rclcpp::Node & node, const std::string & layer_name)
+PredictedObjectCostmap::PredictedObjectCostmap(
+  rclcpp::Node & node, const std::string & layer_namespace)
 : tf_buffer_(node.get_clock()), tf_listener_(tf_buffer_)
 {
-  // objects_sub_ = node->create_subscription<PredictedObjects>(
-  //   "predicted_objects", rclcpp::QoS(10),
-  //   std::bind(&PredictedObjectCostmap::objects_callback, this, std::placeholders::_1));
+  std::string objects_topic =
+    node.declare_parameter(layer_namespace + ".predicted_objects_topic", "~/input/objects");
+  objects_sub_ = node.create_subscription<PredictedObjects>(
+    objects_topic, 1,
+    std::bind(&PredictedObjectCostmap::objects_callback, this, std::placeholders::_1));
+
+  distance_threshold_ = node.declare_parameter(layer_namespace + ".distance_threshold", 0.0);
 }
 
 bool PredictedObjectCostmap::is_ready()
