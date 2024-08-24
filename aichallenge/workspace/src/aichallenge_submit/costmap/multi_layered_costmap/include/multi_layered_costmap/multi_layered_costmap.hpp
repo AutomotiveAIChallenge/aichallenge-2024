@@ -24,6 +24,7 @@ namespace multi_layered_costmap
 class MultiLayeredCostmap
 {
 public:
+  using SharedPtr = std::shared_ptr<MultiLayeredCostmap>;
   void add_costmap_layer(CostmapBase::SharedPtr costmap_layer);
   bool is_ready();
   bool is_occupied(const geometry_msgs::msg::PointStamped & point);
