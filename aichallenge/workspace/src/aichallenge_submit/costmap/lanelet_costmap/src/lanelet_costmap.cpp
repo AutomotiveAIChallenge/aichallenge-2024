@@ -41,10 +41,9 @@ bool LaneletCostmap::is_occupied(const geometry_msgs::msg::PointStamped & point)
 {
   if (is_ready()) throw;
 
-  // Transform the point to the map frame
   geometry_msgs::msg::Point transformed_point;
   if (!try_transform_point(point, transformed_point, map_frame_id_)) {
-    throw;
+    return true;
   }
 
   tier4_autoware_utils::Point2d point2d(transformed_point.x, transformed_point.y);
