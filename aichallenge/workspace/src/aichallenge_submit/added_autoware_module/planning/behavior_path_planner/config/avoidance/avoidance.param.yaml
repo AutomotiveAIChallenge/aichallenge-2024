@@ -27,7 +27,7 @@
         truck: true
         bus: true
         trailer: true
-        unknown: false
+        unknown: true
         bicycle: false
         motorcycle: false
         pedestrian: false
