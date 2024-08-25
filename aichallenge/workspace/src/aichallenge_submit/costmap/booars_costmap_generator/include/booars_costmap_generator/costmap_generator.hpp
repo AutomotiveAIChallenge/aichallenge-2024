@@ -20,8 +20,12 @@
 #include <booars_utils/ros/function_timer.hpp>
 #include <multi_layered_costmap/multi_layered_costmap.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <tier4_autoware_utils/geometry/geometry.hpp>
 
 #include <nav_msgs/msg/occupancy_grid.hpp>
+
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
 
 namespace booars_costmap_generator
 {
@@ -30,6 +34,8 @@ using FunctionTimer = booars_utils::ros::FunctionTimer;
 using MultiLayeredCostmap = multi_layered_costmap::MultiLayeredCostmap;
 using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
 using OccupancyGridParameters = booars_utils::nav::OccupancyGridParameters;
+using PointStamped = geometry_msgs::msg::PointStamped;
+using Point2d = tier4_autoware_utils::Point2d;
 using Vector3 = geometry_msgs::msg::Vector3;
 
 class CostmapGenerator : public rclcpp::Node
@@ -42,7 +48,11 @@ private:
   bool try_get_transform(geometry_msgs::msg::TransformStamped & transform);
 
   FunctionTimer::SharedPtr update_timer_;
-  rclcpp::Publisher<OccupancyGrid>::SharedPtr costmap_publisher_;
+
+  tf2_ros::Buffer tf_buffer_;
+  tf2_ros::TransformListener tf_listener_;
+
+  rclcpp::Publisher<OccupancyGrid>::SharedPtr costmap_pub_;
   MultiLayeredCostmap::SharedPtr multi_layered_costmap_;
 
   OccupancyGrid::SharedPtr costmap_;
@@ -50,6 +60,8 @@ private:
 
   std::string map_frame_;
   std::string target_frame_;
+
+  std::vector<Point2d> index_to_point_table_;
 };
 };  // namespace booars_costmap_generator
 

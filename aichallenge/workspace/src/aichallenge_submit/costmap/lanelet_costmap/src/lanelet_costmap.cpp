@@ -18,9 +18,12 @@
 #include <lanelet2_extension/utility/query.hpp>
 #include <tier4_autoware_utils/geometry/boost_geometry.hpp>
 
+#include <geometry_msgs/msg/point_stamped.hpp>
+
 #include <boost/geometry/algorithms/intersects.hpp>
 
 #include <lanelet2_core/geometry/Polygon.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace lanelet_costmap
 {
@@ -29,7 +32,8 @@ LaneletCostmap::LaneletCostmap(rclcpp::Node & node, const std::string & layer_na
 {
   std::string map_topic = node.declare_parameter(layer_namespace + ".map_topic", "~/input/map");
   map_sub_ = node.create_subscription<HADMapBin>(
-    map_topic, 1, std::bind(&LaneletCostmap::map_callback, this, std::placeholders::_1));
+    map_topic, rclcpp::QoS(rclcpp::KeepLast(1)).reliable().transient_local(),
+    std::bind(&LaneletCostmap::map_callback, this, std::placeholders::_1));
 }
 
 bool LaneletCostmap::is_ready()
@@ -39,7 +43,7 @@ bool LaneletCostmap::is_ready()
 
 bool LaneletCostmap::is_occupied(const geometry_msgs::msg::PointStamped & point)
 {
-  if (is_ready()) throw;
+  if (!is_ready()) return true;
 
   geometry_msgs::msg::Point transformed_point;
   if (!try_transform_point(point, transformed_point, map_frame_id_)) {
@@ -58,15 +62,13 @@ bool LaneletCostmap::try_transform_point(
   const geometry_msgs::msg::PointStamped & point, geometry_msgs::msg::Point & transformed_point,
   const std::string & target_frame)
 {
-  geometry_msgs::msg::TransformStamped transform;
+  geometry_msgs::msg::PointStamped transformed_point_stamped;
   try {
-    transform = tf_buffer_.lookupTransform(target_frame, point.header.frame_id, point.header.stamp);
+    transformed_point_stamped = tf_buffer_.transform(point, target_frame);
   } catch (tf2::TransformException & ex) {
     return false;
   }
 
-  geometry_msgs::msg::PointStamped transformed_point_stamped;
-  tf2::doTransform(point, transformed_point_stamped, transform);
   transformed_point = transformed_point_stamped.point;
   return true;
 }
