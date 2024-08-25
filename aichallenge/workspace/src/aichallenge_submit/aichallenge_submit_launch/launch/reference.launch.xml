@@ -100,6 +100,11 @@
     <remap from="~/output/objects" to="/perception/object_recognition/objects"/>
   </node>
 
+  <!-- object_info_publisher-->
+  <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
+  </node>
+  <!-- object_info_publisher End-->
+  
   <!-- Planning -->
   <group>
     <push-ros-namespace namespace="planning"/>
@@ -164,7 +169,11 @@
             <composable_node pkg="behavior_path_planner" plugin="behavior_path_planner::BehaviorPathPlannerNode" name="behavior_path_planner" namespace="">
               <remap from="~/input/route" to="/planning/mission_planning/route" />
               <remap from="~/input/vector_map" to="/map/vector_map" />
-              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> <!-- autoware_auto_perception_msgs/PredictedObjects -->
+
+              <!-- <remap from="~/input/perception" to="/perception/object_recognition/objects" />  -->
+
+              <remap from="~/input/perception" to="/perception/object_recognition/objects_filtered" /> 
+            
               <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
               <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
               <remap from="~/input/odometry" to="/localization/kinematic_state" />
@@ -174,7 +183,10 @@
               <remap from="~/output/turn_indicators_cmd" to="/planning/turn_indicators_cmd" />
               <remap from="~/output/hazard_lights_cmd" to="/planning/hazard_lights_cmd" />
               <remap from="~/output/modified_goal" to="/planning/scenario_planning/modified_goal" />
-              <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/>
+
+              <!-- <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/> -->
+              <param name="bt_tree_config_path" value="$(find-pkg-share behavior_path_planner)/config/behavior_path_planner_tree.xml"/>
+              
               <param name="lane_change.enable_abort_lane_change" value="false"/>
               <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
               <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
