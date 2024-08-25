@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Essential parameters -->
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="map_path" default="/aichallenge/mapfile"/>
+  <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
+  <arg name="sensor_model" description="sensor model name"/>
+
+  <!-- Optional parameters -->
+  <!-- Map -->
+  <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
+  <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/>
+  <!-- Control -->
+  <!-- Vehicle -->
+  <arg name="launch_vehicle_interface" default="false"/>
+  <!-- System -->
+  <arg name="system_run_mode" default="online" description="run mode in system"/>
+
+  <!-- Global parameters -->
+  <group scoped="false">
+    <include file="$(find-pkg-share global_parameter_loader)/launch/global_params.launch.py">
+      <arg name="use_sim_time" value="$(var use_sim_time)"/>
+      <arg name="vehicle_model" value="$(var vehicle_model)"/>
+    </include>
+  </group>
+
+  <group>
+    <arg name="model_file" default="$(find-pkg-share tier4_vehicle_launch)/urdf/vehicle.xacro" description="path to the file of model settings (*.xacro)"/>
+    <arg name="config_dir" default="$(find-pkg-share racing_kart_sensor_kit_description)/config"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher">
+      <param name="robot_description" value="$(command 'xacro $(var model_file) vehicle_model:=$(var vehicle_model) sensor_model:=$(var sensor_model) config_dir:=$(var config_dir)' 'warn')"/>
+    </node>
+  </group>
+
+  <!-- Sensing -->
+  <group>
+    <push-ros-namespace namespace="sensing"/>
+    <!-- Vehicle Velocity Converter  -->
+    <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
+      <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
+      <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+    </include>
+    <group>
+      <push-ros-namespace namespace="imu"/>
+      <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
+        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+          <arg name="input_topic" value="imu_raw"/>
+          <arg name="output_topic" value="imu_data"/>
+          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+        </include>
+    </group>
+  </group>
+
+  <!-- Localization -->
+  <group>
+    <push-ros-namespace namespace="localization"/>
+    <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
+      <arg name="input_vehicle_twist_with_covariance_topic" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+      <arg name="input_imu_topic" value="/sensing/imu/imu_data"/>
+      <arg name="output_twist_with_covariance_topic" value="/localization/twist_estimator/twist_with_covariance"/>
+      <arg name="output_twist_with_covariance_raw_topic" value="/localization/twist_estimator/twist_with_covariance_raw"/>
+    </include>
+
+    <node pkg="imu_gnss_poser" exec="imu_gnss_poser_node" name="imu_gnss_poser" output="screen"/>
+
+    <include file="$(find-pkg-share ekf_localizer)/launch/ekf_localizer.launch.xml">
+      <arg name="enable_yaw_bias_estimation" value="false"/>
+      <arg name="tf_rate" value="50.0"/>
+      <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
+      <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
+      <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
+      <arg name="output_odom_name" value="kinematic_state"/>
+      <arg name="output_pose_name" value="pose"/>
+      <arg name="output_pose_with_covariance_name" value="/localization/pose_with_covariance"/>
+      <arg name="output_biased_pose_name" value="biased_pose"/>
+      <arg name="output_biased_pose_with_covariance_name" value="biased_pose_with_covariance"/>
+      <arg name="output_twist_name" value="twist"/>
+      <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
+      <arg name="proc_stddev_vx_c" value="10.0"/>
+      <arg name="proc_stddev_wz_c" value="5.0"/>
+    </include>
+
+    <!-- twist2accel -->
+    <group>
+      <node pkg="twist2accel" exec="twist2accel" name="twist2accel" output="screen">
+        <param name="accel_lowpass_gain" value="0.9"/>
+        <param name="use_odom" value="true"/>
+        <remap from="input/odom" to="/localization/kinematic_state"/>
+        <remap from="input/twist" to="/localization/twist_estimator/twist_with_covariance"/>
+        <remap from="output/accel" to="/localization/acceleration"/>
+      </node>
+    </group>
+
+  </group>
+
+  <!-- Dummy Perception -->
+  <node pkg="dummy_perception_publisher" exec="empty_objects_publisher" name="empty_objects_publisher" output="screen">
+    <remap from="~/output/objects" to="/perception/object_recognition/objects"/>
+  </node>
+
+  <!-- Planning -->
+  <group>
+    <push-ros-namespace namespace="planning"/>
+
+    <!-- mission_planning -->
+    <group>
+      <push-ros-namespace namespace="mission_planning"/>
+
+      <!-- mission_planner -->
+      <node pkg="mission_planner" exec="mission_planner" name="mission_planner" output="screen">
+        <remap from="input/modified_goal" to="/planning/scenario_planning/modified_goal"/>
+        <remap from="input/vector_map" to="/map/vector_map"/>
+        <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
+        <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
+        <param from="$(find-pkg-share autoware_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
+      </node>
+
+      <!-- goal_pose_visualizer -->
+      <node pkg="mission_planner" exec="goal_pose_visualizer" name="goal_pose_visualizer" output="screen">
+        <remap from="input/route" to="/planning/mission_planning/route"/>
+        <remap from="output/goal_pose" to="/planning/mission_planning/echo_back_goal_pose"/>
+      </node>
+
+    </group> <!-- mission_planning -->
+
+    <!-- scenario_planning -->
+    <group>
+      <push-ros-namespace namespace="scenario_planning"/>
+
+      <!-- scenario_selector -->
+      <group>
+        <arg name="cmd" default="ros2 topic pub /planning/scenario_planning/scenario tier4_planning_msgs/msg/Scenario '{current_scenario: LaneDriving, activating_scenarios: [LaneDriving]}'"/>
+        <executable cmd="$(var cmd)" name="scenario_pub" shell="true"/>
+      </group> <!-- scenario_selector -->
+
+      <!-- operation_mode -->
+      <group>
+        <arg name="cmd" default="ros2 topic pub /system/operation_mode/state autoware_adapi_v1_msgs/msg/OperationModeState '{
+          mode: 1,
+          is_autoware_control_enabled: true,
+          is_in_transition: false,
+          is_stop_mode_available: true,
+          is_autonomous_mode_available: true,
+          is_local_mode_available: true,
+          is_remote_mode_available: true
+          }'"/>
+        <executable cmd="$(var cmd)" name="operation_mode_pub" shell="true"/>
+      </group> <!-- operation_mode -->
+
+      <!-- lane_driving -->
+      <group>
+        <push-ros-namespace namespace="lane_driving"/>
+
+        <!-- behavior_planning -->
+        <group>
+          <push-ros-namespace namespace="behavior_planning"/>
+
+          <!-- behavior_planning_container -->
+          <node_container pkg="rclcpp_components" exec="component_container" name="behavior_planning_container" namespace="">
+
+            <!-- behavior_path_planner::BehaviorPathPlannerNode -->
+            <composable_node pkg="behavior_path_planner" plugin="behavior_path_planner::BehaviorPathPlannerNode" name="behavior_path_planner" namespace="">
+              <remap from="~/input/route" to="/planning/mission_planning/route" />
+              <remap from="~/input/vector_map" to="/map/vector_map" />
+              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> <!-- autoware_auto_perception_msgs/PredictedObjects -->
+              <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
+              <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
+              <remap from="~/input/odometry" to="/localization/kinematic_state" />
+              <remap from="~/input/accel" to="/localization/acceleration" />
+              <remap from="~/input/scenario" to="/planning/scenario_planning/scenario" />
+              <remap from="~/output/path" to="path_with_lane_id" />
+              <remap from="~/output/turn_indicators_cmd" to="/planning/turn_indicators_cmd" />
+              <remap from="~/output/hazard_lights_cmd" to="/planning/hazard_lights_cmd" />
+              <remap from="~/output/modified_goal" to="/planning/scenario_planning/modified_goal" />
+              <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/>
+              <param name="lane_change.enable_abort_lane_change" value="false"/>
+              <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
+              <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
+              <param name="lane_change.use_all_predicted_path" value="false"/>
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
+              <extra_arg name="use_intra_process_comms" value="false" />
+            </composable_node>
+
+          </node_container>
+        </group> <!-- behavior_planning -->
+      </group> <!-- lane_driving -->
+
+      <!-- Customizable -->
+      <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
+        <remap from="input" to="/planning/scenario_planning/lane_driving/behavior_planning/path_with_lane_id"/>
+        <remap from="output" to="/planning/scenario_planning/trajectory"/>
+      </node>
+
+    </group>
+  </group>
+
+  <arg name="enable_obstacle_collision_checker" default="true"/>
+  <arg name="lateral_controller_mode" default="mpc"/>
+  <arg name="longitudinal_controller_mode" default="pid"/>
+  <arg name="enable_autonomous_emergency_braking" default="true"/>
+  <arg name="check_external_emergency_heartbeat" default="true"/>
+  <arg name="trajectory_follower_mode" default="trajectory_follower_node"/>
+  <arg name="nearest_search_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/nearest_search.param.yaml"/>
+  <arg name="trajectory_follower_node_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/trajectory_follower_node.param.yaml"/>
+  <arg name="lon_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/mpc.param.yaml"/>
+  <arg name="lat_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/pid.param.yaml"/>
+  <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+  <arg name="use_sim_time" default="false"/>
+  
+  <!-- Node to launch the controller -->
+  <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
+
+    <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+          <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
+          <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
+          <remap from="~/input/current_accel" to="/localization/acceleration"/>
+          <remap from="~/input/current_operation_mode" to="/system/operation_mode/state"/>
+          <remap from="~/output/predicted_trajectory" to="lateral/predicted_trajectory"/>
+          <remap from="~/output/lateral_diagnostic" to="lateral/diagnostic"/>
+          <remap from="~/output/slope_angle" to="longitudinal/slope_angle"/>
+          <remap from="~/output/longitudinal_diagnostic" to="longitudinal/diagnostic"/>
+          <remap from="~/output/stop_reason" to="longitudinal/stop_reason"/>
+          <remap from="~/output/control_cmd" to="/control/command/control_cmd"/>
+          <param name="lateral_controller_mode" value="$(var lateral_controller_mode)"/>
+          <param name="longitudinal_controller_mode" value="$(var longitudinal_controller_mode)"/>
+          <param from="$(var nearest_search_param_path)"/>
+          <param from="$(var trajectory_follower_node_param_path)"/>
+          <param from="$(var lon_controller_param_path)"/>
+          <param from="$(var lat_controller_param_path)"/>
+          <param from="$(var vehicle_param_file)"/>
+  </node>
+
+  <!-- Map -->
+  <group>
+    <push-ros-namespace namespace="map"/>
+
+    <!-- map_container -->
+    <node_container pkg="rclcpp_components" exec="component_container" name="map_container" namespace="">
+
+      <!-- map_loader::Lanelet2MapLoaderNode -->
+      <composable_node pkg="map_loader" plugin="Lanelet2MapLoaderNode" name="lanelet2_map_loader" namespace="">
+        <remap from="output/lanelet2_map" to="vector_map" />
+        <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
+        <param from="$(find-pkg-share autoware_launch)/config/map/lanelet2_map_loader.param.yaml" />
+        <extra_arg name="use_intra_process_comms" value="false" />
+      </composable_node>
+
+      <!-- map_loader::Lanelet2MapVisualizationNode -->
+      <composable_node pkg="map_loader" plugin="Lanelet2MapVisualizationNode" name="lanelet2_map_visualization" namespace="">
+        <remap from="input/lanelet2_map" to="vector_map" />
+        <remap from="output/lanelet2_map_marker" to="vector_map_marker" />
+        <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
+        <param from="$(find-pkg-share autoware_launch)/config/map/lanelet2_map_loader.param.yaml" />
+        <extra_arg name="use_intra_process_comms" value="false" />
+      </composable_node>
+
+      <!-- map_tf_generator::VectorMapTFGeneratorNode -->
+      <composable_node pkg="map_tf_generator" plugin="VectorMapTFGeneratorNode" name="vector_map_tf_generator" namespace="">
+        <param name="map_frame" value="map" />
+        <param name="viewer_frame" value="viewer" />
+        <extra_arg name="use_intra_process_comms" value="false" />
+      </composable_node>
+
+    </node_container>
+
+  </group> <!-- map -->
+
+  <!-- vehicle -->
+  <group if="$(var launch_vehicle_interface)">
+    <include file="$(find-pkg-share raw_vehicle_cmd_converter)/launch/raw_vehicle_converter.launch.xml">
+      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_submit_launch)/config/converter.param.yaml"/>
+      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_submit_launch)/data/accel_map.csv"/>
+      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_submit_launch)/data/brake_map.csv"/>
+
+      <arg name="max_throttle" value="1.0"/>
+      <arg name="max_brake" value="1.0"/>
+      <arg name="convert_accel_cmd" value="true"/>
+      <arg name="convert_brake_cmd" value="true"/>
+      <arg name="convert_steer_cmd" value="false"/>
+
+      <arg name="input_control_cmd" value="/control/command/control_cmd"/>
+      <arg name="input_odometry" value="/localization/kinematic_state"/>
+      <arg name="input_steering" value="/vehicle/status/steering_status"/>
+      <arg name="output_actuation_cmd" value="/control/command/actuation_cmd"/>
+    </include>
+  </group>
+
+  <!-- API -->
+  <group>
+    <!-- default_ad_api -->
+    <include file="$(find-pkg-share default_ad_api)/launch/default_ad_api.launch.py" />
+
+    <!-- ad_api_adaptors -->
+    <include file="$(find-pkg-share ad_api_adaptors)/launch/rviz_adaptors.launch.xml" />
+  </group>
+
+</launch>
