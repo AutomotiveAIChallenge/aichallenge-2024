@@ -69,6 +69,17 @@ tier4_autoware_utils::Point2d index_to_point(
     index_y * parameters->resolution() - parameters->width_2()};
 }
 
+std::vector<tier4_autoware_utils::Point2d> get_index_to_point_table(
+  const OccupancyGridParameters::SharedPtr parameters)
+{
+  std::vector<tier4_autoware_utils::Point2d> table;
+  table.reserve(parameters->grid_num());
+  for (int i = 0; i < parameters->grid_num(); ++i) {
+    table.push_back(index_to_point(parameters, i));
+  }
+  return table;
+}
+
 }  // namespace booars_utils::nav::occupancy_grid_utils
 
 #endif  // BOOARS_UTILS__NAV__OCCUPANCY_GRID_UTILS_HPP_
