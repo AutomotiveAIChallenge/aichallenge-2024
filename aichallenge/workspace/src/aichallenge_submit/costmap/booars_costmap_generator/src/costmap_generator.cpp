@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "multi_layered_costmap_visualizer/multi_layered_costmap_visualizer.hpp"
+#include "booars_costmap_generator/costmap_generator.hpp"
 
-namespace multi_layered_costmap_visualizer
+namespace booars_costmap_generator
 {
-MultiLayeredCostmapVisualizer::MultiLayeredCostmapVisualizer(const rclcpp::NodeOptions & options)
-: Node("multi_layered_costmap_visualizer", options)
+CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & options)
+: Node("costmap_generator", options)
 {
   multi_layered_costmap_ =
     booars_costmap_utils::create_multi_layered_costmap(*this, "multi_layered_costmap");
 }
-}  // namespace multi_layered_costmap_visualizer
+}  // namespace booars_costmap_generator
 
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(multi_layered_costmap_visualizer::MultiLayeredCostmapVisualizer)
+RCLCPP_COMPONENTS_REGISTER_NODE(booars_costmap_generator::CostmapGenerator)

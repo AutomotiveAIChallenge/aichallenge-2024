@@ -12,26 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef MULTI_LAYERED_COSTMAP_VISUALIZER__MULTI_LAYERED_COSTMAP_VISUALIZER_HPP_
-#define MULTI_LAYERED_COSTMAP_VISUALIZER__MULTI_LAYERED_COSTMAP_VISUALIZER_HPP_
+#ifndef BOOARS_COSTMAP_GENERATOR__COSTMAP_GENERATOR_HPP_
+#define BOOARS_COSTMAP_GENERATOR__COSTMAP_GENERATOR_HPP_
 
 #include <booars_costmap_utils/booars_costmap_utils.hpp>
 #include <multi_layered_costmap/multi_layered_costmap.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-namespace multi_layered_costmap_visualizer
+namespace booars_costmap_generator
 {
 
 using MultiLayeredCostmap = multi_layered_costmap::MultiLayeredCostmap;
 
-class MultiLayeredCostmapVisualizer : public rclcpp::Node
+class CostmapGenerator : public rclcpp::Node
 {
 public:
-  explicit MultiLayeredCostmapVisualizer(const rclcpp::NodeOptions & options);
+  explicit CostmapGenerator(const rclcpp::NodeOptions & options);
 
 private:
   MultiLayeredCostmap::SharedPtr multi_layered_costmap_;
 };
-};  // namespace multi_layered_costmap_visualizer
+};  // namespace booars_costmap_generator
 
-#endif  // MULTI_LAYERED_COSTMAP_VISUALIZER__MULTI_LAYERED_COSTMAP_VISUALIZER_HPP_
+#endif  // BOOARS_COSTMAP_GENERATOR__COSTMAP_GENERATOR_HPP_

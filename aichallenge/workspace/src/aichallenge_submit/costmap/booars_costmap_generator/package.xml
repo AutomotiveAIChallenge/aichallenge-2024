@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>multi_layered_costmap_visualizer</name>
+  <name>booars_costmap_generator</name>
   <version>0.1.0</version>
-  <description>The booars_utils package</description>
+  <description>The booars_costmap_generator package</description>
   <maintainer email="harada.akiro@gmail.com">Akiro Harada</maintainer>
 
   <license>Apache 2</license>

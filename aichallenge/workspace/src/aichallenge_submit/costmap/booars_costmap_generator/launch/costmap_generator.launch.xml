@@ -1,0 +1,7 @@
+<launch>
+  <arg name="config_file" default="$(find-pkg-share booars_costmap_generator)/config/costmap_generator.param.yaml"/>
+
+  <node pkg="booars_costmap_generator" exec="costmap_generator_node" name="costmap_generator" output="screen">
+    <param from="$(var config_file)"/>
+  </node>
+</launch>
