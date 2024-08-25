@@ -101,8 +101,8 @@
   </node>
 
   <!-- object_info_publisher-->
-  <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
-  </node>
+  <!-- <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
+  </node> -->
   <!-- object_info_publisher End-->
   
   <!-- Planning -->
@@ -186,7 +186,7 @@
 
               <!-- <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/> -->
               <param name="bt_tree_config_path" value="$(find-pkg-share behavior_path_planner)/config/behavior_path_planner_tree.xml"/>
-              
+
               <param name="lane_change.enable_abort_lane_change" value="false"/>
               <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
               <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
