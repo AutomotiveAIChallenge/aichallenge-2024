@@ -1,5 +1,5 @@
 #!/bin/bash
-AWSIM_DIRECTORY=/aichallenge/simulator/AWSIM
+AWSIM_DIRECTORY=/aichallenge/simulator/AWSIM_GPU
 
 # shellcheck disable=SC1091
 source /aichallenge/workspace/install/setup.bash
