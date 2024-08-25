@@ -11,8 +11,10 @@
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <depend>booars_costmap_utils</depend>
+  <depend>booars_utils</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <depend>tf2_ros</depend>
 
   <test_depend>ament_lint_auto</test_depend>
 

@@ -14,13 +14,73 @@
 
 #include "booars_costmap_generator/costmap_generator.hpp"
 
+#include <booars_utils/nav/occupancy_grid_utils.hpp>
+
 namespace booars_costmap_generator
 {
 CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & options)
 : Node("costmap_generator", options)
 {
-  multi_layered_costmap_ =
-    booars_costmap_utils::create_multi_layered_costmap(*this, "multi_layered_costmap");
+  // Declare parameters
+  {
+    map_frame_ = this->declare_parameter("map_frame_id", "map");
+    target_frame_ = this->declare_parameter("costmap_frame_id", "base_link");
+  }
+
+  // Crate update() timer
+  {
+    double update_rate = this->declare_parameter("update_rate", 10.0);
+    update_timer_ = FunctionTimer::create_function_timer(
+      this, update_rate, std::bind(&CostmapGenerator::update, this));
+  }
+
+  // Declare costmap parameters
+  {
+    double costmap_width = this->declare_parameter("costmap_width", 10.0);
+    double costmap_resolution = this->declare_parameter("costmap_resolution", 0.1);
+    costmap_parameters_ =
+      OccupancyGridParameters::create_parameters(costmap_width, costmap_resolution);
+  }
+
+  // Create costmap
+  {
+    costmap_ = booars_utils::nav::occupancy_grid_utils::create_occupancy_grid(costmap_parameters_);
+    costmap_->header.frame_id = map_frame_;
+  }
+
+  // Crate multi layered costmap
+  {
+    multi_layered_costmap_ =
+      booars_costmap_utils::create_multi_layered_costmap(*this, "multi_layered_costmap");
+  }
+}
+
+void CostmapGenerator::update()
+{
+  if (!multi_layered_costmap_->is_ready()) {
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000, "MultiLayeredCostmap is not ready");
+    return;
+  }
+
+  rclcpp::Time costmap_time;
+  Vector3 costmap_center_position;
+  {
+    geometry_msgs::msg::TransformStamped transform;
+    if (!try_get_transform(transform)) return;
+    costmap_time = transform.header.stamp;
+    costmap_center_position = transform.transform.translation;
+  }
+}
+
+bool CostmapGenerator::try_get_transform(geometry_msgs::msg::TransformStamped & transform)
+{
+  try {
+    transform = tf_buffer_.lookupTransform(map_frame_, target_frame_, tf2::TimePointZero);
+  } catch (tf2::TransformException & ex) {
+    RCLCPP_WARN(get_logger(), "Failed to get transform: %s", ex.what());
+    return false;
+  }
+  return true;
 }
 }  // namespace booars_costmap_generator
 

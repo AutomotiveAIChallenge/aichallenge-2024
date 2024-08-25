@@ -16,13 +16,21 @@
 #define BOOARS_COSTMAP_GENERATOR__COSTMAP_GENERATOR_HPP_
 
 #include <booars_costmap_utils/booars_costmap_utils.hpp>
+#include <booars_utils/nav/occupancy_grid_parameters.hpp>
+#include <booars_utils/ros/function_timer.hpp>
 #include <multi_layered_costmap/multi_layered_costmap.hpp>
 #include <rclcpp/rclcpp.hpp>
+
+#include <nav_msgs/msg/occupancy_grid.hpp>
 
 namespace booars_costmap_generator
 {
 
+using FunctionTimer = booars_utils::ros::FunctionTimer;
 using MultiLayeredCostmap = multi_layered_costmap::MultiLayeredCostmap;
+using OccupancyGrid = nav_msgs::msg::OccupancyGrid;
+using OccupancyGridParameters = booars_utils::nav::OccupancyGridParameters;
+using Vector3 = geometry_msgs::msg::Vector3;
 
 class CostmapGenerator : public rclcpp::Node
 {
@@ -30,7 +38,18 @@ public:
   explicit CostmapGenerator(const rclcpp::NodeOptions & options);
 
 private:
+  void update();
+  bool try_get_transform(geometry_msgs::msg::TransformStamped & transform);
+
+  FunctionTimer::SharedPtr update_timer_;
+  rclcpp::Publisher<OccupancyGrid>::SharedPtr costmap_publisher_;
   MultiLayeredCostmap::SharedPtr multi_layered_costmap_;
+
+  OccupancyGrid::SharedPtr costmap_;
+  OccupancyGridParameters::SharedPtr costmap_parameters_;
+
+  std::string map_frame_;
+  std::string target_frame_;
 };
 };  // namespace booars_costmap_generator
 
