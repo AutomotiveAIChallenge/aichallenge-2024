@@ -101,8 +101,8 @@
   </node>
 
   <!-- object_info_publisher-->
-  <!-- <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
-  </node> -->
+  <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
+  </node>
   <!-- object_info_publisher End-->
   
   <!-- Planning -->
@@ -170,9 +170,9 @@
               <remap from="~/input/route" to="/planning/mission_planning/route" />
               <remap from="~/input/vector_map" to="/map/vector_map" />
 
-              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> 
+              <!-- <remap from="~/input/perception" to="/perception/object_recognition/objects" />  -->
 
-              <!-- <remap from="~/input/perception" to="/perception/object_recognition/objects_filtered" />  -->
+              <remap from="~/input/perception" to="/perception/object_recognition/objects_filtered" /> 
             
               <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
               <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
@@ -192,22 +192,22 @@
               <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
               <param name="lane_change.use_all_predicted_path" value="false"/>
 
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
+              <!-- <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
               <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
               <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
               <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
               <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" /> -->
 
-              <!-- <param from="$(find-pkg-share aichallenge_submit_launch)/param/common/nearest_search.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/param/common/nearest_search.param.yaml" />
               <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/side_shift.param.yaml" />
               <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/avoidance.param.yaml" />
               <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/lane_change.param.yaml" />
               <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/pull_over.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/lane_following.param.yaml" /> -->
+              <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/lane_following.param.yaml" />
 
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" />
-              <!-- <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/behavior_path_planner.param.yaml" /> -->
+              <!-- <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" /> -->
+              <param from="$(find-pkg-share aichallenge_submit_launch)/param/planning/behavior_path_planner/behavior_path_planner.param.yaml" />
               
               <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
               <extra_arg name="use_intra_process_comms" value="false" />

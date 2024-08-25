@@ -20,8 +20,8 @@
       disable_path_update: false
 
       # for debug
-      publish_debug_marker: false
-      print_debug_info: false
+      publish_debug_marker: true
+      print_debug_info: true
 
       # avoidance is performed for the object type with true
       target_object:
