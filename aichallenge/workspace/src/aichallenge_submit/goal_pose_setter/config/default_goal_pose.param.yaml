@@ -16,4 +16,14 @@
     half_goal.orientation.z: -0.9
     half_goal.orientation.w: 0.25
 
+    pit_stop_area.position.x: 89626.3671875
+    pit_stop_area.position.y: 43134.921875
+    pit_stop_area.position.z: 42.10000228881836
+    pit_stop_area .orientation.x: 0.0
+    pit_stop_area.orientation.y: -0.0
+    pit_stop_area.orientation.z: -0.878817200660705
+    pit_stop_area.orientation.w: -0.47715866565704346
+    pit_stop_area.size.x: 4.0
+    pit_stop_area.size.y: 2.0
+
     goal_range: 10.0

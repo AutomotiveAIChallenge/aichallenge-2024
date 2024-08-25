@@ -11,6 +11,7 @@
 
   <depend>autoware_adapi_v1_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
   <depend>rclcpp</depend>
   <depend>std_srvs</depend>
   <depend>nav2_msgs</depend>
