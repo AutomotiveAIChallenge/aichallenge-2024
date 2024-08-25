@@ -29,7 +29,7 @@ private:
   // Callback function for PredictedObjects messages
   void objects_callback(const autoware_auto_perception_msgs::msg::PredictedObjects::SharedPtr msg)
   {
-    RCLCPP_INFO(this->get_logger(), "Received PredictedObjects message");
+    // RCLCPP_INFO(this->get_logger(), "Received PredictedObjects message");
 
     // Initialize a new PredictedObjects message
     auto filtered_msg = autoware_auto_perception_msgs::msg::PredictedObjects();
@@ -49,7 +49,7 @@ private:
   // Callback function for Float64MultiArray messages
   void data_callback(const std_msgs::msg::Float64MultiArray::SharedPtr msg)
 {
-    RCLCPP_INFO(this->get_logger(), "Received Float64MultiArray message");
+    // RCLCPP_INFO(this->get_logger(), "Received Float64MultiArray message");
 
     // Initialize a new PredictedObjects message
     auto predicted_objects_msg = autoware_auto_perception_msgs::msg::PredictedObjects();
