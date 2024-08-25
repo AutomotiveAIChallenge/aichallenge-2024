@@ -23,12 +23,12 @@ def calculate_lat_lon_from_local_xy(x, y):
 
 # CSVファイルのパス
 input_files = {
-    'short_left': '../csv/origin/short_left.csv',
-    'long_left': '../csv/origin/long_left.csv',
-    'short_right': '../csv/origin/short_right.csv',
-    'long_right': '../csv/origin/long_right.csv',
-    'short_centerline': '../csv/origin/short_center.csv',
-    'long_centerline': '../csv/origin/long_center.csv'
+    'short_left': '../csv/csv_to_osm/short_left.csv',
+    'long_left': '../csv/csv_to_osm/long_left.csv',
+    'short_right': '../csv/csv_to_osm/short_right.csv',
+    'long_right': '../csv/csv_to_osm/long_right.csv',
+    'short_centerline': '../csv/csv_to_osm/short_center.csv',
+    'long_centerline': '../csv/csv_to_osm/long_center.csv'
 }
 
 # OSMファイルのパス
