@@ -101,8 +101,8 @@
   </node>
 
   <!-- object_info_publisher-->
-  <!-- <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
-  </node> -->
+  <node pkg="object_info_publisher" exec="object_info_publisher_node" name="object_info_publisher_node" output="screen">
+  </node>
   <!-- object_info_publisher End-->
   
   <!-- Planning -->
@@ -170,9 +170,9 @@
               <remap from="~/input/route" to="/planning/mission_planning/route" />
               <remap from="~/input/vector_map" to="/map/vector_map" />
 
-              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> 
+              <!-- <remap from="~/input/perception" to="/perception/object_recognition/objects" />  -->
 
-              <!-- <remap from="~/input/perception" to="/perception/object_recognition/objects_filtered" />  -->
+              <remap from="~/input/perception" to="/perception/object_recognition/objects_filtered" /> 
             
               <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
               <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
