@@ -7,6 +7,9 @@
   <maintainer email="isamu.takagi@tier4.jp">Takagi Isamu</maintainer>
   <license>Apache License 2.0</license>
 
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
