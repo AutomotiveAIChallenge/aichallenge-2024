@@ -2,6 +2,7 @@ import csv
 import xml.etree.ElementTree as ET
 from pyproj import Proj
 import mgrs
+import numpy as np
 
 # 基準点のMGRSコード
 mgrs_base_code = "54SUE000000"  # グリッド54SUEの左下隅を基準点とする
@@ -21,18 +22,53 @@ def calculate_lat_lon_from_local_xy(x, y):
 
     return lon, lat, calculated_mgrs_code
 
+def find_closest_point(target, points):
+    """ targetに最も近いポイントをpointsから探す """
+    target_point = np.array(target)
+    points_array = np.array(points)
+    distances = np.linalg.norm(points_array - target_point, axis=1)
+    closest_index = np.argmin(distances)
+    return closest_index
+
 # CSVファイルのパス
 input_files = {
-    'short_left': '../csv/csv_to_osm/short_left.csv',
-    'long_left': '../csv/csv_to_osm/long_left.csv',
-    'short_right': '../csv/csv_to_osm/short_right.csv',
-    'long_right': '../csv/csv_to_osm/long_right.csv',
-    'short_centerline': '../csv/csv_to_osm/short_center.csv',
-    'long_centerline': '../csv/csv_to_osm/long_center.csv'
+    'short_left': './csv/osm_to_csv/short_left.csv',
+    'long_left': './csv/osm_to_csv/long_left.csv',
+    'short_right': './csv/osm_to_csv/short_right.csv',
+    'long_right': './csv/osm_to_csv/long_right.csv',
 }
 
+center_path = './csv/csv_to_osm/gray_aichallenge.csv'
+short_center = './csv/osm_to_csv/short_center.csv'
+
+with open(short_center, newline='') as file:
+    reader = csv.DictReader(file)
+    first_row = next(reader)
+    short_center_first_point = (float(first_row['local_x']), float(first_row['local_y']))
+
+center_points = []
+downsample_interval = 5  # n個ごとに1つのデータポイントを選択
+
+with open(center_path, newline='') as file:
+    reader = csv.reader(file)
+    next(reader)  # ヘッダーをスキップ
+    for i, row in enumerate(reader):
+        if i % downsample_interval == 0:
+            center_points.append((float(row[0]), float(row[1])))
+
+closest_index = find_closest_point(short_center_first_point, center_points)
+closest_point = center_points[closest_index]
+
+upper_points = center_points[:closest_index + 1]
+lower_points = center_points[closest_index:]
+
+# 結果を表示
+# print("Closest point:", closest_point)
+# print("Upper points count:", len(upper_points))
+# print("Lower points count:", len(lower_points))
+
 # OSMファイルのパス
-osm_file = '../osm/lanelet2_map.osm'
+osm_file = './osm/lanelet2_map.osm'
 
 root = ET.Element("osm", version="0.6", generator="custom_conversion")
 
@@ -109,6 +145,67 @@ def create_osm_from_csv():
             start_index = node_refs[0]
 
         count += 1
+
+    node_refs = []
+    for point in upper_points:
+        local_x = point[0]
+        local_y = point[1]
+        lon, lat, mgrs_code = calculate_lat_lon_from_local_xy(local_x, local_y)
+        node = ET.SubElement(root, "node", {
+                            "id": str(counter),
+                            "lat": str(lat),
+                            "lon": str(lon)
+        })
+        ET.SubElement(node, "tag", {"k": "local_x", "v": str(local_x)})
+        ET.SubElement(node, "tag", {"k": "local_y", "v": str(local_y)})
+        ET.SubElement(node, "tag", {"k": "ele", "v": str(43.1)})
+        ET.SubElement(node, "tag", {"k": "mgrs_code", "v": str(mgrs_code)})
+        node_refs.append(str(counter))
+        counter += 1
+
+    end_index = node_refs[-1]
+    start_index = node_refs[0]
+
+    way = ET.SubElement(root, "way", {"id": str(counter)})
+    for ref in node_refs:
+        ET.SubElement(way, "nd", {"ref": ref})
+    ET.SubElement(way, "tag", {"k": "type", "v": "line_thin"})
+    ET.SubElement(way, "tag", {"k": "subtype", "v": "solid"})
+
+    long_lanelet['centerline'] = counter
+
+    counter += 1
+
+    node_refs = []
+    num = len(lower_points)
+    for index, point in enumerate(lower_points):
+        if index == 0:
+            node_refs.append(str(end_index))
+        elif index == num - 1:
+            node_refs.append(str(start_index))
+        else:
+            local_x = point[0]
+            local_y = point[1]
+            lon, lat, mgrs_code = calculate_lat_lon_from_local_xy(local_x, local_y)
+            node = ET.SubElement(root, "node", {
+                                "id": str(counter),
+                                "lat": str(lat),
+                                "lon": str(lon)
+            })
+            ET.SubElement(node, "tag", {"k": "local_x", "v": str(local_x)})
+            ET.SubElement(node, "tag", {"k": "local_y", "v": str(local_y)})
+            ET.SubElement(node, "tag", {"k": "ele", "v": str(43.1)})
+            ET.SubElement(node, "tag", {"k": "mgrs_code", "v": str(mgrs_code)})
+            node_refs.append(str(counter))
+            counter += 1
+
+    way = ET.SubElement(root, "way", {"id": str(counter)})
+    for ref in node_refs:
+        ET.SubElement(way, "nd", {"ref": ref})
+    ET.SubElement(way, "tag", {"k": "type", "v": "line_thin"})
+    ET.SubElement(way, "tag", {"k": "subtype", "v": "solid"})
+
+    short_lanelet['centerline'] = counter
 
 
     short_relation = ET.SubElement(root, "relation", {"id": str(counter)})
