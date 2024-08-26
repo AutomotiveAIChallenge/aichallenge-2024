@@ -68,12 +68,12 @@ Visualization Manager:
           Displays:
             - Class: rviz_plugins/SteeringAngle
               Enabled: true
-              Left: 128
-              Length: 256
+              Left: 800
+              Length: 100
               Name: SteeringAngle
-              Scale: 17
+              Scale: 10
               Text Color: 25; 255; 240
-              Top: 128
+              Top: 0
               Topic:
                 Depth: 5
                 Durability Policy: Volatile
@@ -85,11 +85,11 @@ Visualization Manager:
               Value height offset: 0
             - Class: rviz_plugins/ConsoleMeter
               Enabled: true
-              Left: 512
-              Length: 256
+              Left: 800
+              Length: 100
               Name: ConsoleMeter
               Text Color: 25; 255; 240
-              Top: 128
+              Top: 100
               Topic:
                 Depth: 5
                 Durability Policy: Volatile
@@ -175,30 +175,8 @@ Visualization Manager:
               Value: true
               Wave Color: 255; 255; 255
               Wave Velocity: 40
-            - Class: rviz_plugins/MaxVelocity
-              Enabled: true
-              Left: 595
-              Length: 96
-              Name: MaxVelocity
-              Text Color: 255; 255; 255
-              Top: 280
-              Topic: /planning/scenario_planning/current_max_velocity
-              Value: true
-              Value Scale: 0.25
-            - Class: rviz_plugins/TurnSignal
-              Enabled: true
-              Height: 256
-              Left: 196
-              Name: TurnSignal
-              Top: 350
-              Topic:
-                Depth: 5
-                Durability Policy: Volatile
-                History Policy: Keep Last
-                Reliability Policy: Reliable
-                Value: /vehicle/status/turn_indicators_status
-              Value: true
-              Width: 512
+            
+            
           Enabled: true
           Name: Vehicle
       Enabled: true
@@ -1936,6 +1914,235 @@ Visualization Manager:
       Name: Planning
     - Class: rviz_common/Group
       Displays:
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: MPC calculation result
+          Topic: /control/trajectory_follower/lateral/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 1
+          foreground alpha: 0.7
+          foreground alpha 2: 0.4
+          foreground color: 25; 255; 240  # 薄い青
+          left: 0
+          max color: 0; 200; 255  # 青
+          max color change threshold: 0
+          max value: 1
+          med color: 0; 150; 255  # やや濃い青
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 0
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: Lateral error
+          Topic: /control/trajectory_follower/lateral/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 5
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 0; 150; 255  # やや濃い青
+          left: 110  # 位置を変更
+          max color: 0; 200; 255  # 青
+          max color change threshold: 0
+          max value: 1
+          med color: 0; 100; 255  # 濃い青
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 0  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: current_pose yaw
+          Topic: /control/trajectory_follower/lateral/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 6
+          foreground alpha: 0.9
+          foreground alpha 2: 0.6
+          foreground color: 0; 100; 255  # 濃い青
+          left: 220  # 位置を変更
+          max color: 0; 150; 255  # やや濃い青
+          max color change threshold: 0
+          max value: 1
+          med color: 0; 50; 255  # 最も濃い青
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 0  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: nearest_pose yaw
+          Topic: /control/trajectory_follower/lateral/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 7
+          foreground alpha: 0.7
+          foreground alpha 2: 0.4
+          foreground color: 0; 200; 255  # 青
+          left: 330  # 位置を変更
+          max color: 25; 255; 240  # 薄い青
+          max color change threshold: 0
+          max value: 1
+          med color: 0; 150; 255  # やや濃い青
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 0  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: Yaw error
+          Topic: /control/trajectory_follower/lateral/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 8
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 0; 150; 255  # やや濃い青
+          left: 440  # 位置を変更
+          max color: 0; 100; 255  # 濃い青
+          max color change threshold: 0
+          max value: 1
+          med color: 0; 50; 255  # 最も濃い青
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 0  # 位置を変更
+
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: Accel
+          Topic: /control/trajectory_follower/longitudinal/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 18
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 255; 150; 150  # やや濃い赤
+          left: 0  # 位置を変更
+          max color: 255; 100; 100  # 濃い赤
+          max color change threshold: 0
+          max value: 1
+          med color: 255; 50; 50  # 最も濃い赤
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 120  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: PID_P
+          Topic: /control/trajectory_follower/longitudinal/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 19
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 255; 150; 150  # やや濃い赤
+          left: 110  # 位置を変更
+          max color: 255; 100; 100  # 濃い赤
+          max color change threshold: 0
+          max value: 1
+          med color: 255; 50; 50  # 最も濃い赤
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 120  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: PID_I
+          Topic: /control/trajectory_follower/longitudinal/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 20
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 255; 150; 150  # やや濃い赤
+          left: 220  # 位置を変更
+          max color: 255; 100; 100  # 濃い赤
+          max color change threshold: 0
+          max value: 1
+          med color: 255; 50; 50  # 最も濃い赤
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 120  # 位置を変更
+
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: PID_D
+          Topic: /control/trajectory_follower/longitudinal/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 21
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 255; 150; 150  # やや濃い赤
+          left: 330  # 位置を変更
+          max color: 255; 100; 100  # 濃い赤
+          max color change threshold: 0
+          max value: 1
+          med color: 255; 50; 50  # 最も濃い赤
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 120  # 位置を変更
+
+
+
         - Class: rviz_plugins/Trajectory
           Color Border Vel Max: 3
           Enabled: true
