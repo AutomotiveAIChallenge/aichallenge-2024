@@ -18,4 +18,15 @@
   <node pkg="goal_pose_setter" exec="goal_pose_setter_node" name="goal_pose_setter" output="screen">
     <param from="$(find-pkg-share goal_pose_setter)/config/default_goal_pose.param.yaml" />
   </node>
+
+  <include file="$(find-pkg-share aichallenge_submit_launch)/launch/map_server.launch.py">
+    <arg name="map_yaml_file" value="$(find-pkg-share aichallenge_submit_launch)/map/map.yaml" />
+    <arg name="use_namespace" value="true" />
+    <arg name="namespace" value="/ogm" />
+  </include>
+
+  <node pkg="costmap_server" exec="costmap_node" name="costmap_2d" output="screen">
+    <param from="$(find-pkg-share costmap_server)/config/costmap.param.yaml" />
+  </node>
+
 </launch>
