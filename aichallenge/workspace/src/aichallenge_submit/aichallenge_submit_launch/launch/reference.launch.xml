@@ -227,7 +227,7 @@
   </group>
 
   
-  <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
+  <!-- <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="true"/>
     <param name="external_target_vel" value="8.0"/>
     <param name="lookahead_gain" value="0.3"/>
@@ -237,26 +237,29 @@
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
     <remap from="output/control_cmd" to="/control/command/control_cmd"/>
-  </node>
+  </node> -->
 
   <!-- MPC PID Controller -->
+  <group>
+    <push-ros-namespace namespace="control"/>
+    <group>
+      <push-ros-namespace namespace="trajectory_follower"/>
+        <arg name="enable_obstacle_collision_checker" default="true"/>
+        <arg name="lateral_controller_mode" default="mpc"/>
+        <arg name="longitudinal_controller_mode" default="pid"/>
+        <arg name="enable_autonomous_emergency_braking" default="true"/>
+        <arg name="check_external_emergency_heartbeat" default="true"/>
+        <arg name="trajectory_follower_mode" default="trajectory_follower_node"/>
+        <arg name="nearest_search_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/common/nearest_search.param.yaml"/>
+        <arg name="trajectory_follower_node_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/trajectory_follower_node.param.yaml"/>
+        <arg name="lon_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/mpc.param.yaml"/>
+        <arg name="lat_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/pid.param.yaml"/>
+        <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+        <arg name="use_sim_time" default="false"/>
+        
+        <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
 
-  <!-- <arg name="enable_obstacle_collision_checker" default="true"/>
-  <arg name="lateral_controller_mode" default="mpc"/>
-  <arg name="longitudinal_controller_mode" default="pid"/>
-  <arg name="enable_autonomous_emergency_braking" default="true"/>
-  <arg name="check_external_emergency_heartbeat" default="true"/>
-  <arg name="trajectory_follower_mode" default="trajectory_follower_node"/>
-  <arg name="nearest_search_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/common/nearest_search.param.yaml"/>
-  <arg name="trajectory_follower_node_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/trajectory_follower_node.param.yaml"/>
-  <arg name="lon_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/mpc.param.yaml"/>
-  <arg name="lat_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/param/control/pid.param.yaml"/>
-  <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
-  <arg name="use_sim_time" default="false"/>
-  
-  <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
-
-    <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+          <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
           <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
           <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
           <remap from="~/input/current_accel" to="/localization/acceleration"/>
@@ -274,7 +277,9 @@
           <param from="$(var lon_controller_param_path)"/>
           <param from="$(var lat_controller_param_path)"/>
           <param from="$(var vehicle_param_file)"/>
-  </node> -->
+        </node>
+      </group>
+  </group>  
   
   <!--MPC PID Controller   End -->
 
