@@ -1,0 +1,3 @@
+[submodule "occupancy_grid_map"]
+	path = occupancy_grid_map
+	url = https://github.com/Roborovsky-Racers/lanelet2_to_ogm.git
