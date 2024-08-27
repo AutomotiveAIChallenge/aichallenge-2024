@@ -10,6 +10,7 @@
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
   <buildtool_depend>autoware_cmake</buildtool_depend>
   <exec_depend>aichallenge_submit_launch</exec_depend>
+  <exec_depend>aichallenge_system_launch</exec_depend>
   <exec_depend>tier4_vehicle_launch</exec_depend>
   <exec_depend>global_parameter_loader</exec_depend>
   <exec_depend>goal_pose_setter</exec_depend>

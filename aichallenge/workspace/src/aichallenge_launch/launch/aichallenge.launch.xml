@@ -224,7 +224,7 @@
       <composable_node pkg="map_loader" plugin="Lanelet2MapLoaderNode" name="lanelet2_map_loader" namespace="">
         <remap from="output/lanelet2_map" to="vector_map" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share aichallenge_submit_launch)/config/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/map/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
@@ -233,7 +233,7 @@
         <remap from="input/lanelet2_map" to="vector_map" />
         <remap from="output/lanelet2_map_marker" to="vector_map_marker" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share aichallenge_submit_launch)/config/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/map/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
