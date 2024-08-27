@@ -2,7 +2,8 @@
 <launch>
   <group>
     <push-ros-namespace namespace="perception"/>
-    <node pkg="dummy_perception_publisher" exec="empty_objects_publisher" name="empty_objects_publisher" output="screen">
+    <node pkg="booars_dummy_perception_publisher" exec="dummy_objects_publisher" name="dummy_objects_publisher" output="screen">
+      <remap from="~/input/objects" to="/aichallenge/objects"/>
       <remap from="~/output/objects" to="/perception/object_recognition/objects"/>
     </node>
   </group>
