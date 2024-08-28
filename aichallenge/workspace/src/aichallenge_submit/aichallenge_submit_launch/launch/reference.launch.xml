@@ -236,7 +236,7 @@
 
     <!-- costmap  -->
 
-    <!-- <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+    <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
     <include file="$(find-pkg-share costmap_generator)/launch/costmap_generator.launch.xml">
         <arg name="input_objects" value="/perception/object_recognition/objects_filtered"/>
         <arg name="input_points_no_ground" value="/perception/obstacle_segmentation/pointcloud"/>
@@ -245,13 +245,13 @@
         <arg name="output_grid_map" value="costmap_generator/grid_map"/>
         <arg name="output_occupancy_grid" value="costmap_generator/occupancy_grid"/>
         <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
-    </include> -->
+    </include>
 
       <!-- costmap End -->
 
       <!-- freespace_planner -->
 
-      <!-- <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+      <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
 
       <include file="$(find-pkg-share freespace_planner)/launch/freespace_planner.launch.xml">
         <arg name="input_route" value="/planning/mission_planning/route"/>
@@ -262,7 +262,7 @@
         <arg name="is_completed" value="/planning/scenario_planning/parking/is_completed"/>
         <arg name="param_file" value="$(find-pkg-share aichallenge_submit_launch)/param/planning/freespace_planner/freespace_planner.param.yaml"/>
         <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
-      </include> -->
+      </include>
 
       <!-- freespace_planner  End -->
       
@@ -301,7 +301,7 @@
         
         <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
 
-          <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+          <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/parking/trajectory"/>
           <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
           <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
           <remap from="~/input/current_accel" to="/localization/acceleration"/>

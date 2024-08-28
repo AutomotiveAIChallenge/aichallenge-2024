@@ -20,7 +20,7 @@ private:
   {
     auto scenario_msg = tier4_planning_msgs::msg::Scenario();
 
-    if (msg->data >= 1000)
+    if (msg->data >= 0)
     {
       scenario_msg.current_scenario = tier4_planning_msgs::msg::Scenario::PARKING;
       scenario_msg.activating_scenarios.push_back(tier4_planning_msgs::msg::Scenario::PARKING);
