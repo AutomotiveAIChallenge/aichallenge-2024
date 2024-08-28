@@ -21,7 +21,7 @@
     mpc_prediction_dt: 0.1 # prediction horizon period [s]
     mpc_weight_lat_error: 0.1 # lateral error weight in matrix Q
     mpc_weight_heading_error: 0.0 # heading error weight in matrix Q
-    mpc_weight_heading_error_squared_vel: 0.0 #0.3 # heading error * velocity weight in matrix Q
+    mpc_weight_heading_error_squared_vel: 0.3 #0.3 # heading error * velocity weight in matrix Q
     mpc_weight_steering_input: 1.0  # 1.0# steering error weight in matrix R
     mpc_weight_steering_input_squared_vel: 0.2 #0.25 # steering error * velocity weight in matrix R
     mpc_weight_lat_jerk: 0.0 # lateral jerk weight in matrix R
