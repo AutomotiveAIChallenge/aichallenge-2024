@@ -225,6 +225,15 @@
 
     </group>
 
+    <!-- scenario_pub_pkg -->
+
+    <node pkg="scenario_pub_pkg" exec="scenario_pub_node" name="scenario_pub_node" output="screen">
+        <remap from="input_topic" to="/aichallenge/pitstop/condition"/>
+        <remap from="output_topic" to="/planning/pit_stop/scenario"/>
+    </node>
+
+    <!-- scenario_pub_pkg End -->
+
     <!-- costmap  -->
 
     <!-- <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
@@ -236,7 +245,7 @@
         <arg name="output_grid_map" value="costmap_generator/grid_map"/>
         <arg name="output_occupancy_grid" value="costmap_generator/occupancy_grid"/>
         <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
-      </include> -->
+    </include> -->
 
       <!-- costmap End -->
 
@@ -247,7 +256,7 @@
       <include file="$(find-pkg-share freespace_planner)/launch/freespace_planner.launch.xml">
         <arg name="input_route" value="/planning/mission_planning/route"/>
         <arg name="input_occupancy_grid" value="costmap_generator/occupancy_grid"/>
-        <arg name="input_scenario" value="/planning/scenario_planning/scenario"/>
+        <arg name="input_scenario" value="/planning/pit_stop/scenario"/>
         <arg name="input_odometry" value="/localization/kinematic_state"/>
         <arg name="output_trajectory" value="/planning/scenario_planning/parking/trajectory"/>
         <arg name="is_completed" value="/planning/scenario_planning/parking/is_completed"/>

@@ -69,7 +69,7 @@ bool isActive(const Scenario::ConstSharedPtr & scenario)
     return true;
   }
 
-  return true;
+  return false;
 }
 
 PoseArray trajectory2PoseArray(const Trajectory & trajectory)
