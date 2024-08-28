@@ -11,7 +11,7 @@
     replan_when_obstacle_found: true
     replan_when_course_out: true
 
-    time_limit: 10000000000.0
+    time_limit: 10000.0
     minimum_turning_radius: 6.0
     maximum_turning_radius: 15.0
     turning_radius_size: 5
