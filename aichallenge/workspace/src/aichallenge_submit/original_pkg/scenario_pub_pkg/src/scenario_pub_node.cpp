@@ -8,6 +8,10 @@ class ParkingNode : public rclcpp::Node
 public:
   ParkingNode() : Node("parking_node"), current_section_(0)
   {
+    // パラメータの宣言と初期値の設定
+    this->declare_parameter<int>("ConditionThreshold", 1000);
+    this->declare_parameter<bool>("UseStatusCondition", true);
+
     // Subscriber
     condition_sub_ = this->create_subscription<std_msgs::msg::Int32>(
       "/condition", 10, std::bind(&ParkingNode::condition_callback, this, std::placeholders::_1));
@@ -24,8 +28,12 @@ private:
   {
     auto scenario_msg = tier4_planning_msgs::msg::Scenario();
 
+    // パラメータを取得
+    int condition_threshold = this->get_parameter("ConditionThreshold").as_int();
+    bool use_status_condition = this->get_parameter("UseStatusCondition").as_bool();
+
     // 条件に基づいてシナリオを選択
-    if (msg->data >= 1000 && current_section_ == 8)
+    if (msg->data >= condition_threshold && (!use_status_condition || current_section_ == 8))
     {
       scenario_msg.current_scenario = tier4_planning_msgs::msg::Scenario::PARKING;
       scenario_msg.activating_scenarios.push_back(tier4_planning_msgs::msg::Scenario::PARKING);
