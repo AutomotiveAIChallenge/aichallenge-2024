@@ -265,6 +265,17 @@
       </include>
 
       <!-- freespace_planner  End -->
+
+      <!-- trajectory_selector -->
+
+      <node pkg="scenario_pub_pkg" exec="scenario_pub_node" name="scenario_pub_node" output="screen">
+        <remap from="/scenario" to="/planning/pit_stop/scenario"/>
+        <remap from="/trajectory_pit" to="/planning/scenario_planning/parking/trajectory"/>
+        <remap from="/trajectory_lane" to="/planning/scenario_planning/trajectory"/>
+        <remap from="/selected_trajectory" to="/planning/scenario_planning/selected_trajectory"/>
+      </node>
+
+      <!-- trajectory_selector End -->
       
   </group>
 
@@ -301,7 +312,7 @@
         
         <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
 
-          <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/parking/trajectory"/>
+          <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/selected_trajectory"/>
           <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
           <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
           <remap from="~/input/current_accel" to="/localization/acceleration"/>
