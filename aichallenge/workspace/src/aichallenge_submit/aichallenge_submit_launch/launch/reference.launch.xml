@@ -228,6 +228,10 @@
     <!-- scenario_pub_pkg -->
 
     <node pkg="scenario_pub_pkg" exec="scenario_pub_node" name="scenario_pub_node" output="screen">
+
+        <param name="ConditionThreshold" value="0" /> 
+        <param name="UseStatusCondition" value="false" />
+
         <remap from="/condition" to="/aichallenge/pitstop/condition"/>
         <remap from="/status" to="/aichallenge/awsim/status"/>
         <remap from="/scenario" to="/planning/pit_stop/scenario"/>
