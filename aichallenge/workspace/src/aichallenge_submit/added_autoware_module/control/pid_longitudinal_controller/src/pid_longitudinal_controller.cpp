@@ -431,6 +431,19 @@ PidLongitudinalController::ControlData PidLongitudinalController::getControlData
   const bool is_yaw_deviation_large =
     m_state_transition_params.emergency_state_traj_rot_dev < m_diagnostic_data.rot_deviation;
 
+  if (is_dist_deviation_large) {
+  RCLCPP_ERROR_THROTTLE(
+    node_->get_logger(), *node_->get_clock(), 3000,
+    "[Emergency stop due to position deviation] Trans deviation: %3.3f, Threshold: %3.3f",
+    m_diagnostic_data.trans_deviation, m_state_transition_params.emergency_state_traj_trans_dev);
+  }
+
+  if (is_yaw_deviation_large) {
+    RCLCPP_ERROR_THROTTLE(
+      node_->get_logger(), *node_->get_clock(), 3000,
+      "[Emergency stop due to yaw deviation] Rot deviation: %3.3f, Threshold: %3.3f",
+      m_diagnostic_data.rot_deviation, m_state_transition_params.emergency_state_traj_rot_dev);
+  }
   if (is_dist_deviation_large || is_yaw_deviation_large) {
     // return here if nearest index is not found
     control_data.is_far_from_trajectory = true;
