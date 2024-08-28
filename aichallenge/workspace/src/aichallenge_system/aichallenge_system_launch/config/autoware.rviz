@@ -2141,6 +2141,31 @@ Visualization Manager:
           text size: 7
           top: 120  # 位置を変更
 
+        - Class: rviz_plugins/Float32MultiArrayStampedPieChart
+          Enabled: true
+          Name: State
+          Topic: /control/trajectory_follower/longitudinal/diagnostic
+          Value: true
+          auto color change: true
+          background alpha: 0
+          background color: 0; 0; 0
+          clockwise rotate direction: false
+          data index: 13
+          foreground alpha: 0.8
+          foreground alpha 2: 0.5
+          foreground color: 255; 150; 150  # やや濃い赤
+          left: 440  # 位置を変更
+          max color: 255; 100; 100  # 濃い赤
+          max color change threshold: 0
+          max value: 1
+          med color: 255; 50; 50  # 最も濃い赤
+          med color change threshold: 0
+          min value: 0
+          show caption: true
+          size: 100
+          text size: 7
+          top: 120  # 位置を変更
+
 
 
         - Class: rviz_plugins/Trajectory
