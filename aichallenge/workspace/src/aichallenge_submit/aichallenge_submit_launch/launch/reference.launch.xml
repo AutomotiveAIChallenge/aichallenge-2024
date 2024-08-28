@@ -226,6 +226,7 @@
     </group>
 
     <!-- costmap  -->
+
     <!-- <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
     <include file="$(find-pkg-share costmap_generator)/launch/costmap_generator.launch.xml">
         <arg name="input_objects" value="/perception/object_recognition/objects_filtered"/>
@@ -238,6 +239,24 @@
       </include> -->
 
       <!-- costmap End -->
+
+      <!-- freespace_planner -->
+
+      <!-- <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+
+      <include file="$(find-pkg-share freespace_planner)/launch/freespace_planner.launch.xml">
+        <arg name="input_route" value="/planning/mission_planning/route"/>
+        <arg name="input_occupancy_grid" value="costmap_generator/occupancy_grid"/>
+        <arg name="input_scenario" value="/planning/scenario_planning/scenario"/>
+        <arg name="input_odometry" value="/localization/kinematic_state"/>
+        <arg name="output_trajectory" value="/planning/scenario_planning/parking/trajectory"/>
+        <arg name="is_completed" value="/planning/scenario_planning/parking/is_completed"/>
+        <arg name="param_file" value="$(find-pkg-share aichallenge_submit_launch)/param/planning/freespace_planner/freespace_planner.param.yaml"/>
+        <arg name="vehicle_param_file" value="$(var vehicle_param_file)"/>
+      </include> -->
+
+      <!-- freespace_planner  End -->
+      
   </group>
 
   
