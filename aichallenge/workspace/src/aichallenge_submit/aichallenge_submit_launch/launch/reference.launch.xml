@@ -268,7 +268,7 @@
 
       <!-- trajectory_selector -->
 
-      <node pkg="scenario_pub_pkg" exec="scenario_pub_node" name="scenario_pub_node" output="screen">
+      <node pkg="trajectory_selector" exec="trajectory_selector_node" name="trajectory_selector_node" output="screen">
         <remap from="/scenario" to="/planning/pit_stop/scenario"/>
         <remap from="/trajectory_pit" to="/planning/scenario_planning/parking/trajectory"/>
         <remap from="/trajectory_lane" to="/planning/scenario_planning/trajectory"/>
