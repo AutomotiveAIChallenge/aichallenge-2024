@@ -179,29 +179,29 @@ Trajectory createTrajectory(
   return trajectory;
 }
 
-Trajectory createStopTrajectory(const PoseStamped & current_pose)
-{
-  PlannerWaypoints waypoints;
-  PlannerWaypoint waypoint;
+// Trajectory createStopTrajectory(const PoseStamped & current_pose)
+// {
+//   PlannerWaypoints waypoints;
+//   PlannerWaypoint waypoint;
 
-  waypoints.header.stamp = rclcpp::Clock().now();
-  waypoints.header.frame_id = current_pose.header.frame_id;
-  waypoint.pose.header = waypoints.header;
-  waypoint.pose.pose = current_pose.pose;
-  waypoint.is_back = false;
-  waypoints.waypoints.push_back(waypoint);
+//   waypoints.header.stamp = rclcpp::Clock().now();
+//   waypoints.header.frame_id = current_pose.header.frame_id;
+//   waypoint.pose.header = waypoints.header;
+//   waypoint.pose.pose = current_pose.pose;
+//   waypoint.is_back = false;
+//   waypoints.waypoints.push_back(waypoint);
 
-  return createTrajectory(current_pose, waypoints, 0.0);
-}
+//   return createTrajectory(current_pose, waypoints, 0.0);
+// }
 
-Trajectory createStopTrajectory(const Trajectory & trajectory)
-{
-  Trajectory stop_trajectory = trajectory;
-  for (size_t i = 0; i < trajectory.points.size(); ++i) {
-    stop_trajectory.points.at(i).longitudinal_velocity_mps = 0.0;
-  }
-  return stop_trajectory;
-}
+// Trajectory createStopTrajectory(const Trajectory & trajectory)
+// {
+//   Trajectory stop_trajectory = trajectory;
+//   for (size_t i = 0; i < trajectory.points.size(); ++i) {
+//     stop_trajectory.points.at(i).longitudinal_velocity_mps = 0.0;
+//   }
+//   return stop_trajectory;
+// }
 
 bool isStopped(
   const std::deque<Odometry::ConstSharedPtr> & odom_buffer, const double th_stopped_velocity_mps)
@@ -436,13 +436,13 @@ void FreespacePlannerNode::onTimer()
   }
 
   if (isPlanRequired()) {
-    // Stop before planning new trajectory
-    const auto stop_trajectory = partial_trajectory_.points.empty()
-                                   ? createStopTrajectory(current_pose_)
-                                   : createStopTrajectory(partial_trajectory_);
-    trajectory_pub_->publish(stop_trajectory);
-    debug_pose_array_pub_->publish(trajectory2PoseArray(stop_trajectory));
-    debug_partial_pose_array_pub_->publish(trajectory2PoseArray(stop_trajectory));
+    // // Stop before planning new trajectory
+    // const auto stop_trajectory = partial_trajectory_.points.empty()
+    //                                ? createStopTrajectory(current_pose_)
+    //                                : createStopTrajectory(partial_trajectory_);
+    // trajectory_pub_->publish(stop_trajectory);
+    // debug_pose_array_pub_->publish(trajectory2PoseArray(stop_trajectory));
+    // debug_partial_pose_array_pub_->publish(trajectory2PoseArray(stop_trajectory));
 
     reset();
 
