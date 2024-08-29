@@ -2,6 +2,7 @@ aichallenge/workspace/src/aichallenge_submit/aichallenge_submit_launch/** @booar
 aichallenge/workspace/src/aichallenge_submit/booars_dummy_perception_publisher/** @Autumn60
 aichallenge/workspace/src/aichallenge_submit/booars_launch/** @Autumn60
 aichallenge/workspace/src/aichallenge_submit/booars_utils/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/costmap/** @Autumn60
 aichallenge/workspace/src/aichallenge_submit/goal_pose_setter/** @hrjp
 aichallenge/workspace/src/aichallenge_submit/gyro_odometer/** @booars/aic2024-developers
 aichallenge/workspace/src/aichallenge_submit/imu_corrector/** @booars/aic2024-developers
