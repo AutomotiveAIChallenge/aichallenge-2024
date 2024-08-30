@@ -111,5 +111,17 @@
         <!-- <arg name="costmap_topic" value="~/costmap"/> -->
       </include>
     </group>
+
+    <!-- Local Planning -->
+    <node pkg="mppi_controller" exec="mppi_controller_node" name="mppi_controller_node" output="screen">
+      <param from="$(find-pkg-share mppi_controller)/config/mppi_controller.param.yaml"/>
+      <remap from="input/kinematics" to="/localization/kinematic_state"/>
+      <remap from="input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+      <!-- cost map -->
+      <remap from="input/costmap" to="/planning/costmap/costmap_generator/costmap"/>
+      <remap from="output/control_cmd" to="output/mppi_control_cmd"/>
+      <remap from="output/planned_path" to="output/mppi_planned_path"/>
+      
+    </node>
   </group>
 </launch>
