@@ -323,7 +323,7 @@ class MPPI(nn.Module):
                 dim=0,
             )
 
-            # appply sg filter for each control dimension
+            # apply sg filter for each control dimension
             filtered_action_seq = torch.zeros_like(
                 prolonged_action_seq, device=self._device, dtype=self._dtype
             )
