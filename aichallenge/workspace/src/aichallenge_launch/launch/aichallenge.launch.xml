@@ -47,6 +47,8 @@
         <arg name="output_topic_gnss_pose_cov" value="pose_with_covariance"/>
         <arg name="output_topic_gnss_fixed" value="nav_sat_fix"/>
         <arg name="coordinate_system" value="1"/> <!-- MGRS -->
+        <arg name="gnss_frame" value="gnss2_link"/>
+        <arg name="gnss_base_frame" value="gnss2_base_link"/>
       </include>
     </group>
     <group>
