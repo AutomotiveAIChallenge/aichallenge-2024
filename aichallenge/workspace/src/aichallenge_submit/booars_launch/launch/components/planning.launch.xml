@@ -100,5 +100,16 @@
       </node>
 
     </group>
+
+    <!-- costmap -->
+    <group>
+      <push-ros-namespace namespace="costmap"/>
+
+      <!-- Costmap Generator -->
+      <include file="$(find-pkg-share booars_costmap_generator)/launch/costmap_generator.launch.xml">
+        <arg name="config_file" value="$(find-pkg-share booars_launch)/config/planning/costmap_generator.param.yaml"/>
+        <!-- <arg name="costmap_topic" value="~/costmap"/> -->
+      </include>
+    </group>
   </group>
 </launch>
