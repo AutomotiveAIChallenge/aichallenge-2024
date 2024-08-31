@@ -123,5 +123,6 @@
       <remap from="output/planned_path" to="output/mppi_planned_path"/>
       
     </node>
+
   </group>
 </launch>
