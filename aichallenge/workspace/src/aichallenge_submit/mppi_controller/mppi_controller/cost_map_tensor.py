@@ -30,7 +30,7 @@ class CostMapTensor:
         """
         Check collision in a batch of trajectories.
         :param x: Tensor of shape (batch_size, traj_length, position_dim).
-        :return: collsion costs on the trajectories.
+        :return: collision costs on the trajectories.
         """
         assert self.cost_map is not None
         if x.device != self.device or x.dtype != self.dtype:
