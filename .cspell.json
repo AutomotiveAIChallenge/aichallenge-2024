@@ -104,6 +104,17 @@
     "wpedantic",
     "xacro",
     "xyzrpy",
-    "zcvf"
+    "zcvf",
+    "mppi",
+    "Qdin",
+    "Kohei",
+    "MPPI",
+    "Savitzky",
+    "Golay",
+    "reparameting",
+    "tempature",
+    "rsample",
+    "coeffs",
+    "softplus"
   ]
 }
