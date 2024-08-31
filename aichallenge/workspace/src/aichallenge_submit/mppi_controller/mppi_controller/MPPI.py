@@ -377,7 +377,7 @@ class MPPI(nn.Module):
         assert num_samples <= self._num_samples
 
         # posterior distribution of MPPI
-        # covaraince is the same as noise distribution
+        # covariance is the same as noise distribution
         posterior_distribution = MultivariateNormal(
             loc=optimal_solution, covariance_matrix=self._covariance
         )
