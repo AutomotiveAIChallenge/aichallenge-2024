@@ -15,4 +15,4 @@
       predicted_object_layer:
         type: "predicted_object"
         predicted_objects_topic: "/perception/object_recognition/objects"
-        distance_threshold: 1.0
+        distance_threshold: 1.2
