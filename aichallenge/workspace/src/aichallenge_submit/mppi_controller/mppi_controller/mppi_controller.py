@@ -55,7 +55,7 @@ class mppi_controller:
 
         self.current_path_index = 0
 
-        # reference indformation (tensor)
+        # reference information (tensor)
         self.reference_path: torch.Tensor = None
         self.cost_map: CostMapTensor = None
 
