@@ -10,7 +10,7 @@
       auto_lambda : false
       # reference path
       DL : 0.1
-      loolahead_distance : 3.0
+      lookahead_distance : 3.0
       reference_path_interval : 0.85
       # cost weights
       Qc : 2.0
