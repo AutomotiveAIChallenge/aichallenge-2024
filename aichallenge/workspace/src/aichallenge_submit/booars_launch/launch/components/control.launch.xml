@@ -5,12 +5,13 @@
     <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
       <param name="use_external_target_vel" value="true"/>
       <param name="external_target_vel" value="8.0"/>
-      <param name="lookahead_gain" value="0.3"/>
-      <param name="lookahead_min_distance" value="4.0"/>
+      <param name="lookahead_gain" value="0.4"/>
+      <param name="lookahead_min_distance" value="3.0"/>
       <param name="speed_proportional_gain" value="1.0"/>
 
       <remap from="input/kinematics" to="/localization/kinematic_state"/>
-      <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
+      <!-- <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/> -->
+      <remap from="input/trajectory" to="/planning/output/mppi_planned_path"/>
       <remap from="output/control_cmd" to="/control/command/control_cmd"/>
     </node>
   </group>
