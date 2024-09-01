@@ -13,6 +13,7 @@
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+        <arg name="simulation" value="$(var simulation)"/>
     </include>
     
     <!-- Workaround because the simulator cannot use the service. -->
