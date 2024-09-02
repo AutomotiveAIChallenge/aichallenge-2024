@@ -7,8 +7,8 @@ sensor_kit_base_link:
     pitch: 0.0
     yaw: 0.0
   gnss_link2:
-    x: 1.46 # TODO: update
-    y: 0.0  # TODO: update
+    x: 1.46 
+    y: 0.0 
     z: 0.0
     roll: 0.0
     pitch: 0.0
