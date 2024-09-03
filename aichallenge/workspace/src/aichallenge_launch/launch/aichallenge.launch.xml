@@ -5,6 +5,7 @@
   <arg name="map_path" default="$(find-pkg-share aichallenge_submit_launch)/map"/>
   <arg name="vehicle_model" default="racing_kart" description="vehicle model name"/>
   <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
 
   <!-- Optional parameters -->
   <!-- Map -->
@@ -213,7 +214,7 @@
     </group>
   </group>
 
-  <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
+  <!--<node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="true"/>
     <param name="external_target_vel" value="8.0"/>
     <param name="lookahead_gain" value="0.3"/>
@@ -223,7 +224,9 @@
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
     <remap from="output/control_cmd" to="/control/command/control_cmd"/>
-  </node>
+  </node> -->
+
+  <include file="$(find-pkg-share aichallenge_launch)/launch/tier4_control_component.launch.xml"/>
 
 
   <!-- Map -->
