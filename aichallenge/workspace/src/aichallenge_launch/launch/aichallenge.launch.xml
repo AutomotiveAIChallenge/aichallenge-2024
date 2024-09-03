@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <!-- Essential parameters -->
-  <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
-  <arg name="use_sim_time" default="true"/>
-  <arg name="map_path" default="/aichallenge/mapfile"/>
-  <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
-  <arg name="sensor_model" description="sensor model name"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="map_path" default="$(find-pkg-share aichallenge_submit_launch)/map"/>
+  <arg name="vehicle_model" default="racing_kart" description="vehicle model name"/>
+  <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
 
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
   <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/>
-  <!-- Control -->
+
   <!-- Vehicle -->
   <arg name="launch_vehicle_interface" default="false"/>
-  <!-- System -->
-  <arg name="system_run_mode" default="online" description="run mode in system"/>
+  <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
 
   <!-- Global parameters -->
   <group scoped="false">
@@ -42,17 +40,29 @@
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
     </include>
     <group>
+      <push-ros-namespace namespace="gnss2"/>
+      <include file="$(find-pkg-share gnss_poser)/launch/gnss_poser.launch.xml">
+        <arg name="input_topic_fix" value="/ublox_gps_node/fix"/>
+        <arg name="output_topic_gnss_pose" value="pose"/>
+        <arg name="output_topic_gnss_pose_cov" value="pose_with_covariance"/>
+        <arg name="output_topic_gnss_fixed" value="nav_sat_fix"/>
+        <arg name="coordinate_system" value="1"/> <!-- MGRS -->
+        <arg name="gnss_frame" value="gnss2_link"/>
+        <arg name="gnss_base_frame" value="gnss2_base_link"/>
+      </include>
+    </group>
+    <group>
       <push-ros-namespace namespace="imu"/>
-      <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
-        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-          <arg name="input_topic" value="imu_raw"/>
-          <arg name="output_topic" value="imu_data"/>
-          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
-        </include>
+      <arg name="imu_corrector_param_file" default="$(find-pkg-share imu_corrector)/config/imu_corrector.param.yaml"/>
+      <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+        <arg name="input_topic" value="imu_raw"/>
+        <arg name="output_topic" value="imu_data"/>
+        <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+      </include>
     </group>
   </group>
 
-  <!-- Localization -->
+    <!-- Localization -->
   <group>
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
@@ -68,6 +78,7 @@
       <arg name="enable_yaw_bias_estimation" value="false"/>
       <arg name="tf_rate" value="50.0"/>
       <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="pose_smoothing_steps" value="1"/>
       <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
@@ -94,7 +105,6 @@
     </group>
 
   </group>
-
   <!-- Dummy Perception -->
   <node pkg="dummy_perception_publisher" exec="empty_objects_publisher" name="empty_objects_publisher" output="screen">
     <remap from="~/output/objects" to="/perception/object_recognition/objects"/>
@@ -203,7 +213,7 @@
     </group>
   </group>
 
-  <!-- <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
+  <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="true"/>
     <param name="external_target_vel" value="8.0"/>
     <param name="lookahead_gain" value="0.3"/>
@@ -213,9 +223,8 @@
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
     <remap from="output/control_cmd" to="/control/command/control_cmd"/>
-  </node> -->
+  </node>
 
-  <include file="$(find-pkg-share aichallenge_submit_launch)/launch/tier4_control_component.launch.xml"/>
 
   <!-- Map -->
   <group>
@@ -252,7 +261,6 @@
 
   </group> <!-- map -->
 
-  <!-- vehicle -->
   <group if="$(var launch_vehicle_interface)">
     <include file="$(find-pkg-share raw_vehicle_cmd_converter)/launch/raw_vehicle_converter.launch.xml">
       <arg name="converter_param_path" value="$(find-pkg-share aichallenge_submit_launch)/config/converter.param.yaml"/>

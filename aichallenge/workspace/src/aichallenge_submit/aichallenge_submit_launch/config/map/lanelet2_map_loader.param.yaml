@@ -1,0 +1,4 @@
+/**:
+  ros__parameters:
+    lanelet2_map_projector_type: MGRS  # Options: MGRS, UTM
+    center_line_resolution: 5.0        # [m]
