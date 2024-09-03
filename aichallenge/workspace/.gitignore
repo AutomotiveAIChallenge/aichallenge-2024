@@ -2,3 +2,6 @@
 /install
 /log
 result-details.json
+
+.vscode
+*.code-workspace

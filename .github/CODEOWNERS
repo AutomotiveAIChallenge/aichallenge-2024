@@ -1,0 +1,15 @@
+aichallenge/workspace/src/aichallenge_submit/aichallenge_submit_launch/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/booars_dummy_perception_publisher/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/booars_launch/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/booars_utils/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/costmap/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/goal_pose_setter/** @hrjp
+aichallenge/workspace/src/aichallenge_submit/gyro_odometer/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/imu_corrector/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/imu_gnss_poser/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/path_to_trajectory/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/racing_kart_description/** @Autumn60
+aichallenge/workspace/src/aichallenge_submit/racing_kart_sensor_kit_description/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/simple_pure_pursuit/** @sitahara
+aichallenge/workspace/src/aichallenge_system/aichallenge_system_launch/** @booars/aic2024-developers
+aichallenge/workspace/src/aichallenge_submit/mppi_controller/** @tamago117

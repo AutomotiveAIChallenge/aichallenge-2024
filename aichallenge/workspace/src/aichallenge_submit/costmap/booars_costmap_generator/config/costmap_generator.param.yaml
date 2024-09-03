@@ -1,0 +1,18 @@
+/**:
+  ros__parameters:
+    update_rate: 10.0
+    map_frame_id: "map"
+    costmap_center_frame_id: "base_link"
+    costmap_width: 20.0
+    costmap_resolution: 0.1
+    multi_layered_costmap:
+      layers:
+        - "lanelet_layer"
+        - "predicted_object_layer"
+      lanelet_layer:
+        type: "lanelet"
+        map_topic: "/map/vector_map"
+      predicted_object_layer:
+        type: "predicted_object"
+        predicted_objects_topic: "/perception/object_recognition/objects"
+        distance_threshold: 3.0

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <group>
+    <push-ros-namespace namespace="planning"/>
+
+    <!-- mission_planning -->
+    <group>
+      <push-ros-namespace namespace="mission_planning"/>
+
+      <!-- mission_planner -->
+      <node pkg="mission_planner" exec="mission_planner" name="mission_planner" output="screen">
+        <remap from="input/modified_goal" to="/planning/scenario_planning/modified_goal"/>
+        <remap from="input/vector_map" to="/map/vector_map"/>
+        <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
+        <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
+        <param from="$(find-pkg-share autoware_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
+      </node>
+
+      <!-- goal_pose_visualizer -->
+      <node pkg="mission_planner" exec="goal_pose_visualizer" name="goal_pose_visualizer" output="screen">
+        <remap from="input/route" to="/planning/mission_planning/route"/>
+        <remap from="output/goal_pose" to="/planning/mission_planning/echo_back_goal_pose"/>
+      </node>
+
+    </group> <!-- mission_planning -->
+
+    <!-- scenario_planning -->
+    <group>
+      <push-ros-namespace namespace="scenario_planning"/>
+
+      <!-- scenario_selector -->
+      <group>
+        <arg name="cmd" default="ros2 topic pub /planning/scenario_planning/scenario tier4_planning_msgs/msg/Scenario '{current_scenario: LaneDriving, activating_scenarios: [LaneDriving]}'"/>
+        <executable cmd="$(var cmd)" name="scenario_pub" shell="true"/>
+      </group> <!-- scenario_selector -->
+
+      <!-- operation_mode -->
+      <group>
+        <arg name="cmd" default="ros2 topic pub /system/operation_mode/state autoware_adapi_v1_msgs/msg/OperationModeState '{
+          mode: 1,
+          is_autoware_control_enabled: true,
+          is_in_transition: false,
+          is_stop_mode_available: true,
+          is_autonomous_mode_available: true,
+          is_local_mode_available: true,
+          is_remote_mode_available: true
+          }'"/>
+        <executable cmd="$(var cmd)" name="operation_mode_pub" shell="true"/>
+      </group> <!-- operation_mode -->
+
+      <!-- lane_driving -->
+      <group>
+        <push-ros-namespace namespace="lane_driving"/>
+
+        <!-- behavior_planning -->
+        <group>
+          <push-ros-namespace namespace="behavior_planning"/>
+
+          <!-- behavior_planning_container -->
+          <node_container pkg="rclcpp_components" exec="component_container" name="behavior_planning_container" namespace="">
+
+            <!-- behavior_path_planner::BehaviorPathPlannerNode -->
+            <composable_node pkg="behavior_path_planner" plugin="behavior_path_planner::BehaviorPathPlannerNode" name="behavior_path_planner" namespace="">
+              <remap from="~/input/route" to="/planning/mission_planning/route" />
+              <remap from="~/input/vector_map" to="/map/vector_map" />
+              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> <!-- autoware_auto_perception_msgs/PredictedObjects -->
+              <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
+              <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
+              <remap from="~/input/odometry" to="/localization/kinematic_state" />
+              <remap from="~/input/accel" to="/localization/acceleration" />
+              <remap from="~/input/scenario" to="/planning/scenario_planning/scenario" />
+              <remap from="~/output/path" to="path_with_lane_id" />
+              <remap from="~/output/turn_indicators_cmd" to="/planning/turn_indicators_cmd" />
+              <remap from="~/output/hazard_lights_cmd" to="/planning/hazard_lights_cmd" />
+              <remap from="~/output/modified_goal" to="/planning/scenario_planning/modified_goal" />
+              <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/>
+              <param name="lane_change.enable_abort_lane_change" value="false"/>
+              <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
+              <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
+              <param name="lane_change.use_all_predicted_path" value="false"/>
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" />
+              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
+              <extra_arg name="use_intra_process_comms" value="false" />
+            </composable_node>
+
+          </node_container>
+        </group> <!-- behavior_planning -->
+      </group> <!-- lane_driving -->
+
+      <!-- Customizable -->
+      <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
+        <remap from="input" to="/planning/scenario_planning/lane_driving/behavior_planning/path_with_lane_id"/>
+        <remap from="output" to="/planning/scenario_planning/trajectory"/>
+      </node>
+
+    </group>
+
+    <!-- costmap -->
+    <group>
+      <push-ros-namespace namespace="costmap"/>
+
+      <!-- Costmap Generator -->
+      <include file="$(find-pkg-share booars_costmap_generator)/launch/costmap_generator.launch.xml">
+        <arg name="config_file" value="$(find-pkg-share booars_launch)/config/planning/costmap_generator.param.yaml"/>
+        <!-- <arg name="costmap_topic" value="~/costmap"/> -->
+      </include>
+    </group>
+
+    <!-- Local Planning -->
+    <node pkg="mppi_controller" exec="mppi_controller_node" name="mppi_controller_node" output="screen">
+      <param from="$(find-pkg-share mppi_controller)/config/mppi_controller.param.yaml"/>
+      <remap from="input/kinematics" to="/localization/kinematic_state"/>
+      <remap from="input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+      <!-- cost map -->
+      <remap from="input/costmap" to="/planning/costmap/costmap_generator/costmap"/>
+      <remap from="output/control_cmd" to="output/mppi_control_cmd"/>
+      <remap from="output/planned_path" to="output/mppi_planned_path"/>
+      
+    </node>
+
+  </group>
+</launch>

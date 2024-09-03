@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <group>
+    <push-ros-namespace namespace="vehicle"/>
+  </group>
+</launch>
