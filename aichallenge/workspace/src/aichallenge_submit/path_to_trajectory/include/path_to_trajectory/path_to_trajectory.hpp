@@ -32,6 +32,7 @@ class PathToTrajectory : public rclcpp::Node {
   void callback(const PathWithLaneId::SharedPtr msg);
   rclcpp::Subscription<PathWithLaneId>::SharedPtr sub_;
   rclcpp::Publisher<Trajectory>::SharedPtr pub_;
+  float max_speed_;
 };
 
 #endif  // PATH_TO_TRAJECTORY__PATH_TO_TRAJECTORY_HPP_
