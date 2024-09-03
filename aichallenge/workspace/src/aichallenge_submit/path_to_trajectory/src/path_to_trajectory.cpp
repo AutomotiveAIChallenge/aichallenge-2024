@@ -14,7 +14,10 @@
 
 #include "path_to_trajectory/path_to_trajectory.hpp"
 
-PathToTrajectory::PathToTrajectory() : Node("path_to_trajectory_node") {
+PathToTrajectory::PathToTrajectory()
+: Node("path_to_trajectory_node"),
+  max_speed_(declare_parameter<float>("max_speed", 1.11111111)) // 4km/h
+{
   using std::placeholders::_1;
 
   pub_ = this->create_publisher<Trajectory>("output", 1);
@@ -28,7 +31,7 @@ void PathToTrajectory::callback(const PathWithLaneId::SharedPtr msg) {
   for (auto& path_point_with_lane_id : msg->points) {
     TrajectoryPoint trajectory_point;
     trajectory_point.pose = path_point_with_lane_id.point.pose;
-    trajectory_point.longitudinal_velocity_mps = path_point_with_lane_id.point.longitudinal_velocity_mps;
+    trajectory_point.longitudinal_velocity_mps = std::clamp(path_point_with_lane_id.point.longitudinal_velocity_mps, 0.0f, max_speed_);
     trajectory.points.emplace_back(std::move(trajectory_point));
   }
   pub_->publish(trajectory);
