@@ -37,8 +37,8 @@
   <exec_depend>simple_pure_pursuit</exec_depend>
   <exec_depend>mpc_lateral_controller</exec_depend>
   <exec_depend>pid_longitudinal_controller</exec_depend>
-  <exec_depend>trajctory_follower_base</exec_depend>
-  <exec_depend>trajctory_follower_node</exec_depend>
+  <exec_depend>trajectory_follower_base</exec_depend>
+  <exec_depend>trajectory_follower_node</exec_depend>
 
   <exec_depend>tier4_planning_rviz_plugin</exec_depend>
   <exec_depend>tier4_localization_rviz_plugin</exec_depend>
