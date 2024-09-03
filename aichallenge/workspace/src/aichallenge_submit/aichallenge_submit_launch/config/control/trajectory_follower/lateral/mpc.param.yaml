@@ -2,7 +2,7 @@
   ros__parameters:
     # -- system --
     traj_resample_dist: 0.1         # path resampling interval [m]
-    use_steer_prediction: false     # flag for using steer prediction (do not use steer measurement)
+    use_steer_prediction: true     # flag for using steer prediction (do not use steer measurement)
     admissible_position_error: 5.0  # stop mpc calculation when error is larger than the following value
     admissible_yaw_error_rad: 1.57  # stop mpc calculation when error is larger than the following value
 
@@ -19,7 +19,7 @@
     qp_solver_type: "osqp"                       # optimization solver option (unconstraint_fast or osqp)
     mpc_prediction_horizon: 50                   # prediction horizon step
     mpc_prediction_dt: 0.1                       # prediction horizon period [s]
-    mpc_weight_lat_error: 0.1                    # lateral error weight in matrix Q
+    mpc_weight_lat_error: 0.5                    # lateral error weight in matrix Q
     mpc_weight_heading_error: 0.0                # heading error weight in matrix Q
     mpc_weight_heading_error_squared_vel: 0.3    # heading error * velocity weight in matrix Q
     mpc_weight_steering_input: 1.0               # steering error weight in matrix R
@@ -45,8 +45,8 @@
 
     # -- vehicle model --
     vehicle_model_type: "kinematics" # vehicle model type for mpc prediction. option is kinematics, kinematics_no_delay, and dynamics
-    input_delay: 0.24                # steering input delay time for delay compensation
-    vehicle_model_steer_tau: 0.3     # steering dynamics time constant (1d approximation) [s]
+    input_delay: 0.2                # steering input delay time for delay compensation
+    vehicle_model_steer_tau: 0.2     # steering dynamics time constant (1d approximation) [s]
     steer_rate_lim_dps: 40.0         # steering angle rate limit [deg/s]
     acceleration_limit: 2.0          # acceleration limit for trajectory velocity modification [m/ss]
     velocity_time_constant: 0.3      # velocity dynamics time constant  for trajectory velocity modification [s]
