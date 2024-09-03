@@ -214,7 +214,7 @@
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
     <remap from="output/control_cmd" to="/control/command/control_cmd"/>
   </node>
-  
+
   <!-- Map -->
   <group>
     <push-ros-namespace namespace="map"/>
