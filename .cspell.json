@@ -126,6 +126,7 @@
     "tempature",
     "rsample",
     "coeffs",
-    "softplus"
+    "softplus",
+    "mpss"
   ]
 }
