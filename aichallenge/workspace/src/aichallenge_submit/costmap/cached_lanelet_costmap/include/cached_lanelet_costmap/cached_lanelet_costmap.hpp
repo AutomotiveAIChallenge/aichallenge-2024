@@ -68,6 +68,7 @@ private:
 
   double cached_costmap_origin_x_;
   double cached_costmap_origin_y_;
+  int inflation_radius_index_;
   bool is_map_ready_ = false;
 };
 }  // namespace cached_lanelet_costmap

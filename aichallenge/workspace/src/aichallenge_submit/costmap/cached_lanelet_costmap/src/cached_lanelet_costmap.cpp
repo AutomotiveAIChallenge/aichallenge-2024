@@ -40,6 +40,7 @@ CachedLaneletCostmap::CachedLaneletCostmap(rclcpp::Node & node, const std::strin
   costmap_pub_ = node.create_publisher<OccupancyGrid>(
     costmap_topic, rclcpp::QoS(rclcpp::KeepLast(1)).reliable().transient_local());
 
+  // Declare cached costmap
   {
     double cached_costmap_min_x =
       node.declare_parameter(layer_namespace + ".cached_costmap.min_x", 0.0);
@@ -67,6 +68,12 @@ CachedLaneletCostmap::CachedLaneletCostmap(rclcpp::Node & node, const std::strin
     origin.z = 0.0;
     booars_utils::nav::occupancy_grid_utils::update_origin(
       cached_costmap_, cached_costmap_parameters_, origin);
+  }
+
+  // Declare other parameters
+  {
+    double inflation_radius = node.declare_parameter(layer_namespace + ".inflation_radius", 0.0);
+    inflation_radius_index_ = std::ceil(inflation_radius / cached_costmap_parameters_->resolution());
   }
 }
 
@@ -115,6 +122,9 @@ bool CachedLaneletCostmap::try_transform_point(
 void CachedLaneletCostmap::create_cached_costmap(
   const std::string & map_frame_id, const lanelet::ConstLanelets & roads_lanelets)
 {
+  std::vector<int> unoccupied_indices; 
+
+  // Create costmap
   cached_costmap_->header.frame_id = map_frame_id;
   for (int i = 0; i < cached_costmap_parameters_->grid_num(); i++) {
     tier4_autoware_utils::Point2d point2d =
@@ -125,9 +135,33 @@ void CachedLaneletCostmap::create_cached_costmap(
     for (const auto & road_lanelet : roads_lanelets) {
       if (!lanelet::geometry::within(point2d, road_lanelet.polygon2d().basicPolygon())) continue;
       cached_costmap_->data[i] = 0;
+      unoccupied_indices.push_back(i);
       break;
     }
   }
+
+  // Inflate costmap
+  if (inflation_radius_index_ > 0) {
+    int inflation_radius_index_sqr = inflation_radius_index_ * inflation_radius_index_;
+    for (const auto & unoccupied_index : unoccupied_indices)
+    {
+      bool occupied = false;
+      for (int i = -inflation_radius_index_; i <= inflation_radius_index_; i++) {
+        for (int j = -inflation_radius_index_; j <= inflation_radius_index_; j++) {
+          if (i*i + j*j > inflation_radius_index_sqr) continue;
+          int index = unoccupied_index + i * cached_costmap_parameters_->grid_width() + j;
+          if (index < 0 || index >= cached_costmap_parameters_->grid_num()) continue;
+          if(cached_costmap_->data[index] != 100) continue;
+          cached_costmap_->data[unoccupied_index] = 50;
+          occupied = true;
+          break;
+        }
+        if(occupied) break;
+      }
+    }
+  }
+
+  // Publish costmap
   costmap_pub_->publish(*cached_costmap_);
 
   is_map_ready_ = true;
