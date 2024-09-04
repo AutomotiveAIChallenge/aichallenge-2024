@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <log message="This is aichallenge_submit_launch."/>
   <arg name="use_sim_time" default="true"/>
-  <arg name="launch_vehicle_interface" default="false"/>
   <arg name="sensor_model" default="racing_kart_sensor_kit"/>
-  <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
+  <arg name="launch_vehicle_interface" default="false"/>
+
+  <log message="The arguments for aichallenge_submit_launch."/>
+  <log message=" - use_sim_time: $(var use_sim_time)"/>
+  <log message=" - sensor_model: $(var sensor_model)"/>
+  <log message=" - launch_vehicle_interface: $(var launch_vehicle_interface)"/>
 
   <include file="$(find-pkg-share aichallenge_submit_launch)/launch/reference.launch.xml" >
     <arg name="vehicle_model" value="racing_kart"/>

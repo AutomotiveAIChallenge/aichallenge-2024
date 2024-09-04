@@ -3,29 +3,35 @@
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
     <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="$(var simulation)"/>
-    <arg name="launch_vehicle_interface" default="false"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
+    <arg name="launch_vehicle_interface" default="false"/>
 
-    <log message="This is aichallenge_system_launch."/>
-    <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
-    <log message="echo launch param simulation: $(var simulation)"/>
+    <log message="The arguments for aichallenge_system_launch."/>
+    <log message=" - simulation: $(var simulation)"/>
+    <log message=" - use_sim_time: $(var use_sim_time)"/>
+    <log message=" - sensor_model: $(var sensor_model)"/>
+    <log message=" - launch_vehicle_interface: $(var launch_vehicle_interface)"/>
 
+    <!-- Main module of AI challenge 2024. -->
     <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" >
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
     </include>
 
+    <!-- Visualization. -->
+    <group>
+        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share autoware_launch)/rviz/image/autoware.png"/>
+        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
+    </group>
+
+    <!-- Adapters for simulation. -->
     <group if="$(var simulation)">
         <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/awsim.launch.xml"/>
     </group>
 
+    <!-- Adapters for real vehicle. -->
     <group unless="$(var simulation)">
         <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/real.launch.xml"/>
-    </group>
-
-    <group>
-        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share autoware_launch)/rviz/image/autoware.png"/>
-        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
     </group>
 </launch>
