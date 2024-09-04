@@ -5,8 +5,8 @@
 
     <!-- Adaptors for AWSIM -->
     <node pkg="topic_tools" exec="relay" name="relay_control_cmd">
-        <param name="input_topic" value="/awsim/control_cmd"/>
-        <param name="output_topic" value="/control/command/control_cmd"/>
+        <param name="input_topic" value="/control/command/control_cmd"/>
+        <param name="output_topic" value="/awsim/control_cmd"/>
     </node>
 
     <node pkg="topic_tools" exec="relay" name="relay_gnss_pose">
