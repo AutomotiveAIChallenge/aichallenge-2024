@@ -79,6 +79,7 @@
       <arg name="enable_yaw_bias_estimation" value="false"/>
       <arg name="tf_rate" value="50.0"/>
       <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="pose_smoothing_steps" value="1"/>
       <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
