@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>booars_dummy_perception_publisher</name>
+  <version>0.0.0</version>
+  <description>The booars_dummy_perception_publisher package</description>
+  <maintainer email="harada.akiro@gmail.com">Akiro Harada</maintainer>
+
+  <license>Apache 2</license>
+
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
+
+  <depend>autoware_auto_perception_msgs</depend>
+  <depend>rclcpp_components</depend>
+  <depend>std_msgs</depend>
+  <test_depend>ament_lint_auto</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
