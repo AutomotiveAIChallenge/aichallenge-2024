@@ -13,3 +13,4 @@ aichallenge/workspace/src/aichallenge_submit/racing_kart_sensor_kit_description/
 aichallenge/workspace/src/aichallenge_submit/simple_pure_pursuit/** @sitahara
 aichallenge/workspace/src/aichallenge_system/aichallenge_system_launch/** @booars/aic2024-developers
 aichallenge/workspace/src/aichallenge_submit/mppi_controller/** @tamago117
+aichallenge/workspace/src/aichallenge_submit/stanley_control/** @sitahara
