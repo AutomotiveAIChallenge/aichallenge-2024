@@ -15,12 +15,14 @@
 #ifndef BOOARS_COSTMAP_UTILS__BOOARS_COSTMAP_UTILS_HPP_
 #define BOOARS_COSTMAP_UTILS__BOOARS_COSTMAP_UTILS_HPP_
 
+#include <cached_lanelet_costmap/cached_lanelet_costmap.hpp>
 #include <lanelet_costmap/lanelet_costmap.hpp>
 #include <multi_layered_costmap/multi_layered_costmap.hpp>
 #include <predicted_object_costmap/predicted_object_costmap.hpp>
 
 namespace booars_costmap_utils
 {
+using CachedLaneletCostmap = cached_lanelet_costmap::CachedLaneletCostmap;
 using LaneletCostmap = lanelet_costmap::LaneletCostmap;
 using MultiLayeredCostmap = multi_layered_costmap::MultiLayeredCostmap;
 using PredictedObjectCostmap = predicted_object_costmap::PredictedObjectCostmap;
@@ -36,7 +38,10 @@ MultiLayeredCostmap::SharedPtr create_multi_layered_costmap(
     std::string layer_namespace = costmap_namespace + "." + layer;
     auto type = node.declare_parameter(layer_namespace + ".type", std::string());
 
-    if (type == "lanelet") {
+    if (type == "cached_lanelet") {
+      auto cached_lanelet_costmap = CachedLaneletCostmap::create_costmap(node, layer_namespace);
+      costmap->add_costmap_layer(cached_lanelet_costmap);
+    } else if (type == "lanelet") {
       auto lanelet_costmap = LaneletCostmap::create_costmap(node, layer_namespace);
       costmap->add_costmap_layer(lanelet_costmap);
     } else if (type == "predicted_object") {
