@@ -1,6 +1,9 @@
 #!/bin/bash
 AWSIM_DIRECTORY=/aichallenge/simulator/AWSIM
 
+# Kill all processes
+source /aichallenge/pkill_all.sh
+
 # Move working directory
 OUTPUT_DIRECTORY=$(date +%Y%m%d-%H%M%S)
 cd /output || exit
