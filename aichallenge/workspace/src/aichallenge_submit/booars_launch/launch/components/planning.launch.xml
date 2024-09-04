@@ -97,6 +97,10 @@
       <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
         <remap from="input" to="/planning/scenario_planning/lane_driving/behavior_planning/path_with_lane_id"/>
         <remap from="output" to="/planning/scenario_planning/trajectory"/>
+        <param name="deceleration" value="-10.0"/>
+        <param name="stop_offset" value="3.0"/>
+        <param name="max_speed" value="30.0"/>
+        <param name="traj_width" value="1.0"/>
       </node>
 
     </group>
