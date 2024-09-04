@@ -68,6 +68,7 @@
       <arg name="enable_yaw_bias_estimation" value="false"/>
       <arg name="tf_rate" value="50.0"/>
       <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="pose_smoothing_steps" value="1"/>
       <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
@@ -249,6 +250,26 @@
     </node_container>
 
   </group> <!-- map -->
+
+  <!-- vehicle -->
+  <group if="$(var launch_vehicle_interface)">
+    <include file="$(find-pkg-share raw_vehicle_cmd_converter)/launch/raw_vehicle_converter.launch.xml">
+      <arg name="converter_param_path" value="$(find-pkg-share aichallenge_submit_launch)/config/converter.param.yaml"/>
+      <arg name="csv_path_accel_map" value="$(find-pkg-share aichallenge_submit_launch)/data/accel_map.csv"/>
+      <arg name="csv_path_brake_map" value="$(find-pkg-share aichallenge_submit_launch)/data/brake_map.csv"/>
+
+      <arg name="max_throttle" value="1.0"/>
+      <arg name="max_brake" value="1.0"/>
+      <arg name="convert_accel_cmd" value="true"/>
+      <arg name="convert_brake_cmd" value="true"/>
+      <arg name="convert_steer_cmd" value="false"/>
+
+      <arg name="input_control_cmd" value="/control/command/control_cmd"/>
+      <arg name="input_odometry" value="/localization/kinematic_state"/>
+      <arg name="input_steering" value="/vehicle/status/steering_status"/>
+      <arg name="output_actuation_cmd" value="/control/command/actuation_cmd"/>
+    </include>
+  </group>
 
   <!-- API -->
   <group>
