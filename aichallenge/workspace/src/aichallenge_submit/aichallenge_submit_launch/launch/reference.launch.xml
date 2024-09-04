@@ -6,7 +6,7 @@
   <arg name="map_path" default="/aichallenge/mapfile"/>
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
   <arg name="sensor_model" description="sensor model name"/>
-  <arg name="simulation" default="true"/>
+  <arg name="simulation" description="used for sensor kit param"/>
 
   <!-- Optional parameters -->
   <!-- Map -->
