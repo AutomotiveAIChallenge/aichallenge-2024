@@ -49,6 +49,7 @@
         <arg name="coordinate_system" value="1"/> <!-- MGRS -->
         <arg name="gnss_frame" value="gnss2_link"/>
         <arg name="gnss_base_frame" value="gnss2_base_link"/>
+        <arg name="use_gnss_ins_orientation" value="false"/>
       </include>
     </group>
     <group>

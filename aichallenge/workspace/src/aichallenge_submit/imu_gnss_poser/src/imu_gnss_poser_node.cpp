@@ -17,10 +17,10 @@ public:
             "/localization/twist_with_covariance", qos,
             std::bind(&ImuGnssPoser::twist_callback, this, std::placeholders::_1));
         sub_gnss_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-            "/sensing/gnss/pose_with_covariance", qos,
+            "/sensing/gnss2/pose_with_covariance", qos,
             std::bind(&ImuGnssPoser::gnss_callback, this, std::placeholders::_1));
         sub_gnss2_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-            "/sensing/gnss2/pose_with_covariance", qos,
+            "/sensing/gnss/pose_with_covariance", qos,
             std::bind(&ImuGnssPoser::gnss2_callback, this, std::placeholders::_1));
         sub_imu_ = this->create_subscription<sensor_msgs::msg::Imu>(
             "/sensing/imu/imu_raw", qos,
@@ -39,36 +39,36 @@ private:
     }
 
     void gnss_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
-        msg->pose.pose.orientation.x = imu_msg_.orientation.x;
-        msg->pose.pose.orientation.y = imu_msg_.orientation.y;
-        msg->pose.pose.orientation.z = imu_msg_.orientation.z;
-        msg->pose.pose.orientation.w = imu_msg_.orientation.w;
+        // msg->pose.pose.orientation.x = imu_msg_.orientation.x;
+        // msg->pose.pose.orientation.y = imu_msg_.orientation.y;
+        // msg->pose.pose.orientation.z = imu_msg_.orientation.z;
+        // msg->pose.pose.orientation.w = imu_msg_.orientation.w;
 
         const auto base_to_gnss1 = get_transform("gnss_link");
         const auto base_to_gnss2 = get_transform("gnss2_link");
 
-        if (!last_gnss2_msg_.has_value()) {
-          RCLCPP_WARN(this->get_logger(), "gnss2 is not received yet");
-        } else if(base_to_gnss1.has_value() && base_to_gnss2.has_value()) {
-          const double base_link_to_antenna_dx = base_to_gnss1->transform.translation.x - base_to_gnss2->transform.translation.x;
-          const double base_link_to_antenna_dy = base_to_gnss1->transform.translation.y - base_to_gnss2->transform.translation.y;
-          const double base_link_to_antenna = std::atan2(base_link_to_antenna_dy, base_link_to_antenna_dx);
+        // if (!last_gnss2_msg_.has_value()) {
+        //   RCLCPP_WARN(this->get_logger(), "gnss2 is not received yet");
+        // } else if(base_to_gnss1.has_value() && base_to_gnss2.has_value()) {
+        //   const double base_link_to_antenna_dx = base_to_gnss1->transform.translation.x - base_to_gnss2->transform.translation.x;
+        //   const double base_link_to_antenna_dy = base_to_gnss1->transform.translation.y - base_to_gnss2->transform.translation.y;
+        //   const double base_link_to_antenna = std::atan2(base_link_to_antenna_dy, base_link_to_antenna_dx);
 
-          const double map_to_antenna_dx = last_gnss2_msg_->pose.pose.position.x - msg->pose.pose.position.x;
-          const double map_to_antenna_dy = last_gnss2_msg_->pose.pose.position.y - msg->pose.pose.position.y;
-          const double map_to_antenna = std::atan2(map_to_antenna_dy, map_to_antenna_dx);
+        //   const double map_to_antenna_dx = last_gnss2_msg_->pose.pose.position.x - msg->pose.pose.position.x;
+        //   const double map_to_antenna_dy = last_gnss2_msg_->pose.pose.position.y - msg->pose.pose.position.y;
+        //   const double map_to_antenna = std::atan2(map_to_antenna_dy, map_to_antenna_dx);
 
-          const double yaw = map_to_antenna - base_link_to_antenna;
+        //   const double yaw = map_to_antenna - base_link_to_antenna;
 
-          msg->pose.pose.orientation.x = 0.0;
-          msg->pose.pose.orientation.y = 0.0;
-          msg->pose.pose.orientation.z = std::sin(yaw / 2.0);
-          msg->pose.pose.orientation.w = std::cos(yaw / 2.0);
-          RCLCPP_INFO_STREAM_THROTTLE(
-            this->get_logger(), *this->get_clock(), std::chrono::milliseconds(1000).count(), "dual antenna heading: " << yaw);
-        } else {
-          RCLCPP_WARN(this->get_logger(), "TF for gnss1 or gnss2 is not received yet");
-        }
+        //   msg->pose.pose.orientation.x = 0.0;
+        //   msg->pose.pose.orientation.y = 0.0;
+        //   msg->pose.pose.orientation.z = std::sin(yaw / 2.0);
+        //   msg->pose.pose.orientation.w = std::cos(yaw / 2.0);
+        //   RCLCPP_INFO_STREAM_THROTTLE(
+        //     this->get_logger(), *this->get_clock(), std::chrono::milliseconds(1000).count(), "dual antenna heading: " << yaw);
+        // } else {
+        //   RCLCPP_WARN(this->get_logger(), "TF for gnss1 or gnss2 is not received yet");
+        // }
 
         msg->pose.covariance[7 * 0] = 0.1;
         msg->pose.covariance[7 * 1] = 0.1;
