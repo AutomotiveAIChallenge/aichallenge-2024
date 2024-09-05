@@ -26,6 +26,7 @@ SimplePurePursuit::SimplePurePursuit()
   steering_tire_angle_gain_(declare_parameter<float>("steering_tire_angle_gain", 1.0))
 {
   pub_cmd_ = create_publisher<AckermannControlCommand>("output/control_cmd", 1);
+  pub_raw_cmd_ = create_publisher<AckermannControlCommand>("output/raw_control_cmd", 1);
 
   sub_kinematics_ = create_subscription<Odometry>(
     "input/kinematics", 1, [this](const Odometry::SharedPtr msg) { odometry_ = msg; });
@@ -61,12 +62,16 @@ void SimplePurePursuit::onTimer()
 
   // publish zero command
   AckermannControlCommand cmd = zeroAckermannControlCommand(get_clock()->now());
+  AckermannControlCommand raw_cmd = zeroAckermannControlCommand(get_clock()->now());
 
   if (
     (closet_traj_point_idx == trajectory_->points.size() - 1) ||
     (trajectory_->points.size() <= 5)) {
-    cmd.longitudinal.speed = 0.0;
-    cmd.longitudinal.acceleration = -10.0;
+    
+    raw_cmd.longitudinal.speed = 0.0;
+    raw_cmd.longitudinal.acceleration = -10.0;
+    cmd.longitudinal.speed = raw_cmd.longitudinal.speed;
+    cmd.longitudinal.acceleration = raw_cmd.longitudinal.acceleration;
     RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000 /*ms*/, "reached to the goal");
   } else {
     // get closest trajectory point from current position
@@ -77,9 +82,12 @@ void SimplePurePursuit::onTimer()
       use_external_target_vel_ ? external_target_vel_ : closet_traj_point.longitudinal_velocity_mps;
     double current_longitudinal_vel = odometry_->twist.twist.linear.x;
 
-    cmd.longitudinal.speed = target_longitudinal_vel;
-    cmd.longitudinal.acceleration =
+
+    raw_cmd.longitudinal.speed = target_longitudinal_vel;
+    raw_cmd.longitudinal.acceleration =
       speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
+    cmd.longitudinal.speed = raw_cmd.longitudinal.speed;
+    cmd.longitudinal.acceleration = raw_cmd.longitudinal.acceleration;
 
     // calc lateral control
     //// calc lookahead distance
@@ -105,9 +113,13 @@ void SimplePurePursuit::onTimer()
     // calc steering angle for lateral control
     double alpha = std::atan2(lookahead_point_y - rear_y, lookahead_point_x - rear_x) -
                    tf2::getYaw(odometry_->pose.pose.orientation);
+    raw_cmd.lateral.steering_tire_angle =
+      std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
     cmd.lateral.steering_tire_angle =
-      steering_tire_angle_gain_ * std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
+      steering_tire_angle_gain_ * raw_cmd.lateral.steering_tire_angle;
+    
   }
+  pub_raw_cmd_->publish(raw_cmd);
   pub_cmd_->publish(cmd);
 }
 
