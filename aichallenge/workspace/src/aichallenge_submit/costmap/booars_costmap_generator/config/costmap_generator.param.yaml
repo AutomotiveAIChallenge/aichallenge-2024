@@ -14,6 +14,7 @@
         type: "cached_lanelet"
         map_topic: "/map/vector_map"
         costmap_topic: "~/debug/cached_costmap"
+        inflation_radius: 0.5
         cached_costmap:
           min_x: 89607.0
           max_x: 89687.0
