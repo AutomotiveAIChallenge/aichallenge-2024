@@ -26,6 +26,7 @@ SimplePurePursuit::SimplePurePursuit()
   steering_tire_angle_gain_(declare_parameter<float>("steering_tire_angle_gain", 1.0))
 {
   pub_cmd_ = create_publisher<AckermannControlCommand>("output/control_cmd", 1);
+  pub_raw_cmd_ = create_publisher<AckermannControlCommand>("output/raw_control_cmd", 1);
 
   sub_kinematics_ = create_subscription<Odometry>(
     "input/kinematics", 1, [this](const Odometry::SharedPtr msg) { odometry_ = msg; });
@@ -109,6 +110,8 @@ void SimplePurePursuit::onTimer()
       steering_tire_angle_gain_ * std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
   }
   pub_cmd_->publish(cmd);
+  cmd.lateral.steering_tire_angle /=  steering_tire_angle_gain_;
+  pub_raw_cmd_->publish(cmd);
 }
 
 bool SimplePurePursuit::subscribeMessageAvailable()

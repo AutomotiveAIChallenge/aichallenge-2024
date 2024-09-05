@@ -29,6 +29,7 @@ class SimplePurePursuit : public rclcpp::Node {
   
   // publishers
   rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_cmd_;
+  rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_raw_cmd_;
   
   // timer
   rclcpp::TimerBase::SharedPtr timer_;
