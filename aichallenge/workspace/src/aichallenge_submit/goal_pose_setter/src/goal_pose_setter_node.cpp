@@ -159,7 +159,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
         return;
     //RCLCPP_INFO(this->get_logger(), "%lf",pit_position_.position.x );
     // Publish half goal pose for loop
-    if(half_goal_pose_published_ == false &&
+    if(half_goal_pose_published_ == true &&
         tier4_autoware_utils::calcDistance2d(msg->pose.pose, goal_position_) < goal_range_
         && pit_in_flag_ == false)
     {
@@ -172,7 +172,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
         }
         else{
             goal_pose->pose = half_goal_position_;
-            half_goal_pose_published_ = true;
+            half_goal_pose_published_ = false;
         }
         
         goal_publisher_->publish(*goal_pose);
@@ -180,7 +180,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
         
     }
 
-    if(pit_in_flag_ == false &&
+    if(pit_in_flag_ == true &&
         tier4_autoware_utils::calcDistance2d(msg->pose.pose, pit_position_) < goal_range_
         && pit_stop_time_ > 3.1)
     {
@@ -188,7 +188,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
         goal_pose->header.stamp = this->get_clock()->now();
         goal_pose->header.frame_id = "map";
         goal_pose->pose = half_goal_position_;
-        half_goal_pose_published_ = true;
+        half_goal_pose_published_ = false;
         pit_in_flag_ = false;
         
         goal_publisher_->publish(*goal_pose);
@@ -197,7 +197,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
     }
 
     // Publish goal pose for loop
-    if (half_goal_pose_published_ == true &&
+    if (half_goal_pose_published_ == false &&
         tier4_autoware_utils::calcDistance2d(msg->pose.pose, half_goal_position_) < goal_range_) 
     {
         auto goal_pose = std::make_shared<geometry_msgs::msg::PoseStamped>();
@@ -207,7 +207,7 @@ void GoalPosePublisher::odometry_callback(const nav_msgs::msg::Odometry::SharedP
 
         goal_publisher_->publish(*goal_pose);
         RCLCPP_INFO(this->get_logger(), "Publishing goal pose for loop");
-        half_goal_pose_published_ = false;
+        half_goal_pose_published_ = true;
     }
 }
 
