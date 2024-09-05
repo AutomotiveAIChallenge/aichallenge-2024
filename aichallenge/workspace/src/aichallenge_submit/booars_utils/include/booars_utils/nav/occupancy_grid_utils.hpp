@@ -29,7 +29,8 @@ OccupancyGridParameters::SharedPtr create_occupancy_grid_parameters(
   const OccupancyGrid::SharedPtr occupancy_grid)
 {
   const double width = occupancy_grid->info.width * occupancy_grid->info.resolution;
-  return OccupancyGridParameters::create_parameters(width, occupancy_grid->info.resolution);
+  const double height = occupancy_grid->info.height * occupancy_grid->info.resolution;
+  return OccupancyGridParameters::create_parameters(width, height, occupancy_grid->info.resolution);
 }
 
 OccupancyGrid::SharedPtr create_occupancy_grid(
@@ -37,10 +38,10 @@ OccupancyGrid::SharedPtr create_occupancy_grid(
 {
   OccupancyGrid::SharedPtr occupancy_grid = std::make_shared<OccupancyGrid>();
   occupancy_grid->info.width = parameters->grid_width();
-  occupancy_grid->info.height = parameters->grid_width();
+  occupancy_grid->info.height = parameters->grid_height();
   occupancy_grid->info.resolution = parameters->resolution();
   occupancy_grid->info.origin.position.x = -parameters->width_2();
-  occupancy_grid->info.origin.position.y = -parameters->width_2();
+  occupancy_grid->info.origin.position.y = -parameters->height_2();
   occupancy_grid->data.resize(parameters->grid_num(), value);
   return occupancy_grid;
 }
@@ -50,7 +51,7 @@ void update_origin(
   const geometry_msgs::msg::Vector3 & translation)
 {
   occupancy_grid->info.origin.position.x = -parameters->width_2() + translation.x;
-  occupancy_grid->info.origin.position.y = -parameters->width_2() + translation.y;
+  occupancy_grid->info.origin.position.y = -parameters->height_2() + translation.y;
   occupancy_grid->info.origin.position.z = translation.z;
   occupancy_grid->info.origin.orientation.x = 0.0;
   occupancy_grid->info.origin.orientation.y = 0.0;
@@ -66,7 +67,7 @@ tier4_autoware_utils::Point2d index_to_point(
 
   return {
     index_x * parameters->resolution() - parameters->width_2(),
-    index_y * parameters->resolution() - parameters->width_2()};
+    index_y * parameters->resolution() - parameters->height_2()};
 }
 
 std::vector<tier4_autoware_utils::Point2d> get_index_to_point_table(
@@ -78,6 +79,16 @@ std::vector<tier4_autoware_utils::Point2d> get_index_to_point_table(
     table.push_back(index_to_point(parameters, i));
   }
   return table;
+}
+
+int point_to_index(
+  const OccupancyGridParameters::SharedPtr parameters, const tier4_autoware_utils::Point2d & point)
+{
+  const int x =
+    static_cast<int>((point[0] + parameters->width_2()) * parameters->resolution_inv() + 0.5);
+  const int y =
+    static_cast<int>((point[1] + parameters->height_2()) * parameters->resolution_inv() + 0.5);
+  return y * parameters->grid_width() + x;
 }
 
 }  // namespace booars_utils::nav::occupancy_grid_utils

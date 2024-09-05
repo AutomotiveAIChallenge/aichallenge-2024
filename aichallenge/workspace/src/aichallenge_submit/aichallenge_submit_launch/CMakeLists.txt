@@ -3,4 +3,4 @@ project(aichallenge_submit_launch)
 
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
-ament_auto_package(INSTALL_TO_SHARE launch map config)
+ament_auto_package(INSTALL_TO_SHARE launch map data config)

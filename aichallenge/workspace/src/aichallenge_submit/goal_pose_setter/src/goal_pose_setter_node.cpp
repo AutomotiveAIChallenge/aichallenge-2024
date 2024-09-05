@@ -139,7 +139,7 @@ void GoalPosePublisher::on_timer()
         msg->pose.orientation.w = this->get_parameter("goal.orientation.w").as_double();
 
         goal_publisher_->publish(*msg);
-        RCLCPP_INFO(this->get_logger(), "Publishing goal pose");
+        RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 5000 /*ms*/, "Publishing goal pose");
     }
 }
 

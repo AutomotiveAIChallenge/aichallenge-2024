@@ -44,7 +44,7 @@ CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & options)
     double costmap_width = this->declare_parameter("costmap_width", 10.0);
     double costmap_resolution = this->declare_parameter("costmap_resolution", 0.1);
     costmap_parameters_ =
-      OccupancyGridParameters::create_parameters(costmap_width, costmap_resolution);
+      OccupancyGridParameters::create_parameters(costmap_width, costmap_width, costmap_resolution);
     index_to_point_table_ =
       booars_utils::nav::occupancy_grid_utils::get_index_to_point_table(costmap_parameters_);
   }

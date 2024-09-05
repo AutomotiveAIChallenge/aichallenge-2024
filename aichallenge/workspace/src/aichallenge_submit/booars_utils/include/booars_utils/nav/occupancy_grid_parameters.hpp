@@ -25,37 +25,49 @@ public:
   using SharedPtr = std::shared_ptr<OccupancyGridParameters>;
 
   static OccupancyGridParameters::SharedPtr create_parameters(
-    const double width, const double resolution)
+    const double width, const double height, const double resolution)
   {
-    return std::make_shared<OccupancyGridParameters>(width, resolution);
+    return std::make_shared<OccupancyGridParameters>(width, height, resolution);
   }
 
-  explicit OccupancyGridParameters(const double width, const double resolution)
+  explicit OccupancyGridParameters(const double width, const double height, const double resolution)
   {
     width_ = width;
     width_2_ = width / 2.0;
+    height_ = height;
+    height_2_ = height / 2.0;
     resolution_ = resolution;
     resolution_inv_ = 1.0 / resolution;
     grid_width_2_ = static_cast<int>(width * resolution_inv_) / 2;
     grid_width_ = grid_width_2_ * 2;
-    grid_num_ = grid_width_ * grid_width_;
+    grid_height_2_ = static_cast<int>(height * resolution_inv_) / 2;
+    grid_height_ = grid_height_2_ * 2;
+    grid_num_ = grid_width_ * grid_height_;
   }
 
   double width() const { return width_; }
   double width_2() const { return width_2_; }
+  double height() const { return height_; }
+  double height_2() const { return height_2_; }
   double resolution() const { return resolution_; }
   double resolution_inv() const { return resolution_inv_; }
   int grid_width_2() const { return grid_width_2_; }
   int grid_width() const { return grid_width_; }
+  int gird_height_2() const { return grid_height_2_; }
+  int grid_height() const { return grid_height_; }
   int grid_num() const { return grid_num_; }
 
 private:
   double width_;
   double width_2_;
+  double height_;
+  double height_2_;
   double resolution_;
   double resolution_inv_;
   int grid_width_2_;
   int grid_width_;
+  int grid_height_2_;
+  int grid_height_;
   int grid_num_;
 };
 
