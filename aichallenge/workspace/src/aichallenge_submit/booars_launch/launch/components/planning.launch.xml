@@ -114,7 +114,7 @@
 
     <!-- Local Planning -->
     <node pkg="mppi_controller" exec="mppi_controller_node" name="mppi_controller_node" output="screen">
-      <param from="$(find-pkg-share mppi_controller)/config/mppi_controller.param.yaml"/>
+      <param from="$(find-pkg-share booars_launch)/config/planning/mppi_controller.param.yaml"/>
       <remap from="input/kinematics" to="/localization/kinematic_state"/>
       <remap from="input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
       <!-- cost map -->

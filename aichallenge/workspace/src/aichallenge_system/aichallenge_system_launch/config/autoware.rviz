@@ -8,8 +8,9 @@ Panels:
         - /Planning1/ScenarioPlanning1/ScenarioTrajectory1
         - /Planning1/ScenarioPlanning1/ScenarioTrajectory1/View Path1
         - /Planning1/Costmap1/Map1
-        - /Planning1/MPPI1
         - /Planning1/MPPI1/Trajectory1
+        - /Planning1/MPPI1/ReferenceTrajectory1
+        - /Planning1/MPPI1/ReferenceTrajectory1/View Path1
       Splitter Ratio: 0.557669460773468
     Tree Height: 158
   - Class: rviz_common/Selection
@@ -1993,7 +1994,48 @@ Visualization Manager:
                 Color: 0; 0; 0
                 Constant Color: false
                 Value: true
-                Width: 0.5
+                Width: 0.6000000238418579
+              View Point:
+                Alpha: 1
+                Color: 0; 60; 255
+                Offset: 0
+                Radius: 0.10000000149011612
+                Value: false
+              View Text Velocity:
+                Scale: 0.30000001192092896
+                Value: false
+              View Velocity:
+                Alpha: 1
+                Color: 0; 0; 0
+                Constant Color: false
+                Scale: 0.30000001192092896
+                Value: true
+            - Class: rviz_plugins/Trajectory
+              Color Border Vel Max: 3
+              Enabled: true
+              Name: ReferenceTrajectory
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                Filter size: 10
+                History Policy: Keep Last
+                Reliability Policy: Reliable
+                Value: /planning/debug/path
+              Value: true
+              View Footprint:
+                Alpha: 1
+                Color: 230; 230; 50
+                Offset from BaseLink: 0
+                Rear Overhang: 1.0299999713897705
+                Value: false
+                Vehicle Length: 4.769999980926514
+                Vehicle Width: 1.8300000429153442
+              View Path:
+                Alpha: 1
+                Color: 170; 0; 0
+                Constant Color: true
+                Value: true
+                Width: 2
               View Point:
                 Alpha: 1
                 Color: 0; 60; 255
@@ -2219,7 +2261,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 7.122405529022217
+      Scale: 9.442424774169922
       Target Frame: viewer
       Value: TopDownOrtho (rviz_default_plugins)
       X: 2.5461606979370117

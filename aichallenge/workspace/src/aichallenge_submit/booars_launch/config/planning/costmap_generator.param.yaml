@@ -13,7 +13,7 @@
         type: "cached_lanelet"
         map_topic: "/map/vector_map"
         costmap_topic: "~/debug/cached_costmap"
-        inflation_radius: 0.6 # [m]
+        inflation_radius: 1.8 # [m]
         cached_costmap:
           min_x: 89607.0  # [m]
           max_x: 89687.0  # [m]
@@ -23,4 +23,4 @@
       predicted_object_layer:
         type: "predicted_object"
         predicted_objects_topic: "/perception/object_recognition/objects"
-        distance_threshold: 1.2
+        distance_threshold: 1.3
