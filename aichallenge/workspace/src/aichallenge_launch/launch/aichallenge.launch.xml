@@ -38,6 +38,7 @@
     <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
       <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+      <arg name="config_file" value="$(find-pkg-share aichallenge_submit_launch)/config/vehicle_velocity_converter.param.yaml"/>
     </include>
     <group>
       <push-ros-namespace namespace="imu"/>
