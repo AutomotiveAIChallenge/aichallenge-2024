@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <group>
-    <push-ros-namespace namespace="control"/>
-    <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
-      <param name="use_external_target_vel" value="true"/>
-      <param name="external_target_vel" value="8.0"/>
-      <param name="lookahead_gain" value="0.24"/>
-      <param name="lookahead_min_distance" value="3.0"/>
-      <param name="speed_proportional_gain" value="1.0"/>
+  <!-- Parameters -->
+  <arg name="use_stanley" default="false" />
 
-      <remap from="input/kinematics" to="/localization/kinematic_state"/>
-      <!-- <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/> -->
-      <remap from="input/trajectory" to="/planning/output/mppi_planned_path"/>
-      <remap from="output/control_cmd" to="/control/command/control_cmd"/>
+  <group>
+    <push-ros-namespace namespace="control" />
+
+    <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node"
+      output="screen" unless="$(var use_stanley)">
+      <param name="use_external_target_vel" value="true" />
+      <param name="external_target_vel" value="8.0" />
+      <param name="lookahead_gain" value="0.24" />
+      <param name="lookahead_min_distance" value="3.0" />
+      <param name="speed_proportional_gain" value="1.0" />
+
+      <remap from="input/kinematics" to="/localization/kinematic_state" />
+      <!-- <remap from="input/trajectory" to="/planning/scenario_planning/trajectory" /> -->
+      <remap from="input/trajectory" to="/planning/output/mppi_planned_path" />
+      <remap from="output/control_cmd" to="/control/command/control_cmd" />
     </node>
-    <!-- stanley control -->
-    <!-- <node pkg="stanley_control" exec="stanley_control" name="stanley_control_node" output="screen">
-      <param name="speed_proportional_gain" value="2.14"/>
-      <param name="external_target_vel" value="8.0"/>
-      <param name="k_gain" value="2.0"/>
-      <param name="k_gain_slow" value="1.0"/>
-      <param name="speed_proportional_gain" value="1.0"/>
-      <remap from="input/kinematics" to="/localization/kinematic_state"/>
-      <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
-      <remap from="output/control_cmd" to="/control/command/control_cmd"/>
-    </node> -->
+
+    <node pkg="stanley_control" exec="stanley_control" name="stanley_control_node" output="screen"
+      if="$(var use_stanley)">
+      <param name="speed_proportional_gain" value="2.14" />
+      <param name="external_target_vel" value="8.0" />
+      <param name="k_gain" value="2.0" />
+      <param name="k_gain_slow" value="1.0" />
+      <param name="speed_proportional_gain" value="1.0" />
+      <remap from="input/kinematics" to="/localization/kinematic_state" />
+      <remap from="input/trajectory" to="/planning/scenario_planning/trajectory" />
+      <remap from="output/control_cmd" to="/control/command/control_cmd" />
+    </node>
     <!-- speed_proportional_gain: P gain for speed control -->
     <!-- external_target_vel: Target speed -->
     <!-- k_gain: Gain to determine additional steering based on speed -->
