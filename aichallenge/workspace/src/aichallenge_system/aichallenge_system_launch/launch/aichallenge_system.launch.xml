@@ -4,7 +4,7 @@
     <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="$(var simulation)"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
-    <arg name="launch_vehicle_interface" default="false"/>
+    <arg name="launch_vehicle_interface" default="true"/>
 
     <log message="The arguments for aichallenge_system_launch."/>
     <log message=" - simulation: $(var simulation)"/>

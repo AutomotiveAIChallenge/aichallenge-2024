@@ -4,10 +4,9 @@
     <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
 
     <!-- Adaptors for AWSIM -->
-    <node pkg="topic_tools" exec="relay" name="relay_control_cmd">
-        <param name="input_topic" value="/control/command/control_cmd"/>
-        <param name="output_topic" value="/awsim/control_cmd"/>
-    </node>
+    <group>
+        <include file="$(find-pkg-share aichallenge_awsim_adapter)/launch/aichallenge_awsim_adapter.launch.xml"/>
+    </group>
 
     <node pkg="topic_tools" exec="relay" name="relay_gnss_pose">
         <param name="input_topic" value="/awsim/gnss/pose"/>
