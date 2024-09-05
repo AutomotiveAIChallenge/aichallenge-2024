@@ -26,7 +26,6 @@
   <exec_depend>vehicle_velocity_converter</exec_depend>
   <exec_depend>racing_kart_description</exec_depend>
   <exec_depend>racing_kart_sensor_kit_description</exec_depend>
-  <exec_depend>gnss_poser</exec_depend>
 
   <exec_depend>dummy_perception_publisher</exec_depend>
   <exec_depend>mission_planner</exec_depend>

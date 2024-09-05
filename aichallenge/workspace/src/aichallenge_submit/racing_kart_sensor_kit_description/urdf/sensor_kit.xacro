@@ -33,19 +33,6 @@
       yaw="${calibration['sensor_kit_base_link']['gnss_link']['yaw']}"
       fps="100"
     />
-    <!-- gnss2 -->
-    <xacro:imu_macro
-      name="gnss2"
-      parent="sensor_kit_base_link"
-      namespace=""
-      x="${calibration['sensor_kit_base_link']['gnss_link2']['x']}"
-      y="${calibration['sensor_kit_base_link']['gnss_link2']['y']}"
-      z="${calibration['sensor_kit_base_link']['gnss_link2']['z']}"
-      roll="${calibration['sensor_kit_base_link']['gnss_link2']['roll']}"
-      pitch="${calibration['sensor_kit_base_link']['gnss_link2']['pitch']}"
-      yaw="${calibration['sensor_kit_base_link']['gnss_link2']['yaw']}"
-      fps="100"
-    />
 
     <!-- imu -->
     <xacro:imu_macro

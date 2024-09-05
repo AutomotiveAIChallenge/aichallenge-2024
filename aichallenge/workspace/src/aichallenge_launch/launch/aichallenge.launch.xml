@@ -40,18 +40,6 @@
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
     </include>
     <group>
-      <push-ros-namespace namespace="gnss2"/>
-      <include file="$(find-pkg-share gnss_poser)/launch/gnss_poser.launch.xml">
-        <arg name="input_topic_fix" value="/ublox_gps_node/fix"/>
-        <arg name="output_topic_gnss_pose" value="pose"/>
-        <arg name="output_topic_gnss_pose_cov" value="pose_with_covariance"/>
-        <arg name="output_topic_gnss_fixed" value="nav_sat_fix"/>
-        <arg name="coordinate_system" value="1"/> <!-- MGRS -->
-        <arg name="gnss_frame" value="gnss2_link"/>
-        <arg name="gnss_base_frame" value="gnss2_base_link"/>
-      </include>
-    </group>
-    <group>
       <push-ros-namespace namespace="imu"/>
       <arg name="imu_corrector_param_file" default="$(find-pkg-share imu_corrector)/config/imu_corrector.param.yaml"/>
       <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
