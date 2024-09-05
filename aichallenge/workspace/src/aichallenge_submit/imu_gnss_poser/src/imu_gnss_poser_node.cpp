@@ -36,6 +36,7 @@ private:
         msg->pose.covariance[7*3] = 100000.0;
         msg->pose.covariance[7*4] = 100000.0;
         msg->pose.covariance[7*5] = 100000.0;
+
         pub_pose_->publish(*msg);
         if (!is_ekf_initialized_)
             pub_initial_pose_3d_->publish(*msg);
