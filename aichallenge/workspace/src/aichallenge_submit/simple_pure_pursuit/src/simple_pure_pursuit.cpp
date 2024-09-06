@@ -67,7 +67,7 @@ void SimplePurePursuit::onTimer()
     (closet_traj_point_idx == trajectory_->points.size() - 1) ||
     (trajectory_->points.size() <= 2)) {
     cmd.longitudinal.speed = 0.0;
-    cmd.longitudinal.acceleration = -2.0;
+    cmd.longitudinal.acceleration = -10.0;
     RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000 /*ms*/, "reached to the goal");
   } else {
     // get closest trajectory point from current position
