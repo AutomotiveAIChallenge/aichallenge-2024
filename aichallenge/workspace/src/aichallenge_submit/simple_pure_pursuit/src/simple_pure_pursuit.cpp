@@ -51,7 +51,7 @@ AckermannControlCommand zeroAckermannControlCommand(rclcpp::Time stamp)
 }
 
 void SimplePurePursuit::onTimer()
-{zeroAckermannControlCommand
+{
   // check data
   if (!subscribeMessageAvailable()) {
     return;
