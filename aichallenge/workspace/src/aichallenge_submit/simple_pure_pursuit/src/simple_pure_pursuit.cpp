@@ -27,6 +27,7 @@ SimplePurePursuit::SimplePurePursuit()
 {
   pub_cmd_ = create_publisher<AckermannControlCommand>("output/control_cmd", 1);
   pub_raw_cmd_ = create_publisher<AckermannControlCommand>("output/raw_control_cmd", 1);
+  pub_lookahead_point_ = create_publisher<PointStamped>("/control/debug/lookahead_point", 1);
 
   sub_kinematics_ = create_subscription<Odometry>(
     "input/kinematics", 1, [this](const Odometry::SharedPtr msg) { odometry_ = msg; });
@@ -102,6 +103,14 @@ void SimplePurePursuit::onTimer()
     }
     double lookahead_point_x = lookahead_point_itr->pose.position.x;
     double lookahead_point_y = lookahead_point_itr->pose.position.y;
+
+    geometry_msgs::msg::PointStamped lookahead_point_msg;
+    lookahead_point_msg.header.stamp = get_clock()->now();
+    lookahead_point_msg.header.frame_id = "map";
+    lookahead_point_msg.point.x = lookahead_point_x;
+    lookahead_point_msg.point.y = lookahead_point_y;
+    lookahead_point_msg.point.z = 0;
+    pub_lookahead_point_->publish(lookahead_point_msg);
 
     // calc steering angle for lateral control
     double alpha = std::atan2(lookahead_point_y - rear_y, lookahead_point_x - rear_x) -
