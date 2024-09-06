@@ -9,7 +9,7 @@
   <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
 
   <!-- Optional parameters -->
-  <arg name="lanelet2_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
+  <arg name="lanelet2_file" default="lanelet2_map_opt.osm" description="lanelet2 map file name"/>
 
   <!-- Common -->
   <include file="$(find-pkg-share booars_launch)/launch/components/common.launch.xml">

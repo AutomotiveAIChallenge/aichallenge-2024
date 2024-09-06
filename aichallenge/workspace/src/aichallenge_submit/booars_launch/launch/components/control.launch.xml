@@ -10,7 +10,7 @@
       output="screen" unless="$(var use_stanley)">
       <param name="use_external_target_vel" value="true" />
       <param name="external_target_vel" value="8.0" />
-      <param name="lookahead_gain" value="0.4" />
+      <param name="lookahead_gain" value="0.24" />
       <param name="lookahead_min_distance" value="3.0" />
       <param name="speed_proportional_gain" value="1.0" />
 
