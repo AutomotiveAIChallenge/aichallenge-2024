@@ -39,6 +39,8 @@
   <exec_depend>tier4_localization_rviz_plugin</exec_depend>
   <exec_depend>tier4_control_rviz_plugin</exec_depend>
   <exec_depend>tier4_vehicle_rviz_plugin</exec_depend>
+  <exec_depend>multi_data_monitor</exec_depend>
+  <exec_depend>generic_type_utility</exec_depend>
 
 
   <test_depend>ament_lint_auto</test_depend>

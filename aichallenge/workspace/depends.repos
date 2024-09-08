@@ -25,3 +25,11 @@ repositories:
     type: git
     url: https://github.com/autowarefoundation/autoware.universe.git
     version: awsim-stable
+  multi_data_monitor:
+    type: git
+    url: https://github.com/tier4/multi_data_monitor.git
+    version: main
+  generic_type_utility:
+    type: git
+    url: https://github.com/tier4/generic_type_utility.git
+    version: main
