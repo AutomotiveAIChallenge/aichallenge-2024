@@ -111,7 +111,7 @@ Visualization Manager:
               Left: 50
               Length: 100
               Name: SteeringAngle
-              Scale: 17
+              Scale: 3
               Text Color: 25; 255; 240
               Top: 50
               Topic:
