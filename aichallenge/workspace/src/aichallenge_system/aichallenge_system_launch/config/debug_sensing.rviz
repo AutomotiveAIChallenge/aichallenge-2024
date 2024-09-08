@@ -113,7 +113,7 @@ Visualization Manager:
               Name: SteeringAngle
               Scale: 3
               Text Color: 25; 255; 240
-              Top: 50
+              Top: 30
               Topic:
                 Depth: 5
                 Durability Policy: Volatile
