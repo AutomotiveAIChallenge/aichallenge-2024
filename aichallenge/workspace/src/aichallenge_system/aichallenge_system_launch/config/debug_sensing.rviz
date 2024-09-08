@@ -226,7 +226,7 @@ Visualization Manager:
               Value: true
               Value Scale: 0.25
             - Class: rviz_plugins/TurnSignal
-              Enabled: true
+              Enabled: false
               Height: 273
               Left: 209
               Name: TurnSignal
