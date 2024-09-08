@@ -1,10 +1,21 @@
 version: 2.0
 
 stylesheets:
-  - { path: package://multi_data_monitor/css/plugins/simple.css, target: Simple }
+  - { path: "package://multi_data_monitor/css/plugins/simple.css", target: Simple }
+  - { path: "package://multi_data_monitor/css/colors.css" }
 
 widgets:
-  - { class: Simple, input: s1 }
-
-streams:
-  - { class: subscription, label: s1, topic: /racing_kart/gnss, field: posmode }
+  - class: Simple
+    value: UNKNOWN
+    input: { class: subscription, topic: /racing_kart/gnss, field: posmode }
+    rules:
+      class: SetFirstIf
+      type: uint
+      list:
+        - { eq: 45, value: No Data,      attrs: { back-color: red } }
+        - { eq: 78, value: No Fix,       attrs: { back-color: red } }
+        - { eq: 69, value: Estimated,    attrs: { back-color: yellow } }
+        - { eq: 65, value: Autonomous,   attrs: { back-color: yellow } }
+        - { eq: 68, value: Differential, attrs: { back-color: yellow } }
+        - { eq: 70, value: RTK float,    attrs: { back-color: lime } }
+        - { eq: 82, value: RTK fixed,    attrs: { back-color: cyan } }
