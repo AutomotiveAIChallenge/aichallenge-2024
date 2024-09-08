@@ -80,6 +80,7 @@
       <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
       <arg name="proc_stddev_vx_c" value="10.0"/>
       <arg name="proc_stddev_wz_c" value="5.0"/>
+      <arg name="pose_additional_delay" value="0.5"/>
     </include>
 
     <!-- twist2accel -->
