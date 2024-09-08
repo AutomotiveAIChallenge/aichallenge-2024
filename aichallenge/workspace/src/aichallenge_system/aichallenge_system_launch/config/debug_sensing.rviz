@@ -129,7 +129,7 @@ Visualization Manager:
               Length: 100
               Name: ConsoleMeter
               Text Color: 25; 255; 240
-              Top: 50
+              Top: 35
               Topic:
                 Depth: 5
                 Durability Policy: Volatile
