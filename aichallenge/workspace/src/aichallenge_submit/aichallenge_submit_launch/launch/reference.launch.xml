@@ -2,21 +2,19 @@
 <launch>
   <!-- Essential parameters -->
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
-  <arg name="use_sim_time" default="true"/>
-  <arg name="map_path" default="/aichallenge/mapfile"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="map_path" default="$(find-pkg-share aichallenge_submit_launch)/map"/>
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
-  <arg name="sensor_model" description="sensor model name"/>
+  <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
   <arg name="simulation" description="used for sensor kit param"/>
-
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
   <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/>
-  <!-- Control -->
+
   <!-- Vehicle -->
   <arg name="launch_vehicle_interface" default="false"/>
-  <!-- System -->
-  <arg name="system_run_mode" default="online" description="run mode in system"/>
+  <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
 
   <!-- Global parameters -->
   <group scoped="false">
@@ -30,7 +28,7 @@
     <arg name="model_file" default="$(find-pkg-share tier4_vehicle_launch)/urdf/vehicle.xacro" description="path to the file of model settings (*.xacro)"/>
     <arg name="config_dir" default="$(find-pkg-share racing_kart_sensor_kit_description)/config"/>
     <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher">
-      <param name="robot_description" value="$(command 'xacro $(var model_file) vehicle_model:=$(var vehicle_model) sensor_model:=$(var sensor_model) config_dir:=$(var config_dir) simulation:=$(var simulation)' 'warn')"/>
+      <param name="robot_description" value="$(command 'xacro $(var model_file) vehicle_model:=$(var vehicle_model) sensor_model:=$(var sensor_model) config_dir:=$(var config_dir)' 'warn')"/>
     </node>
   </group>
 
@@ -41,19 +39,20 @@
     <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
       <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+      <arg name="config_file" value="$(find-pkg-share aichallenge_submit_launch)/config/vehicle_velocity_converter.param.yaml"/>
     </include>
     <group>
       <push-ros-namespace namespace="imu"/>
       <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
-        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-          <arg name="input_topic" value="imu_raw"/>
-          <arg name="output_topic" value="imu_data"/>
-          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
-        </include>
+      <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+        <arg name="input_topic" value="imu_raw"/>
+        <arg name="output_topic" value="imu_data"/>
+        <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+      </include>
     </group>
   </group>
 
-  <!-- Localization -->
+    <!-- Localization -->
   <group>
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
@@ -82,6 +81,7 @@
       <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
       <arg name="proc_stddev_vx_c" value="10.0"/>
       <arg name="proc_stddev_wz_c" value="5.0"/>
+      <arg name="pose_additional_delay" value="0.5"/>
     </include>
 
     <!-- twist2accel -->
@@ -116,7 +116,7 @@
         <remap from="input/vector_map" to="/map/vector_map"/>
         <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
         <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
-        <param from="$(find-pkg-share autoware_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
       </node>
 
       <!-- goal_pose_visualizer -->
@@ -181,14 +181,14 @@
               <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
               <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
               <param name="lane_change.use_all_predicted_path" value="false"/>
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
               <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" />
-              <param from="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
+              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
               <extra_arg name="use_intra_process_comms" value="false" />
             </composable_node>
 
@@ -228,7 +228,7 @@
       <composable_node pkg="map_loader" plugin="Lanelet2MapLoaderNode" name="lanelet2_map_loader" namespace="">
         <remap from="output/lanelet2_map" to="vector_map" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share autoware_launch)/config/map/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/map/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
@@ -237,7 +237,7 @@
         <remap from="input/lanelet2_map" to="vector_map" />
         <remap from="output/lanelet2_map_marker" to="vector_map_marker" />
         <param name="lanelet2_map_path" value="$(var map_path)/$(var lanelet2_map_file)" />
-        <param from="$(find-pkg-share autoware_launch)/config/map/lanelet2_map_loader.param.yaml" />
+        <param from="$(find-pkg-share aichallenge_submit_launch)/config/map/lanelet2_map_loader.param.yaml" />
         <extra_arg name="use_intra_process_comms" value="false" />
       </composable_node>
 
