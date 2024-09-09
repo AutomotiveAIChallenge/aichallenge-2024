@@ -80,14 +80,14 @@ void CostmapGenerator::update()
 
   // Fill the costmap data
   {
+    PointStamped global_point;
+    global_point.header.frame_id = map_frame_;
+    global_point.header.stamp = costmap_time;
+    global_point.point.z = 0.0;
     for (int i = 0; i < costmap_parameters_->grid_num(); i++) {
       Point2d local_point = index_to_point_table_[i];
-      PointStamped global_point;
-      global_point.header.frame_id = map_frame_;
-      global_point.header.stamp = costmap_time;
       global_point.point.x = local_point[0] + costmap_center_position.x;
       global_point.point.y = local_point[1] + costmap_center_position.y;
-      global_point.point.z = 0.0;
       costmap_->data[i] = multi_layered_costmap_->is_occupied(global_point) ? 100 : 0;
     }
   }
