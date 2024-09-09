@@ -2,11 +2,25 @@ version: 2.0
 
 stylesheets:
   - { path: "package://multi_data_monitor/css/plugins/simple.css", target: Simple }
+  - { path: "package://multi_data_monitor/css/plugins/titled.css", target: Titled }
   - { path: "package://multi_data_monitor/css/colors.css" }
 
 widgets:
-  - class: Simple
-    value: UNKNOWN
+  - class: Matrix
+    cols: 1
+    items:
+    - posmode
+    - class: Matrix
+      cols: 2
+      items:
+        - target-steering
+        - target-velocity
+        - actual-steering
+        - actual-velocity
+
+  - class: Titled
+    label: posmode
+    title: posmode
     input: { class: subscription, topic: /racing_kart/gnss, field: posmode }
     rules:
       class: SetFirstIf
@@ -19,3 +33,35 @@ widgets:
         - { eq: 68, value: Differential, attrs: { back-color: yellow } }
         - { eq: 70, value: RTK float,    attrs: { back-color: lime } }
         - { eq: 82, value: RTK fixed,    attrs: { back-color: cyan } }
+
+  - class: Titled
+    label: actual-velocity
+    title: Actual Velocity [km/h]
+    input: { class: subscription, topic: /vehicle/status/velocity_status, field: longitudinal_velocity }
+    rules:
+      - { class: Units, mode: mps_to_kph }
+      - { class: Precision, digits: 2 }
+
+  - class: Titled
+    label: actual-steering
+    title: Actual Steering [deg]
+    input: { class: subscription, topic: /vehicle/status/steering_status, field: steering_tire_angle }
+    rules:
+      - { class: Units, mode: rad_to_deg }
+      - { class: Precision, digits: 2 }
+
+  - class: Titled
+    label: target-velocity
+    title: Target Velocity [km/h]
+    input: { class: subscription, topic: /control/command/control_cmd, field: longitudinal.speed }
+    rules:
+      - { class: Units, mode: mps_to_kph }
+      - { class: Precision, digits: 2 }
+
+  - class: Titled
+    label: target-steering
+    title: Target Steering [deg]
+    input: { class: subscription, topic: /control/command/control_cmd, field: lateral.steering_tire_angle }
+    rules:
+      - { class: Units, mode: rad_to_deg }
+      - { class: Precision, digits: 2 }
