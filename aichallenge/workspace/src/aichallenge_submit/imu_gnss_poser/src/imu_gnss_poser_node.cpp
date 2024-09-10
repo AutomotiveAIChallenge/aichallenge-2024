@@ -26,10 +26,10 @@ public:
 private:
 
     void gnss_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
-        msg->pose.pose.orientation.x = imu_msg_.orientation.x;
-        msg->pose.pose.orientation.y = imu_msg_.orientation.y;
-        msg->pose.pose.orientation.z = imu_msg_.orientation.z;
-        msg->pose.pose.orientation.w = imu_msg_.orientation.w;
+        //msg->pose.pose.orientation.x = imu_msg_.orientation.x;
+        //msg->pose.pose.orientation.y = imu_msg_.orientation.y;
+        //msg->pose.pose.orientation.z = imu_msg_.orientation.z;
+        //msg->pose.pose.orientation.w = imu_msg_.orientation.w;
         msg->pose.covariance[7*0] = 0.1;
         msg->pose.covariance[7*1] = 0.1;
         msg->pose.covariance[7*2] = 0.1;
