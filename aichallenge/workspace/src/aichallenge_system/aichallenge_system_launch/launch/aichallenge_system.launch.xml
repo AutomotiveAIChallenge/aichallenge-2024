@@ -4,7 +4,7 @@
     <log message="This is aichallenge_system_launch."/>
     <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="$(var simulation)"/>
-    <arg name="launch_vehicle_interface" default="false"/>
+    <arg name="launch_vehicle_interface" default="true"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
     <log message="echo launch param simulation: $(var simulation)"/>
@@ -13,16 +13,17 @@
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+        <arg name="simulation" value="$(var simulation)"/>
     </include>
     
     <!-- Workaround because the simulator cannot use the service. -->
     <group if="$(var simulation)">
         <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
+        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
     </group>
 
     <!-- RViz -->
     <group>
-        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share autoware_launch)/rviz/image/autoware.png"/>
-        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
+        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
     </group>
 </launch>
