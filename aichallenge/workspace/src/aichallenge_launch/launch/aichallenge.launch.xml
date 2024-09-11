@@ -271,6 +271,11 @@
     </include>
   </group>
 
+  <node pkg="topic_tools" exec="relay" name="initial_pose_relay">
+    <param name="input_topic" value="/initialpose"/>
+    <param name="output_topic" value="/localization/initial_pose3d"/>
+  </node>
+
   <!-- API -->
   <group>
     <!-- default_ad_api -->
