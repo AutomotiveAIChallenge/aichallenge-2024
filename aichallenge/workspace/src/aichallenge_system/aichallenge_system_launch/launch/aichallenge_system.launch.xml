@@ -3,7 +3,7 @@
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
     <log message="This is aichallenge_system_launch."/>
     <arg name="simulation" default="true"/>
-    <arg name="use_sim_time" default="true"/>
+    <arg name="use_sim_time" default="$(var simulation)"/>
     <arg name="launch_vehicle_interface" default="true"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
@@ -15,7 +15,7 @@
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
         <arg name="simulation" value="$(var simulation)"/>
     </include>
-    
+
     <!-- Workaround because the simulator cannot use the service. -->
     <group if="$(var simulation)">
         <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
