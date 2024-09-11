@@ -22,6 +22,11 @@
         <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
     </group>
 
+    <node pkg="topic_tools" exec="relay" name="initial_pose_relay">
+      <param name="input_topic" value="/initialpose"/>
+      <param name="output_topic" value="/localization/initial_pose3d"/>
+    </node>
+
     <!-- RViz -->
     <group>
         <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
