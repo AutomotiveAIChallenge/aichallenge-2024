@@ -53,6 +53,8 @@
   </group>
 
     <!-- Localization -->
+  <let name="pose_additional_delay_var" value="0.0" if="$(var simulation)"/>
+  <let name="pose_additional_delay_var" value="0.5" unless="$(var simulation)"/>
   <group>
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
@@ -81,7 +83,7 @@
       <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
       <arg name="proc_stddev_vx_c" value="10.0"/>
       <arg name="proc_stddev_wz_c" value="5.0"/>
-      <arg name="pose_additional_delay" value="0.5"/>
+      <arg name="pose_additional_delay" value="$(var pose_additional_delay_var)"/>
     </include>
 
     <!-- twist2accel -->
@@ -205,13 +207,17 @@
     </group>
   </group>
 
+  <!-- Pure Pursuit -->
+  <let name="steering_tire_angle_gain_var" value="1.0" if="$(var simulation)"/>
+  <let name="steering_tire_angle_gain_var" value="1.639" unless="$(var simulation)"/>
+
   <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="true"/>
     <param name="external_target_vel" value="8.0"/>
     <param name="lookahead_gain" value="0.3"/>
     <param name="lookahead_min_distance" value="4.0"/>
     <param name="speed_proportional_gain" value="1.0"/>
-    <param name="steering_tire_angle_gain" value="1.639"/>
+    <param name="steering_tire_angle_gain" value="$(var steering_tire_angle_gain_var)"/>
 
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
