@@ -20,6 +20,9 @@ ros2 bag record -a -o "$RECORD_DIR/$TIMESTAMP"
 
 echo "Rosbag recording finished. Compressing data..."
 
+mv "$RECORD_DIR/$TIMESTAMP"/* "$RECORD_DIR"
+rmdir "$RECORD_DIR/$TIMESTAMP"
+
 cd "$RECORD_DIR" || exit
 
 zip -r "$RECORD_DIR.zip" "./"
