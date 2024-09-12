@@ -53,7 +53,7 @@ public:
   double resolution_inv() const { return resolution_inv_; }
   int grid_width_2() const { return grid_width_2_; }
   int grid_width() const { return grid_width_; }
-  int gird_height_2() const { return grid_height_2_; }
+  int grid_height_2() const { return grid_height_2_; }
   int grid_height() const { return grid_height_; }
   int grid_num() const { return grid_num_; }
 
