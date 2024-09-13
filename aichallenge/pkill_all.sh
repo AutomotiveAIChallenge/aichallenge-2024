@@ -1,3 +1,5 @@
+#!/bin/bash
+
 pkill -9 component_conta
 pkill -9 ekf_localizer
 pkill -9 empty_objects_p

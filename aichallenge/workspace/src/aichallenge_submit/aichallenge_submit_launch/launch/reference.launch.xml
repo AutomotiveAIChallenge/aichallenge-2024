@@ -2,20 +2,19 @@
 <launch>
   <!-- Essential parameters -->
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
-  <arg name="use_sim_time" default="true"/>
-  <arg name="map_path" default="/aichallenge/mapfile"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="map_path" default="$(find-pkg-share aichallenge_submit_launch)/map"/>
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
-  <arg name="sensor_model" description="sensor model name"/>
-
+  <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
+  <arg name="simulation" description="used for sensor kit param"/>
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
   <arg name="pointcloud_map_file" default="pointcloud_map.pcd" description="pointcloud map file name"/>
-  <!-- Control -->
+
   <!-- Vehicle -->
   <arg name="launch_vehicle_interface" default="false"/>
-  <!-- System -->
-  <arg name="system_run_mode" default="online" description="run mode in system"/>
+  <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
 
   <!-- Global parameters -->
   <group scoped="false">
@@ -29,7 +28,7 @@
     <arg name="model_file" default="$(find-pkg-share tier4_vehicle_launch)/urdf/vehicle.xacro" description="path to the file of model settings (*.xacro)"/>
     <arg name="config_dir" default="$(find-pkg-share racing_kart_sensor_kit_description)/config"/>
     <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher">
-      <param name="robot_description" value="$(command 'xacro $(var model_file) vehicle_model:=$(var vehicle_model) sensor_model:=$(var sensor_model) config_dir:=$(var config_dir)' 'warn')"/>
+      <param name="robot_description" value="$(command 'xacro $(var model_file) vehicle_model:=$(var vehicle_model) sensor_model:=$(var sensor_model) config_dir:=$(var config_dir) simulation:=$(var simulation)' 'warn')"/>
     </node>
   </group>
 
@@ -40,19 +39,22 @@
     <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
       <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
       <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+      <arg name="config_file" value="$(find-pkg-share aichallenge_submit_launch)/config/vehicle_velocity_converter.param.yaml"/>
     </include>
     <group>
       <push-ros-namespace namespace="imu"/>
       <arg name="imu_corrector_param_file" default="$(find-pkg-share aichallenge_submit_launch)/config/imu_corrector.param.yaml"/>
-        <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-          <arg name="input_topic" value="imu_raw"/>
-          <arg name="output_topic" value="imu_data"/>
-          <arg name="param_file" value="$(var imu_corrector_param_file)"/>
-        </include>
+      <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
+        <arg name="input_topic" value="imu_raw"/>
+        <arg name="output_topic" value="imu_data"/>
+        <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+      </include>
     </group>
   </group>
 
-  <!-- Localization -->
+    <!-- Localization -->
+  <let name="pose_additional_delay_var" value="0.0" if="$(var simulation)"/>
+  <let name="pose_additional_delay_var" value="0.5" unless="$(var simulation)"/>
   <group>
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
@@ -68,6 +70,7 @@
       <arg name="enable_yaw_bias_estimation" value="false"/>
       <arg name="tf_rate" value="50.0"/>
       <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="pose_smoothing_steps" value="1"/>
       <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
@@ -80,6 +83,8 @@
       <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
       <arg name="proc_stddev_vx_c" value="10.0"/>
       <arg name="proc_stddev_wz_c" value="5.0"/>
+      <arg name="pose_additional_delay" value="$(var pose_additional_delay_var)"/>
+      <arg name="extend_state_step" value="100"/>
     </include>
 
     <!-- twist2accel -->
@@ -203,12 +208,17 @@
     </group>
   </group>
 
+  <!-- Pure Pursuit -->
+  <let name="steering_tire_angle_gain_var" value="1.0" if="$(var simulation)"/>
+  <let name="steering_tire_angle_gain_var" value="1.639" unless="$(var simulation)"/>
+
   <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
     <param name="use_external_target_vel" value="false"/>
     <param name="external_target_vel" value="8.0"/>
     <param name="lookahead_gain" value="0.5"/>
     <param name="lookahead_min_distance" value="3.0"/>
     <param name="speed_proportional_gain" value="1.0"/>
+    <param name="steering_tire_angle_gain" value="$(var steering_tire_angle_gain_var)"/>
 
     <remap from="input/kinematics" to="/localization/kinematic_state"/>
     <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
