@@ -13,13 +13,19 @@
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+        <arg name="simulation" value="$(var simulation)"/>
     </include>
-    
+
     <!-- Workaround because the simulator cannot use the service. -->
     <group if="$(var simulation)">
         <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
         <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
     </group>
+
+    <node pkg="topic_tools" exec="relay" name="initial_pose_relay">
+      <param name="input_topic" value="/initialpose"/>
+      <param name="output_topic" value="/localization/initial_pose3d"/>
+    </node>
 
     <!-- RViz -->
     <group>
