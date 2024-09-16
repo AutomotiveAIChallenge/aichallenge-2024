@@ -27,6 +27,4 @@ cd "$RECORD_DIR" || exit
 
 zip -r "$RECORD_DIR.zip" "./"
 
-rm -r "$RECORD_DIR"
-
-echo "Compression completed. ZIP file created at $RECORD_DIR/${TIMESTAMP}_rosbag_and_params.zip"
+echo "Compression completed. ZIP file created at $RECORD_DIR.zip"
