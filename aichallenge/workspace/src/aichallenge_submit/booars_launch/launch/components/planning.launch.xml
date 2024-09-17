@@ -13,7 +13,7 @@
         <remap from="input/vector_map" to="/map/vector_map"/>
         <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
         <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
-        <param from="$(find-pkg-share autoware_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
+        <param from="$(find-pkg-share booars_launch)/config/planning/mission_planner.param.yaml"/>
       </node>
 
       <!-- goal_pose_visualizer -->
