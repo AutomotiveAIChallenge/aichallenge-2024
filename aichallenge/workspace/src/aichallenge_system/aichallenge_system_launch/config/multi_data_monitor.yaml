@@ -9,7 +9,15 @@ widgets:
   - class: Matrix
     cols: 1
     items:
-    - posmode
+    - class: Matrix
+      cols: 2
+      items:
+      - posmode
+      - control-mode
+      - emergency
+      - joy-delay
+
+
     - class: Matrix
       cols: 2
       items:
@@ -20,7 +28,7 @@ widgets:
 
   - class: Titled
     label: posmode
-    title: posmode
+    title: Posmode
     input: { class: subscription, topic: /racing_kart/gnss, field: posmode }
     rules:
       class: SetFirstIf
@@ -33,6 +41,34 @@ widgets:
         - { eq: 68, value: Differential, attrs: { back-color: yellow } }
         - { eq: 70, value: RTK float,    attrs: { back-color: lime } }
         - { eq: 82, value: RTK fixed,    attrs: { back-color: cyan } }
+  - class: Titled
+    label: control mode
+    title: Control Mode
+    input: { class: subscription, topic: /vehicle/status/control_mode, field: mode }
+    rules:
+      class: SetFirstIf
+      type: uint
+      list:
+        - { eq: 0, value: NO_COMMAND,       attrs: { back-color: red } }
+        - { eq: 1, value: AUTONOMOUS,       attrs: { back-color: cyan } }
+        - { eq: 2, value: AUTONOMOUS_STEER_ONLY,   attrs: { back-color: lime } }
+        - { eq: 3, value: AUTONOMOUS_VELOCITY_ONLY,   attrs: { back-color: lime } }
+        - { eq: 4, value: MANUAL,       attrs: { back-color: yellow } }
+        - { eq: 5, value: DISENGAGED,  attrs: { back-color: red } }
+        - { eq: 6, value: NOT_READY,  attrs: { back-color: red } }
+
+
+  - class: Titled
+    label: emergency
+    title: Emergency
+    input: { class: subscription, topic: /racing_kart/debug/status, field: emergency }
+
+  - class: Titled
+    label: joy-delay
+    title: joy delay [sec]
+    input: { class: subscription, topic: /racing_kart/debug/delay, field: data@1}
+    rules:
+      - { class: Precision, digits: 2 }
 
   - class: Titled
     label: actual-velocity
