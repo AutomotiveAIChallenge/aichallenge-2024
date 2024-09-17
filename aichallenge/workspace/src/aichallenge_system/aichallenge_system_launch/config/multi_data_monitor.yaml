@@ -5,25 +5,19 @@ stylesheets:
   - { path: "package://multi_data_monitor/css/plugins/titled.css", target: Titled }
   - { path: "package://multi_data_monitor/css/colors.css" }
 
+
 widgets:
   - class: Matrix
-    cols: 1
+    cols: 2
     items:
-    - class: Matrix
-      cols: 2
-      items:
       - posmode
       - control-mode
       - emergency
       - joy-delay
-
-    - class: Matrix
-      cols: 2
-      items:
-        - target-steering
-        - target-velocity
-        - actual-steering
-        - actual-velocity
+      - target-steering
+      - target-velocity
+      - actual-steering
+      - actual-velocity
 
   - class: Titled
     label: posmode
