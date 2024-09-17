@@ -42,7 +42,7 @@ widgets:
         - { eq: 70, value: RTK float,    attrs: { back-color: lime } }
         - { eq: 82, value: RTK fixed,    attrs: { back-color: cyan } }
   - class: Titled
-    label: control mode
+    label: control-mode
     title: Control Mode
     input: { class: subscription, topic: /vehicle/status/control_mode, field: mode }
     rules:
@@ -62,6 +62,13 @@ widgets:
     label: emergency
     title: Emergency
     input: { class: subscription, topic: /racing_kart/debug/status, field: emergency }
+    rules:
+      class: SetFirstIf
+      type: text
+      list:
+        - { eq: false, value: False,       attrs: { back-color: cyan } }
+        - { eq: true, value: True,       attrs: { back-color: red } }
+
 
   - class: Titled
     label: joy-delay
