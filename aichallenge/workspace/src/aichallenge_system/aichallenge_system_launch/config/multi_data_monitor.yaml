@@ -17,7 +17,6 @@ widgets:
       - emergency
       - joy-delay
 
-
     - class: Matrix
       cols: 2
       items:
@@ -41,6 +40,7 @@ widgets:
         - { eq: 68, value: Differential, attrs: { back-color: yellow } }
         - { eq: 70, value: RTK float,    attrs: { back-color: lime } }
         - { eq: 82, value: RTK fixed,    attrs: { back-color: cyan } }
+
   - class: Titled
     label: control-mode
     title: Control Mode
@@ -57,7 +57,6 @@ widgets:
         - { eq: 5, value: DISENGAGED,  attrs: { back-color: red } }
         - { eq: 6, value: NOT_READY,  attrs: { back-color: red } }
 
-
   - class: Titled
     label: emergency
     title: Emergency
@@ -69,10 +68,9 @@ widgets:
         - { eq: false, value: False,       attrs: { back-color: cyan } }
         - { eq: true, value: True,       attrs: { back-color: red } }
 
-
   - class: Titled
     label: joy-delay
-    title: joy delay [sec]
+    title: Joy Delay [sec]
     input: { class: subscription, topic: /racing_kart/debug/delay, field: data@1}
     rules:
       - { class: Precision, digits: 2 }
