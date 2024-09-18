@@ -46,6 +46,9 @@
       "ignoreRegExpList": ["@author .*$", "[\\@]tparam", "\\author .*$", "Author(s)?( )?: .*$", "TODO\\((.*?)\\)"]
     }
   ],
+  "flagWords": [
+    "gird"
+  ],
   "words": [
     "ackermann",
     "adapi",
