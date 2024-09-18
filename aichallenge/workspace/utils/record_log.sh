@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-NODES_TO_RECORD=("localization/ekf_localizer" "simple_pure_pursuit_node")
+NODES_TO_RECORD=("localization/ekf_localizer" "simple_pure_pursuit_node" "racing_kart_driver")
 
 source $HOME/aichallenge-2024/aichallenge/workspace/install/setup.bash
 source $HOME/racing_kart_interface/install/setup.bash
