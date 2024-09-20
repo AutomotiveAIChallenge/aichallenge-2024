@@ -22,9 +22,12 @@ SimplePurePursuit::SimplePurePursuit()
   lookahead_min_distance_(declare_parameter<float>("lookahead_min_distance", 1.0)),
   speed_proportional_gain_(declare_parameter<float>("speed_proportional_gain", 1.0)),
   use_external_target_vel_(declare_parameter<bool>("use_external_target_vel", false)),
-  external_target_vel_(declare_parameter<float>("external_target_vel", 0.0))
+  external_target_vel_(declare_parameter<float>("external_target_vel", 0.0)),
+  steering_tire_angle_gain_(declare_parameter<float>("steering_tire_angle_gain", 1.0))
 {
   pub_cmd_ = create_publisher<AckermannControlCommand>("output/control_cmd", 1);
+  pub_raw_cmd_ = create_publisher<AckermannControlCommand>("output/raw_control_cmd", 1);
+  pub_lookahead_point_ = create_publisher<PointStamped>("/control/debug/lookahead_point", 1);
 
   sub_kinematics_ = create_subscription<Odometry>(
     "input/kinematics", 1, [this](const Odometry::SharedPtr msg) { odometry_ = msg; });
@@ -63,7 +66,7 @@ void SimplePurePursuit::onTimer()
 
   if (
     (closet_traj_point_idx == trajectory_->points.size() - 1) ||
-    (trajectory_->points.size() <= 5)) {
+    (trajectory_->points.size() <= 2)) {
     cmd.longitudinal.speed = 0.0;
     cmd.longitudinal.acceleration = -10.0;
     RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000 /*ms*/, "reached to the goal");
@@ -101,13 +104,23 @@ void SimplePurePursuit::onTimer()
     double lookahead_point_x = lookahead_point_itr->pose.position.x;
     double lookahead_point_y = lookahead_point_itr->pose.position.y;
 
+    geometry_msgs::msg::PointStamped lookahead_point_msg;
+    lookahead_point_msg.header.stamp = get_clock()->now();
+    lookahead_point_msg.header.frame_id = "map";
+    lookahead_point_msg.point.x = lookahead_point_x;
+    lookahead_point_msg.point.y = lookahead_point_y;
+    lookahead_point_msg.point.z = 0;
+    pub_lookahead_point_->publish(lookahead_point_msg);
+
     // calc steering angle for lateral control
     double alpha = std::atan2(lookahead_point_y - rear_y, lookahead_point_x - rear_x) -
                    tf2::getYaw(odometry_->pose.pose.orientation);
     cmd.lateral.steering_tire_angle =
-      std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
+      steering_tire_angle_gain_ * std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
   }
   pub_cmd_->publish(cmd);
+  cmd.lateral.steering_tire_angle /=  steering_tire_angle_gain_;
+  pub_raw_cmd_->publish(cmd);
 }
 
 bool SimplePurePursuit::subscribeMessageAvailable()
