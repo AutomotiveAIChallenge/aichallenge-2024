@@ -16,7 +16,6 @@ ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV ROS_DOMAIN_ID=71
 ENV CYCLONEDDS_URI=file:///aichallenge/workspace/cyclonedds.xml
 
-
 FROM common AS dev
 
 ENV RCUTILS_COLORIZED_OUTPUT=1
