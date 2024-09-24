@@ -26,16 +26,31 @@ public:
 private:
 
     void gnss_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
-        //msg->pose.pose.orientation.x = imu_msg_.orientation.x;
-        //msg->pose.pose.orientation.y = imu_msg_.orientation.y;
-        //msg->pose.pose.orientation.z = imu_msg_.orientation.z;
-        //msg->pose.pose.orientation.w = imu_msg_.orientation.w;
         msg->pose.covariance[7*0] = 0.1;
         msg->pose.covariance[7*1] = 0.1;
         msg->pose.covariance[7*2] = 0.1;
         msg->pose.covariance[7*3] = 0.01;
         msg->pose.covariance[7*4] = 0.01;
         msg->pose.covariance[7*5] = 0.1;
+        // insert imu if orientation is nan or empty
+        if (std::isnan(msg->pose.pose.orientation.x) || 
+            std::isnan(msg->pose.pose.orientation.y) ||
+            std::isnan(msg->pose.pose.orientation.z) || 
+            std::isnan(msg->pose.pose.orientation.w) ||
+            (msg->pose.pose.orientation.x == 0 && 
+             msg->pose.pose.orientation.y == 0 &&
+             msg->pose.pose.orientation.z == 0 && 
+             msg->pose.pose.orientation.w == 0))
+        {
+            msg->pose.pose.orientation.x = imu_msg_.orientation.x;
+            msg->pose.pose.orientation.y = imu_msg_.orientation.y;
+            msg->pose.pose.orientation.z = imu_msg_.orientation.z;
+            msg->pose.pose.orientation.w = imu_msg_.orientation.w;
+            // this covariance means orientation is not reliable
+            msg->pose.covariance[7*3] = 1000.0;
+            msg->pose.covariance[7*4] = 1000.0;
+            msg->pose.covariance[7*5] = 1000.0;
+        }
         pub_pose_->publish(*msg);
         if (!is_ekf_initialized_)
             pub_initial_pose_3d_->publish(*msg);
