@@ -14,10 +14,6 @@ widgets:
       - control-mode
       - emergency
       - joy-delay
-      - target-steering
-      - target-velocity
-      - actual-steering
-      - actual-velocity
 
   - class: Titled
     label: posmode
@@ -67,36 +63,4 @@ widgets:
     title: Joy Delay [sec]
     input: { class: subscription, topic: /racing_kart/debug/delay, field: data@1}
     rules:
-      - { class: Precision, digits: 2 }
-
-  - class: Titled
-    label: actual-velocity
-    title: Actual Velocity [km/h]
-    input: { class: subscription, topic: /vehicle/status/velocity_status, field: longitudinal_velocity }
-    rules:
-      - { class: Units, mode: mps_to_kph }
-      - { class: Precision, digits: 2 }
-
-  - class: Titled
-    label: actual-steering
-    title: Actual Steering [deg]
-    input: { class: subscription, topic: /vehicle/status/steering_status, field: steering_tire_angle }
-    rules:
-      - { class: Units, mode: rad_to_deg }
-      - { class: Precision, digits: 2 }
-
-  - class: Titled
-    label: target-velocity
-    title: Target Velocity [km/h]
-    input: { class: subscription, topic: /control/command/control_cmd, field: longitudinal.speed }
-    rules:
-      - { class: Units, mode: mps_to_kph }
-      - { class: Precision, digits: 2 }
-
-  - class: Titled
-    label: target-steering
-    title: Target Steering [deg]
-    input: { class: subscription, topic: /control/command/control_cmd, field: lateral.steering_tire_angle }
-    rules:
-      - { class: Units, mode: rad_to_deg }
       - { class: Precision, digits: 2 }
