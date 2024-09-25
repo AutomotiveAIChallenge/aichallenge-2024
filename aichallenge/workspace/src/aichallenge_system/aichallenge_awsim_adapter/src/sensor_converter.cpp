@@ -26,12 +26,16 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
   gnss_pose_stddev_ = declare_parameter<double>("gnss_pose_stddev");
   gnss_pose_cov_mean_ = declare_parameter<double>("gnss_pose_cov_mean");
   gnss_pose_cov_stddev_ = declare_parameter<double>("gnss_pose_cov_stddev");
-  imu_mean_ = declare_parameter<double>("imu_mean");
-  imu_stddev_ = declare_parameter<double>("imu_stddev");
+  imu_acc_mean_ = declare_parameter<double>("imu_acc_mean");
+  imu_acc_stddev_ = declare_parameter<double>("imu_acc_stddev");
+  imu_ang_mean_ = declare_parameter<double>("imu_ang_mean");
+  imu_ang_stddev_ = declare_parameter<double>("imu_ang_stddev");
+  imu_ori_mean_ = declare_parameter<double>("imu_ori_mean");
+  imu_ori_stddev_ = declare_parameter<double>("imu_ori_stddev");
 
 
   // Subscriptions
-  sub_gnss_pose_ = create_subscription<Pose>(
+  sub_gnss_pose_ = create_subscription<PoseStamped>(
     "/awsim/gnss/pose", 1, std::bind(&SensorConverter::on_gnss_pose, this, _1));
   sub_gnss_pose_cov_ = create_subscription<PoseWithCovariance>(
     "/awsim/gnss/pose_with_covariance", 1, std::bind(&SensorConverter::on_gnss_pose_cov, this, _1));
@@ -39,7 +43,7 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
     "/awsim/imu", 1, std::bind(&SensorConverter::on_imu, this, _1));
 
   // Publishers
-  pub_gnss_pose_ = create_publisher<Pose>("/sensing/gnss/pose", 1);
+  pub_gnss_pose_ = create_publisher<PoseStamped>("/sensing/gnss/pose", 1);
   pub_gnss_pose_cov_ = create_publisher<PoseWithCovariance>("/sensing/gnss/pose_with_covariance", 1);
   pub_imu_ = create_publisher<Imu>("/sensing/imu/imu_raw", 1);
 
@@ -47,21 +51,23 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
   generator_ = std::mt19937(rd());
   pose_distribution_ = std::normal_distribution<double>(gnss_pose_mean_, gnss_pose_stddev_);
   pose_cov_distribution_ = std::normal_distribution<double>(gnss_pose_mean_, gnss_pose_stddev_);
-  imu_distribution_ = std::normal_distribution<double>(imu_mean_, imu_stddev_);
+  imu_acc_distribution_ = std::normal_distribution<double>(imu_acc_mean_, imu_acc_stddev_);
+  imu_ang_distribution_ = std::normal_distribution<double>(imu_ang_mean_, imu_ang_stddev_);
+  imu_ori_distribution_ = std::normal_distribution<double>(imu_ori_mean_, imu_ori_stddev_);
 }
 
-void SensorConverter::on_gnss_pose(const Pose::ConstSharedPtr msg)
+void SensorConverter::on_gnss_pose(const PoseStamped::ConstSharedPtr msg)
 {
   rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_delay_));
-  pose_ = std::make_shared<Pose>(*msg);
+  pose_ = std::make_shared<PoseStamped>(*msg);
   // pose_ = msg;
-  pose_->position.x += pose_distribution_(generator_);
-  pose_->position.y += pose_distribution_(generator_);
-  pose_->position.z += pose_distribution_(generator_);
-  pose_->orientation.x += pose_distribution_(generator_);
-  pose_->orientation.y += pose_distribution_(generator_);
-  pose_->orientation.z += pose_distribution_(generator_);
-  pose_->orientation.w += pose_distribution_(generator_);
+  pose_->pose.position.x += pose_distribution_(generator_);
+  pose_->pose.position.y += pose_distribution_(generator_);
+  pose_->pose.position.z += pose_distribution_(generator_);
+  pose_->pose.orientation.x += pose_distribution_(generator_);
+  pose_->pose.orientation.y += pose_distribution_(generator_);
+  pose_->pose.orientation.z += pose_distribution_(generator_);
+  pose_->pose.orientation.w += pose_distribution_(generator_);
 
   pub_gnss_pose_->publish(*pose_);
 }
@@ -86,16 +92,16 @@ void SensorConverter::on_gnss_pose_cov(const PoseWithCovariance::ConstSharedPtr 
 void SensorConverter::on_imu(const Imu::ConstSharedPtr msg)
 {
   imu_ = std::make_shared<Imu>(*msg);
-  imu_ -> orientation.x += imu_distribution_(generator_);
-  imu_ -> orientation.y += imu_distribution_(generator_);
-  imu_ -> orientation.z += imu_distribution_(generator_);
-  imu_ -> orientation.w += imu_distribution_(generator_);
-  imu_ -> angular_velocity.x += imu_distribution_(generator_);
-  imu_ -> angular_velocity.y += imu_distribution_(generator_);
-  imu_ -> angular_velocity.z += imu_distribution_(generator_);
-  imu_ -> linear_acceleration.x += imu_distribution_(generator_);
-  imu_ -> linear_acceleration.y += imu_distribution_(generator_);
-  imu_ -> linear_acceleration.z += imu_distribution_(generator_);
+  imu_ -> orientation.x += imu_ori_distribution_(generator_);
+  imu_ -> orientation.y += imu_ori_distribution_(generator_);
+  imu_ -> orientation.z += imu_ori_distribution_(generator_);
+  imu_ -> orientation.w += imu_ori_distribution_(generator_);
+  imu_ -> angular_velocity.x += imu_ang_distribution_(generator_);
+  imu_ -> angular_velocity.y += imu_ang_distribution_(generator_);
+  imu_ -> angular_velocity.z += imu_ang_distribution_(generator_);
+  imu_ -> linear_acceleration.x += imu_acc_distribution_(generator_);
+  imu_ -> linear_acceleration.y += imu_acc_distribution_(generator_);
+  imu_ -> linear_acceleration.z += imu_acc_distribution_(generator_);
   pub_imu_->publish(*imu_);
 }
 
