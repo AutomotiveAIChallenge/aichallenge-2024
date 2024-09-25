@@ -37,9 +37,6 @@ Panels:
     Splitter Ratio: 0.5
   - Class: tier4_localization_rviz_plugin/InitialPoseButtonPanel
     Name: InitialPoseButtonPanel
-  - Class: multi_data_monitor::MultiDataMonitor
-    Name: MultiDataMonitor
-    Path: package://aichallenge_system_launch/config/multi_data_monitor.yaml
 Visualization Manager:
   Class: ""
   Displays:
