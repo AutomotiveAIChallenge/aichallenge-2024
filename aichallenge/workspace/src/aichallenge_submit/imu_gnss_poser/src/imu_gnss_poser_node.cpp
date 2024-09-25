@@ -29,9 +29,9 @@ private:
         msg->pose.covariance[7*0] = 0.1;
         msg->pose.covariance[7*1] = 0.1;
         msg->pose.covariance[7*2] = 0.1;
-        msg->pose.covariance[7*3] = 0.01;
-        msg->pose.covariance[7*4] = 0.01;
-        msg->pose.covariance[7*5] = 0.1;
+        msg->pose.covariance[7*3] = 100000.0;
+        msg->pose.covariance[7*4] = 100000.0;
+        msg->pose.covariance[7*5] = 100000.0;
         // insert imu if orientation is nan or empty
         if (std::isnan(msg->pose.pose.orientation.x) || 
             std::isnan(msg->pose.pose.orientation.y) ||
@@ -47,9 +47,6 @@ private:
             msg->pose.pose.orientation.z = imu_msg_.orientation.z;
             msg->pose.pose.orientation.w = imu_msg_.orientation.w;
             // this covariance means orientation is not reliable
-            msg->pose.covariance[7*3] = 1000.0;
-            msg->pose.covariance[7*4] = 1000.0;
-            msg->pose.covariance[7*5] = 1000.0;
         }
         pub_pose_->publish(*msg);
         if (!is_ekf_initialized_)
