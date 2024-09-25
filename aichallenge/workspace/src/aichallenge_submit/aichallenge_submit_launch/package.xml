@@ -8,6 +8,38 @@
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
+  <buildtool_depend>autoware_cmake</buildtool_depend>
+  <exec_depend>tier4_vehicle_launch</exec_depend>
+  <exec_depend>global_parameter_loader</exec_depend>
+  <exec_depend>goal_pose_setter</exec_depend>
+  <exec_depend>map_loader</exec_depend>
+  <exec_depend>map_tf_generator</exec_depend>
+  <exec_depend>imu_corrector</exec_depend>
+  <exec_depend>imu_gnss_poser</exec_depend>
+  <exec_depend>gyro_odometer</exec_depend>
+  <exec_depend>ekf_localizer</exec_depend>
+  <exec_depend>twist2accel</exec_depend>
+  <exec_depend>raw_vehicle_cmd_converter</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>vehicle_velocity_converter</exec_depend>
+  <exec_depend>racing_kart_description</exec_depend>
+  <exec_depend>racing_kart_sensor_kit_description</exec_depend>
+
+  <exec_depend>dummy_perception_publisher</exec_depend>
+  <exec_depend>mission_planner</exec_depend>
+  <exec_depend>behavior_path_planner</exec_depend>
+  <exec_depend>path_to_trajectory</exec_depend>
+  <exec_depend>default_ad_api</exec_depend>
+  <exec_depend>ad_api_adaptors</exec_depend>
+  <exec_depend>simple_pure_pursuit</exec_depend>
+
+  <exec_depend>tier4_planning_rviz_plugin</exec_depend>
+  <exec_depend>tier4_localization_rviz_plugin</exec_depend>
+  <exec_depend>tier4_control_rviz_plugin</exec_depend>
+  <exec_depend>tier4_vehicle_rviz_plugin</exec_depend>
+  <exec_depend>multi_data_monitor</exec_depend>
+  <exec_depend>generic_type_utility</exec_depend>
+  <exec_depend>topic_tools</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>autoware_lint_common</test_depend>
