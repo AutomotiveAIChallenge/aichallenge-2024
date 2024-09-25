@@ -14,7 +14,9 @@ ENV XDG_RUNTIME_DIR=/tmp/xdg
 ENV ROS_LOCALHOST_ONLY=0
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV ROS_DOMAIN_ID=71
-ENV CYCLONEDDS_URI=file:///aichallenge/workspace/cyclonedds.xml
+ENV CYCLONEDDS_URI=file:///opt/autoware/cyclonedds.xml
+
+COPY cyclonedds.xml /opt/autoware/cyclonedds.xml
 
 FROM common AS dev
 
@@ -33,7 +35,6 @@ RUN chmod 757 /aichallenge
 
 COPY aichallenge/simulator/ /aichallenge/simulator/
 COPY submit/aichallenge_submit.tar.gz /ws
-COPY cyclonedds.xml aichallenge/workspace/cyclonedds.xml
 RUN tar zxf /ws/aichallenge_submit.tar.gz -C /aichallenge/workspace/src
 RUN rm -rf /ws
 
