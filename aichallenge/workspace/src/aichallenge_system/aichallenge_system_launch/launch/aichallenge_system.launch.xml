@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
+    <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/debug_sensing.rviz" description="rviz config"/>
+    <log message="This is aichallenge_system_launch."/>
     <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="$(var simulation)"/>
+    <arg name="run_rviz" default="$(var simulation)"/>
+    <arg name="launch_vehicle_interface" default="true"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <arg name="launch_vehicle_interface" default="true"/>
 
@@ -19,11 +22,20 @@
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
     </include>
-
-    <!-- Visualization. -->
-    <group>
-        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share autoware_launch)/rviz/image/autoware.png"/>
+    <!-- Workaround because the simulator cannot use the service. -->
+    <group if="$(var simulation)">
+        <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
         <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
+    </group>
+
+    <node pkg="topic_tools" exec="relay" name="initial_pose_relay">
+      <param name="input_topic" value="/initialpose"/>
+      <param name="output_topic" value="/localization/initial_pose3d"/>
+    </node>
+
+    <!-- RViz -->
+   <group if="$(var run_rviz)">
+        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
     </group>
 
     <!-- Adapters for simulation. -->
