@@ -19,10 +19,10 @@
     </link>
 
     <!-- sensor -->
-    <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/sensor_kit_calibration.yaml')}"/>   
+    <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/sensor_kit_calibration.yaml')}"/>
     <!-- over write calibration file for simulation -->
     <xacro:if value="$(arg simulation)">
-      <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/awsim_sensor_kit_calibration.yaml')}"/>    
+      <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/awsim_sensor_kit_calibration.yaml')}"/>
     </xacro:if>
     <!-- gnss -->
     <xacro:imu_macro

@@ -46,7 +46,7 @@ sleep 1
 
 # Start driving and wait for the simulation to finish
 echo "Waiting for the simulation"
-ros2 topic pub --once /control/control_mode_request_topic std_msgs/msg/Bool '{data: true}' >/dev/null
+ros2 service call /control/control_mode_request autoware_auto_vehicle_msgs/srv/ControlModeCommand '{mode: 1}' >/dev/null
 wait $PID_AWSIM
 
 # Stop recording rviz2
