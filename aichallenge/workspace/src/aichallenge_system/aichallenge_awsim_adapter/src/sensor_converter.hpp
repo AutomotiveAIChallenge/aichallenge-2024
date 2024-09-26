@@ -21,11 +21,11 @@
 
 #include <sensor_msgs/msg/imu.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
-#include <geometry_msgs/msg/pose_with_covariance.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
 #include "autoware_auto_vehicle_msgs/msg/steering_report.hpp"
 
 using geometry_msgs::msg::PoseStamped;
-using geometry_msgs::msg::PoseWithCovariance;
+using geometry_msgs::msg::PoseWithCovarianceStamped;
 using sensor_msgs::msg::Imu;
 using autoware_auto_vehicle_msgs::msg::SteeringReport;
 
@@ -36,22 +36,22 @@ public:
 
 private:
   rclcpp::Subscription<PoseStamped>::SharedPtr sub_gnss_pose_;
-  rclcpp::Subscription<PoseWithCovariance>::SharedPtr sub_gnss_pose_cov_;
+  rclcpp::Subscription<PoseWithCovarianceStamped>::SharedPtr sub_gnss_pose_cov_;
   rclcpp::Subscription<Imu>::SharedPtr sub_imu_;
   rclcpp::Subscription<SteeringReport>::SharedPtr sub_steering_report_;
   rclcpp::Publisher<PoseStamped>::SharedPtr pub_gnss_pose_;
   rclcpp::Publisher<Imu>::SharedPtr pub_imu_;
-  rclcpp::Publisher<PoseWithCovariance>::SharedPtr pub_gnss_pose_cov_;
+  rclcpp::Publisher<PoseWithCovarianceStamped>::SharedPtr pub_gnss_pose_cov_;
   rclcpp::Publisher<SteeringReport>::SharedPtr pub_steering_report_;
 
 
   void on_gnss_pose(const PoseStamped::ConstSharedPtr msg);
-  void on_gnss_pose_cov(const PoseWithCovariance::ConstSharedPtr msg);
+  void on_gnss_pose_cov(const PoseWithCovarianceStamped::ConstSharedPtr msg);
   void on_imu(const Imu::ConstSharedPtr msg);
   void on_steering_report(const SteeringReport::ConstSharedPtr msg);
 
   PoseStamped::SharedPtr pose_;
-  PoseWithCovariance::SharedPtr pose_cov_;
+  PoseWithCovarianceStamped::SharedPtr pose_cov_;
   Imu::SharedPtr imu_;
   SteeringReport::SharedPtr steering_report_;
   int gnss_pose_delay_;

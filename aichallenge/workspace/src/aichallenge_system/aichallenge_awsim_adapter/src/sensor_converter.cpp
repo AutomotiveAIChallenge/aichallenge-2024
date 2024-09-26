@@ -39,7 +39,7 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
   // Subscriptions
   sub_gnss_pose_ = create_subscription<PoseStamped>(
     "/awsim/gnss/pose", 1, std::bind(&SensorConverter::on_gnss_pose, this, _1));
-  sub_gnss_pose_cov_ = create_subscription<PoseWithCovariance>(
+  sub_gnss_pose_cov_ = create_subscription<PoseWithCovarianceStamped>(
     "/awsim/gnss/pose_with_covariance", 1, std::bind(&SensorConverter::on_gnss_pose_cov, this, _1));
   sub_imu_ = create_subscription<Imu>(
     "/awsim/imu", 1, std::bind(&SensorConverter::on_imu, this, _1));
@@ -48,7 +48,7 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
 
   // Publishers
   pub_gnss_pose_ = create_publisher<PoseStamped>("/sensing/gnss/pose", 1);
-  pub_gnss_pose_cov_ = create_publisher<PoseWithCovariance>("/sensing/gnss/pose_with_covariance", 1);
+  pub_gnss_pose_cov_ = create_publisher<PoseWithCovarianceStamped>("/sensing/gnss/pose_with_covariance", 1);
   pub_imu_ = create_publisher<Imu>("/sensing/imu/imu_raw", 1);
   pub_steering_report_ = create_publisher<SteeringReport>("/vehicle/status/steering_status", 1);
 
@@ -79,18 +79,18 @@ void SensorConverter::on_gnss_pose(const PoseStamped::ConstSharedPtr msg)
 }
 
 
-void SensorConverter::on_gnss_pose_cov(const PoseWithCovariance::ConstSharedPtr msg)
+void SensorConverter::on_gnss_pose_cov(const PoseWithCovarianceStamped::ConstSharedPtr msg)
 {
   rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_cov_delay_));
-  pose_cov_ = std::make_shared<PoseWithCovariance>(*msg);
+  pose_cov_ = std::make_shared<PoseWithCovarianceStamped>(*msg);
   // pose_cov_ = msg;
-  pose_cov_->pose.position.x += pose_cov_distribution_(generator_);
-  pose_cov_->pose.position.y += pose_cov_distribution_(generator_);
-  pose_cov_->pose.position.z += pose_cov_distribution_(generator_);
-  pose_cov_->pose.orientation.x += pose_cov_distribution_(generator_);
-  pose_cov_->pose.orientation.y += pose_cov_distribution_(generator_);
-  pose_cov_->pose.orientation.z += pose_cov_distribution_(generator_);
-  pose_cov_->pose.orientation.w += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.position.x += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.position.y += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.position.z += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.orientation.x += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.orientation.y += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.orientation.z += pose_cov_distribution_(generator_);
+  pose_cov_->pose.pose.orientation.w += pose_cov_distribution_(generator_);
 
   pub_gnss_pose_cov_->publish(*pose_cov_);
 }
