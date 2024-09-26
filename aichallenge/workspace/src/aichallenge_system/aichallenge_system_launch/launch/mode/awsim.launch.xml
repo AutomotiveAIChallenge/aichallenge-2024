@@ -8,26 +8,6 @@
         <include file="$(find-pkg-share aichallenge_awsim_adapter)/launch/aichallenge_awsim_adapter.launch.xml"/>
     </group>
 
-    <!-- <node pkg="topic_tools" exec="relay" name="relay_gnss_pose">
-        <param name="input_topic" value="/awsim/gnss/pose"/>
-        <param name="output_topic" value="/sensing/gnss/pose"/>
-    </node>
-
-    <node pkg="topic_tools" exec="relay" name="relay_gnss_pose_cov">
-        <param name="input_topic" value="/awsim/gnss/pose_with_covariance"/>
-        <param name="output_topic" value="/sensing/gnss/pose_with_covariance"/>
-    </node>
-
-    <node pkg="topic_tools" exec="relay" name="relay_imu">
-        <param name="input_topic" value="/awsim/imu"/>
-        <param name="output_topic" value="/sensing/imu/imu_raw"/>
-    </node> -->
-
-    <node pkg="topic_tools" exec="relay" name="relay_steering">
-        <param name="input_topic" value="/awsim/steering_status"/>
-        <param name="output_topic" value="/vehicle/status/steering_status"/>
-    </node>
-
     <node pkg="topic_tools" exec="relay" name="relay_velocity">
         <param name="input_topic" value="/awsim/velocity_status"/>
         <param name="output_topic" value="/vehicle/status/velocity_status"/>
