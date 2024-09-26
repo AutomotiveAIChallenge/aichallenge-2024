@@ -22,10 +22,12 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/pose_with_covariance.hpp>
+#include "autoware_auto_vehicle_msgs/msg/steering_report.hpp"
 
 using geometry_msgs::msg::PoseStamped;
 using geometry_msgs::msg::PoseWithCovariance;
 using sensor_msgs::msg::Imu;
+using autoware_auto_vehicle_msgs::msg::SteeringReport;
 
 class SensorConverter : public rclcpp::Node
 {
@@ -36,17 +38,22 @@ private:
   rclcpp::Subscription<PoseStamped>::SharedPtr sub_gnss_pose_;
   rclcpp::Subscription<PoseWithCovariance>::SharedPtr sub_gnss_pose_cov_;
   rclcpp::Subscription<Imu>::SharedPtr sub_imu_;
+  rclcpp::Subscription<SteeringReport>::SharedPtr sub_steering_report_;
   rclcpp::Publisher<PoseStamped>::SharedPtr pub_gnss_pose_;
   rclcpp::Publisher<Imu>::SharedPtr pub_imu_;
   rclcpp::Publisher<PoseWithCovariance>::SharedPtr pub_gnss_pose_cov_;
+  rclcpp::Publisher<SteeringReport>::SharedPtr pub_steering_report_;
+
 
   void on_gnss_pose(const PoseStamped::ConstSharedPtr msg);
   void on_gnss_pose_cov(const PoseWithCovariance::ConstSharedPtr msg);
   void on_imu(const Imu::ConstSharedPtr msg);
+  void on_steering_report(const SteeringReport::ConstSharedPtr msg);
 
   PoseStamped::SharedPtr pose_;
   PoseWithCovariance::SharedPtr pose_cov_;
   Imu::SharedPtr imu_;
+  SteeringReport::SharedPtr steering_report_;
   int gnss_pose_delay_;
   int gnss_pose_cov_delay_;
 
@@ -56,6 +63,7 @@ private:
   std::normal_distribution<double> imu_acc_distribution_;
   std::normal_distribution<double> imu_ang_distribution_;
   std::normal_distribution<double> imu_ori_distribution_;
+  std::normal_distribution<double> steering_angle_distribution_;
   double gnss_pose_mean_;
   double gnss_pose_stddev_;
   double gnss_pose_cov_mean_;
@@ -66,6 +74,8 @@ private:
   double imu_ang_stddev_;
   double imu_ori_mean_;
   double imu_ori_stddev_;
+  double steering_angle_mean_;
+  double steering_angle_stddev_;
 };
 
 #endif  // AUTOWARE_EXTERNAL_CMD_CONVERTER__NODE_HPP_

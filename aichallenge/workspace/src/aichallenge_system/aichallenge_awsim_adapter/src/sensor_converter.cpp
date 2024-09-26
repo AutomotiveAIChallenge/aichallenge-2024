@@ -32,6 +32,8 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
   imu_ang_stddev_ = declare_parameter<double>("imu_ang_stddev");
   imu_ori_mean_ = declare_parameter<double>("imu_ori_mean");
   imu_ori_stddev_ = declare_parameter<double>("imu_ori_stddev");
+  steering_angle_mean_ = declare_parameter<double>("steering_angle_mean");
+  steering_angle_stddev_ = declare_parameter<double>("steering_angle_stddev");
 
 
   // Subscriptions
@@ -41,11 +43,14 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
     "/awsim/gnss/pose_with_covariance", 1, std::bind(&SensorConverter::on_gnss_pose_cov, this, _1));
   sub_imu_ = create_subscription<Imu>(
     "/awsim/imu", 1, std::bind(&SensorConverter::on_imu, this, _1));
+  sub_steering_report_ = create_subscription<SteeringReport>(
+    "/awsim/steering_status", 1, std::bind(&SensorConverter::on_steering_report, this, _1));
 
   // Publishers
   pub_gnss_pose_ = create_publisher<PoseStamped>("/sensing/gnss/pose", 1);
   pub_gnss_pose_cov_ = create_publisher<PoseWithCovariance>("/sensing/gnss/pose_with_covariance", 1);
   pub_imu_ = create_publisher<Imu>("/sensing/imu/imu_raw", 1);
+  pub_steering_report_ = create_publisher<SteeringReport>("/vehicle/status/steering_status", 1);
 
   std::random_device rd;
   generator_ = std::mt19937(rd());
@@ -54,6 +59,7 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
   imu_acc_distribution_ = std::normal_distribution<double>(imu_acc_mean_, imu_acc_stddev_);
   imu_ang_distribution_ = std::normal_distribution<double>(imu_ang_mean_, imu_ang_stddev_);
   imu_ori_distribution_ = std::normal_distribution<double>(imu_ori_mean_, imu_ori_stddev_);
+  steering_angle_distribution_ = std::normal_distribution<double>(steering_angle_mean_, steering_angle_stddev_);
 }
 
 void SensorConverter::on_gnss_pose(const PoseStamped::ConstSharedPtr msg)
@@ -103,6 +109,13 @@ void SensorConverter::on_imu(const Imu::ConstSharedPtr msg)
   imu_ -> linear_acceleration.y += imu_acc_distribution_(generator_);
   imu_ -> linear_acceleration.z += imu_acc_distribution_(generator_);
   pub_imu_->publish(*imu_);
+}
+
+void SensorConverter::on_steering_report(const SteeringReport::ConstSharedPtr msg)
+{
+  steering_report_ = std::make_shared<SteeringReport>(*msg);
+  steering_report_->steering_tire_angle += steering_angle_distribution_(generator_);
+  pub_steering_report_->publish(*steering_report_);
 }
 
 #include <rclcpp_components/register_node_macro.hpp>
