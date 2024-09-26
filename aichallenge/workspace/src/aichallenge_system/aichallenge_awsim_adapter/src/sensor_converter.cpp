@@ -64,35 +64,45 @@ SensorConverter::SensorConverter(const rclcpp::NodeOptions & node_options)
 
 void SensorConverter::on_gnss_pose(const PoseStamped::ConstSharedPtr msg)
 {
-  rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_delay_));
-  pose_ = std::make_shared<PoseStamped>(*msg);
-  // pose_ = msg;
-  pose_->pose.position.x += pose_distribution_(generator_);
-  pose_->pose.position.y += pose_distribution_(generator_);
-  pose_->pose.position.z += pose_distribution_(generator_);
-  pose_->pose.orientation.x += pose_distribution_(generator_);
-  pose_->pose.orientation.y += pose_distribution_(generator_);
-  pose_->pose.orientation.z += pose_distribution_(generator_);
-  pose_->pose.orientation.w += pose_distribution_(generator_);
+  auto process_and_publish_gnss = [this, msg]() {
+    rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_delay_));
+    
+    auto pose = std::make_shared<PoseStamped>(*msg);
+    pose->pose.position.x += pose_distribution_(generator_);
+    pose->pose.position.y += pose_distribution_(generator_);
+    pose->pose.position.z += pose_distribution_(generator_);
+    pose->pose.orientation.x += pose_distribution_(generator_);
+    pose->pose.orientation.y += pose_distribution_(generator_);
+    pose->pose.orientation.z += pose_distribution_(generator_);
+    pose->pose.orientation.w += pose_distribution_(generator_);
 
-  pub_gnss_pose_->publish(*pose_);
+    pub_gnss_pose_->publish(*pose);
+  };
+
+  std::thread processing_thread(process_and_publish_gnss);
+  processing_thread.detach();
 }
 
 
 void SensorConverter::on_gnss_pose_cov(const PoseWithCovarianceStamped::ConstSharedPtr msg)
 {
-  rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_cov_delay_));
-  pose_cov_ = std::make_shared<PoseWithCovarianceStamped>(*msg);
-  // pose_cov_ = msg;
-  pose_cov_->pose.pose.position.x += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.position.y += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.position.z += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.orientation.x += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.orientation.y += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.orientation.z += pose_cov_distribution_(generator_);
-  pose_cov_->pose.pose.orientation.w += pose_cov_distribution_(generator_);
+    auto process_and_publish_gnss_cov = [this, msg]() {
+    rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_cov_delay_));
+    
+    auto pose_cov = std::make_shared<PoseWithCovarianceStamped>(*msg);
+    pose_cov->pose.pose.position.x += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.position.y += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.position.z += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.orientation.x += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.orientation.y += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.orientation.z += pose_cov_distribution_(generator_);
+    pose_cov->pose.pose.orientation.w += pose_cov_distribution_(generator_);
 
-  pub_gnss_pose_cov_->publish(*pose_cov_);
+    pub_gnss_pose_cov_->publish(*pose_cov);
+  };
+
+  std::thread processing_thread(process_and_publish_gnss_cov);
+  processing_thread.detach();
 }
 
 void SensorConverter::on_imu(const Imu::ConstSharedPtr msg)
