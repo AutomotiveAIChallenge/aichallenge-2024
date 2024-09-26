@@ -59,7 +59,7 @@ private:
         imu_msg_ = *msg;
     }
 
-    void twist_callback(const geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr msg)
+    void twist_callback(const geometry_msgs::msg::TwistWithCovarianceStamped::SharedPtr)
     {
         is_ekf_initialized_ = true;
     }
