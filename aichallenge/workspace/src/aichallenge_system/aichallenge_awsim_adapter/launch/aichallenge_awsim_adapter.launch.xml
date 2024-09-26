@@ -7,4 +7,7 @@
     <param name="csv_path_accel_map" value="$(var csv_path_accel_map)"/>
     <param name="csv_path_brake_map" value="$(var csv_path_accel_map)"/>
   </node>
+  <node pkg="aichallenge_awsim_adapter" exec="sensor_converter">
+    <param from="$(find-pkg-share aichallenge_awsim_adapter)/config/sensor_converter.param.yaml" />
+  </node>
 </launch>
