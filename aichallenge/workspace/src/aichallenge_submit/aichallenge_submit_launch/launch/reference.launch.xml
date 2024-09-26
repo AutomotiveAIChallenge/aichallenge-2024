@@ -53,8 +53,7 @@
   </group>
 
     <!-- Localization -->
-  <let name="pose_additional_delay_var" value="0.0" if="$(var simulation)"/>
-  <let name="pose_additional_delay_var" value="0.5" unless="$(var simulation)"/>
+  <let name="pose_additional_delay_var" value="0.5" />
   <group>
     <push-ros-namespace namespace="localization"/>
     <include file="$(find-pkg-share gyro_odometer)/launch/gyro_odometer.launch.xml">
