@@ -68,6 +68,7 @@ void SensorConverter::on_gnss_pose(const PoseStamped::ConstSharedPtr msg)
     rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_delay_));
     
     auto pose = std::make_shared<PoseStamped>(*msg);
+    pose->header.stamp = now();
     pose->pose.position.x += pose_distribution_(generator_);
     pose->pose.position.y += pose_distribution_(generator_);
     pose->pose.position.z += pose_distribution_(generator_);
@@ -90,6 +91,7 @@ void SensorConverter::on_gnss_pose_cov(const PoseWithCovarianceStamped::ConstSha
     rclcpp::sleep_for(std::chrono::milliseconds(gnss_pose_cov_delay_));
     
     auto pose_cov = std::make_shared<PoseWithCovarianceStamped>(*msg);
+    pose_cov->header.stamp = now();
     pose_cov->pose.pose.position.x += pose_cov_distribution_(generator_);
     pose_cov->pose.pose.position.y += pose_cov_distribution_(generator_);
     pose_cov->pose.pose.position.z += pose_cov_distribution_(generator_);
