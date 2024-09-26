@@ -1,7 +1,7 @@
 /**:
   ros__parameters:
-    gnss_pose_delay: 500  # [ms]
-    gnss_pose_cov_delay: 500  # [ms]
+    gnss_pose_delay: 300  # [ms]
+    gnss_pose_cov_delay: 300  # [ms]
     gnss_pose_mean: 0.0
     gnss_pose_stddev: 0.005
     gnss_pose_cov_mean: 0.0
