@@ -6,6 +6,7 @@
     <arg name="run_rviz" default="$(var simulation)"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <arg name="launch_vehicle_interface" default="true"/>
+
     <log message="The arguments for aichallenge_system_launch."/>
     <log message=" - simulation: $(var simulation)"/>
     <log message=" - use_sim_time: $(var use_sim_time)"/>
@@ -19,6 +20,7 @@
         <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
     </include>
+
     <!-- Visualization. -->
     <group if="$(var run_rviz)">
         <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
@@ -30,16 +32,6 @@
       <param name="input_topic" value="/initialpose"/>
       <param name="output_topic" value="/localization/initial_pose3d"/>
     </node>
-
-    <!-- Adapters for simulation. -->
-    <group if="$(var simulation)">
-        <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/awsim.launch.xml"/>
-    </group>
-
-    <!-- Adapters for real vehicle. -->
-    <group unless="$(var simulation)">
-        <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/real.launch.xml"/>
-    </group>
 
     <!-- Adapters for simulation. -->
     <group if="$(var simulation)">
