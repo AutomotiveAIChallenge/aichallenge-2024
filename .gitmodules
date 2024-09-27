@@ -1,0 +1,9 @@
+[submodule "aichallenge/workspace/src/aichallenge_submit/multidatamonitor"]
+	path = aichallenge/workspace/src/aichallenge_submit/multidatamonitor
+	url = git@github.com:tier4/multi_data_monitor.git
+[submodule "aichallenge/workspace/src/aichallenge_submit/multi_data_monitor"]
+	path = aichallenge/workspace/src/aichallenge_submit/multi_data_monitor
+	url = git@github.com:tier4/multi_data_monitor.git
+[submodule "aichallenge/workspace/src/aichallenge_submit/generic_type_utility"]
+	path = aichallenge/workspace/src/aichallenge_submit/generic_type_utility
+	url = git@github.com:tier4/generic_type_utility.git
