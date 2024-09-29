@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="section_timer" exec="section_timer_node" name="section_timer_node" output="screen">
+    
+    <param from="$(find-pkg-share section_timer)/config/sections.yaml" />
+  
+    <remap from="~/input/odom" to="/localization/kinematic_state"/>
+    <remap from="~/output/section_times" to="/section/section_timer_array"/>
+    
+  </node>
+</launch>
