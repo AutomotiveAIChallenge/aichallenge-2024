@@ -11,8 +11,25 @@ widgets:
     cols: 1
     items:
       - class: Simple
-        value: Kart
-        # attrs: { color: magenta }
+        value: Measured
+
+      - class: Matrix
+        cols: 3
+        items:
+          - measured_steering_deg
+          - measured_longitudinal_vel_kph
+          - measured_heading_rate_deg
+
+          - measured_steering_rad
+          - measured_longitudinal_vel_mps
+          - measured_heading_rate_rad
+
+          - measured_lateral_vel_mps
+          - measured_lateral_vel_kph
+
+
+      - class: Simple
+        value: Actuation Cmd (Kart)
 
       - class: Matrix
         cols: 3
@@ -22,26 +39,166 @@ widgets:
           - steering 
 
       - class: Simple 
-        const: Actuation Cmd
+        const: Control Cmd
 
       - class: Matrix
         cols: 3
         items:
-          - speed
+          - speed_kph
           - acceleration
-          - steering_tire_angle
+          - control_steering_tire_angle_rad
+          - speed_mps
+          - control_steering_tire_angle_deg
+
+      - class: Simple 
+        const: MPC 
+
+      - class: Matrix
+        cols: 3
+        items:
+          - mpc_steer_cmd
+          - mpc_mpc_steer_cmd
+          - mpc_lateral_error
+          - mpc_yaw_error
+
+      - class: Simple 
+        const: PID 
+
+      - class: Matrix
+        cols: 3
+        items:
+          - pid_pub_acc
+          - pid_error_vel
+
+      - class: Matrix
+        cols: 4
+        items:
+          - pid_raw_acc
+          - pid_acc_limited_acc
+          - pid_jerk_limited_acc
+          - pid_slope_applied_acc
+
+      - class: Matrix
+        cols: 3
+        items:
+          - pid_p_contrib
+          - pid_i_contrib
+          - pid_d_contrib
+
+      - class: Simple 
+        const: Others
+
+      - class: Matrix
+        cols: 3
+        items:
           - control-mode
           - emergency
           # - joy-delay
           # - posmode
 
+  # Condition https://github.com/tier4/multi_data_monitor/blob/main/multi_data_monitor/documents/classes/others/conditions.md
+  # Measured
+  - class: Titled
+    label: measured_steering_rad
+    title: Steering[rad]  
+    input: { class: subscription, topic: /vehicle/status/steering_status, field: steering_tire_angle}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_longitudinal_vel_mps
+    title: Long Vel[m/s]
+    input: measured_longitudinal_vel_mps 
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_lateral_vel_mps
+    title: Lat Vel[m/s]
+    input: measured_lateral_vel_mps
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+
+  - class: Titled
+    label: measured_longitudinal_vel_kph
+    title: Long Vel[km/h]
+    input: measured_longitudinal_vel_kph
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_lateral_vel_kph
+    title: Lat Vel[km/h]
+    input: measured_lateral_vel_kph
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_heading_rate_rad
+    title: Heading Rate
+    input: { class: subscription, topic: /vehicle/status/velocity_status, field: heading_rate}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_steering_deg
+    title: Steering[deg]  
+    input: measured_steering_deg
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+  
+  - class: Titled
+    label: measured_heading_rate_deg
+    title: Heading Rate[deg/s]?
+    input: measured_heading_rate_deg
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # Actuation_CMD(Pedal)
   - class: Titled
     label: throttle 
     title: Accel Pedal
     input: { class: subscription, topic: /control/command/actuation_cmd, field: actuation.accel_cmd}
     rules:
       - { class: Precision, digits: 2 }
-      - { class: SetIf, type: real, ge: 0.95, attrs: { back-color: cyan }  }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: 0.95, attrs: { back-color: cyan } }
+          - { lt: 0.95, attrs: { back-color: white } }
 
   - class: Titled
     label: brake 
@@ -49,22 +206,46 @@ widgets:
     input: { class: subscription, topic: /control/command/actuation_cmd, field: actuation.brake_cmd}
     rules:
       - { class: Precision, digits: 2 }
-      - { class: SetIf, type: real, ge: 0.95, attrs: { back-color: cyan }  }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: 0.5, attrs: { back-color: yellow } }
+          - { eq: 0.0, attrs: { back-color: cyan } }
+          - { lt: 0.5, attrs: { back-color: white } }
 
   - class: Titled
     label: steering 
-    title: Steering Cmd  
+    title: Steering Cmd[rad]
     input: { class: subscription, topic: /control/command/actuation_cmd, field: actuation.steer_cmd}
     rules:
-      - { class: Precision, digits: 5 }
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
 
   - class: Titled
-    label: speed 
+    label: speed_kph
     title: Speed[km/h]
     input: control_cmd_kph 
     rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # Control_CMD
+  - class: Titled
+    label: speed_mps 
+    title: Speed[m/s]  
+    input: { class: subscription, topic: /control/command/control_cmd, field: longitudinal.speed}
+    rules:
       - { class: Precision, digits: 2 }
-      # - { class: SetIf, type: real, ge: 0.95, attrs: { back-color: cyan }  }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
 
   - class: Titled
     label: acceleration 
@@ -73,14 +254,181 @@ widgets:
     rules:
       - { class: Precision, digits: 2 }
       # - { class: SetIf, type: real, ge: 0.95, attrs: { back-color: cyan }  }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
 
   - class: Titled
-    label: steering_tire_angle 
-    title: Steering Cmd  
-    input: { class: subscription, topic: /control/command/control_cmd, field: lateral.steering_tire_angle}
+    label: control_steering_tire_angle_rad
+    title: Steering Cmd[rad]
+    input: control_steering_cmd_rad
     rules:
-      - { class: Precision, digits: 5 }
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
 
+  - class: Titled
+    label: control_steering_tire_angle_deg 
+    title: Steering Cmd[deg]  
+    input: control_steering_cmd_deg
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # MPC
+  # https://github.com/AutomotiveAIChallenge/autoware.universe/blob/awsim-stable/control/mpc_lateral_controller/src/mpc.cpp
+  - class: Titled
+    label: mpc_steer_cmd
+    title: Steer Cmd
+    input: { class: subscription, topic: /lateral/diagnostic, field: data@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: mpc_mpc_steer_cmd
+    title: MPC Rerult
+    input: { class: subscription, topic: /lateral/diagnostic, field: data@1}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: mpc_lateral_error
+    title: Lateral Error[m]
+    input: { class: subscription, topic: /lateral/diagnostic, field: data@5}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: mpc_yaw_error
+    title: Yaw Error[rad]
+    input: { class: subscription, topic: /lateral/diagnostic, field: data@8}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # PID
+  # https://github.com/AutomotiveAIChallenge/autoware.universe/blob/awsim-stable/control/pid_longitudinal_controller/include/pid_longitudinal_controller/debug_values.hpp
+  - class: Titled
+    label: pid_error_vel
+    title: Error Velocity[m/s] 
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@11}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_raw_acc
+    title: PID ACC
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@14}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_acc_limited_acc
+    title: ACC Limited
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@15}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_jerk_limited_acc
+    title: Jerk Limited
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@16}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_slope_applied_acc
+    title: Slope Applied
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@17}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_pub_acc
+    title: Pub ACC
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@18}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_p_contrib
+    title: P Contrib
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@19}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_i_contrib
+    title: I Contrib
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@20}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: pid_d_contrib
+    title: D Contrib
+    input: { class: subscription, topic: /longitudinal/diagnostic, field: data@21}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # Others
   - class: Titled
     label: control-mode
     title: Control Mode
@@ -108,12 +456,31 @@ widgets:
         - { eq: false, value: False,       attrs: { back-color: cyan } }
         - { eq: true, value: True,       attrs: { back-color: red } }
 
+# Conversion https://github.com/tier4/multi_data_monitor/blob/main/multi_data_monitor/documents/classes/filter/units.md
 streams:
   - { label: control_cmd_mps, class: subscription, topic: /control/command/control_cmd, field: longitudinal.speed }
   - { label: control_cmd_kph, class: apply, input: control_cmd_mps, rules: f1 }
+  # Measured
+    # Velocity
+  - { label: measured_longitudinal_vel_mps, class: subscription, topic: /vehicle/status/velocity_status, field: longitudinal_velocity }
+  - { label: measured_lateral_vel_mps, class: subscription, topic: /vehicle/status/velocity_status, field: lateral_velocity }
+  - { label: measured_longitudinal_vel_kph, class: apply, input: measured_longitudinal_vel_mps, rules: f1 }
+  - { label: measured_lateral_vel_kph, class: apply, input: measured_lateral_vel_mps, rules: f1 }
+    # Steering
+  - { label: measured_steering_rad, class: subscription, topic: /vehicle/status/steering_status, field: steering_tire_angle }
+  - { label: measured_heading_rate_rad, class: subscription, topic: /vehicle/status/velocity_status, field: heading_rate }
+  - { label: measured_steering_deg, class: apply, input: measured_steering_rad, rules: f2 }
+  - { label: measured_heading_rate_deg, class: apply, input: measured_heading_rate_rad, rules: f2 }
+  # Control_CMD
+  - { label: control_steering_cmd_rad, class: subscription, topic: /control/command/control_cmd, field: lateral.steering_tire_angle }
+  - { label: control_steering_cmd_deg, class: apply, input: control_steering_cmd_rad, rules: f2 }
+
+
+
 
 filters:
   - { class: Units, label: f1, mode: mps_to_kph }
+  - { class: Units, label: f2, mode: rad_to_deg }
 
   # - class: Titled
   #   label: joy-delay
