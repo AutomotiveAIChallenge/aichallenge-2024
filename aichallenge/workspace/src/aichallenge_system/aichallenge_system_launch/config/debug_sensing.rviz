@@ -37,6 +37,8 @@ Panels:
     Splitter Ratio: 0.5
   - Class: tier4_localization_rviz_plugin/InitialPoseButtonPanel
     Name: InitialPoseButtonPanel
+  - Class: AutowareScreenCapturePanel
+    Name: AutowareScreenCapturePanel
 Visualization Manager:
   Class: ""
   Displays:
@@ -48,8 +50,6 @@ Visualization Manager:
           Frames:
             All Enabled: true
             base_link:
-              Value: true
-            gnss_base_link:
               Value: true
             gnss_link:
               Value: true
@@ -74,8 +74,6 @@ Visualization Manager:
                     {}
                   imu_link:
                     {}
-              gnss_base_link:
-                {}
               viewer:
                 {}
           Update Interval: 0
@@ -1927,8 +1925,8 @@ Visualization Manager:
       Scale: 41.36642837524414
       Target Frame: base_link
       Value: TopDownOrtho (rviz_default_plugins)
-      X: 4.791895866394043
-      Y: -8.544848442077637
+      X: 0
+      Y: 0
     Saved:
       - Class: rviz_default_plugins/ThirdPersonFollower
         Distance: 18
@@ -1966,6 +1964,8 @@ Visualization Manager:
         X: 0
         Y: 0
 Window Geometry:
+  AutowareScreenCapturePanel:
+    collapsed: false
   Displays:
     collapsed: false
   Height: 1074
