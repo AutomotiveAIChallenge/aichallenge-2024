@@ -325,10 +325,6 @@
     </include>
   </group>
 
-  <!-- Pose Cov Transformer Node -->
-  <node pkg="pose_cov_transformer" exec="pose_cov_transformer" name="pose_cov_transformer" output="screen">
-  </node>
-
   <!-- API -->
   <group>
     <!-- default_ad_api -->
