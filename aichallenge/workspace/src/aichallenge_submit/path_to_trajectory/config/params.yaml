@@ -1,0 +1,3 @@
+/**:
+  ros__parameters:
+    base_path: "/aichallenge/workspace/src/aichallenge_submit/path_to_trajectory/csv/weaving.csv"

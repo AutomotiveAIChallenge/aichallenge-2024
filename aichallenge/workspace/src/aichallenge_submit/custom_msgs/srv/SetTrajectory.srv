@@ -1,0 +1,4 @@
+string csv_path
+autoware_auto_planning_msgs/TrajectoryPoint[] points
+---
+bool success

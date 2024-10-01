@@ -202,8 +202,7 @@
 
       <!-- Customizable -->
       <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
-        <remap from="input" to="/planning/scenario_planning/lane_driving/behavior_planning/path_with_lane_id"/>
-        <remap from="output" to="/planning/scenario_planning/trajectory"/>
+        <param from="$(find-pkg-share path_to_trajectory)/config/params.yaml" />
       </node>
 
     </group>
