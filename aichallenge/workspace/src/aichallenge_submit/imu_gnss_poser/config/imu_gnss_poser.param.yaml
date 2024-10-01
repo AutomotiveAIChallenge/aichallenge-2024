@@ -1,0 +1,8 @@
+/**:
+  ros__parameters:
+    position_0_cov: 0.1
+    position_1_cov: 0.1
+    position_2_cov: 0.1
+    orientation_0_cov: 100000.0 
+    orientation_1_cov: 100000.0 
+    orientation_2_cov: 100000.0 

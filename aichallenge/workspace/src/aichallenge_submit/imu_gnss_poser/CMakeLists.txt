@@ -14,6 +14,6 @@ ament_auto_add_executable(imu_gnss_poser_node
   src/imu_gnss_poser_node.cpp
 )
 
-ament_auto_package(
-  INSTALL_TO_SHARE
+ament_auto_package(INSTALL_TO_SHARE
+  config
 )
