@@ -334,4 +334,7 @@
     <include file="$(find-pkg-share ad_api_adaptors)/launch/rviz_adaptors.launch.xml" />
   </group>
 
+  <include file="$(find-pkg-share section_timer)/launch/section_timer.launch.xml"/>
+
+
 </launch>

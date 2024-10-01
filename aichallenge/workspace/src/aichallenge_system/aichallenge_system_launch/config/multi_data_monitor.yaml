@@ -9,7 +9,28 @@ stylesheets:
 widgets:
   - class: Matrix 
     cols: 1
+
     items:
+      - class: Simple
+        value: Timer
+
+      - class: Matrix
+        cols: 5
+        items:
+          - section_1
+          - section_2
+          - section_3
+          - section_4
+          - section_5
+          - section_6
+          - section_7
+          - section_8
+          - section_9
+          - section_10
+          - section_11
+          - section_12
+          - rap_time
+
       - class: Simple
         value: Measured
 
@@ -97,6 +118,150 @@ widgets:
           # - posmode
 
   # Condition https://github.com/tier4/multi_data_monitor/blob/main/multi_data_monitor/documents/classes/others/conditions.md
+  # Section
+  - class: Titled
+    label: section_1
+    title: Sec01
+    input: { class: subscription, topic: /section/section_timer_array, field: data@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_2
+    title: Sec02
+    input: { class: subscription, topic: /section/section_timer_array, field: data@1}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_3
+    title: Sec03
+    input: { class: subscription, topic: /section/section_timer_array, field: data@2}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_4
+    title: Sec04
+    input: { class: subscription, topic: /section/section_timer_array, field: data@3}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_5
+    title: Sec05
+    input: { class: subscription, topic: /section/section_timer_array, field: data@4}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_6
+    title: Sec06
+    input: { class: subscription, topic: /section/section_timer_array, field: data@5}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_7
+    title: Sec07
+    input: { class: subscription, topic: /section/section_timer_array, field: data@6}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_8
+    title: Sec08
+    input: { class: subscription, topic: /section/section_timer_array, field: data@7}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_9
+    title: Sec09
+    input: { class: subscription, topic: /section/section_timer_array, field: data@8}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_10
+    title: Sec10
+    input: { class: subscription, topic: /section/section_timer_array, field: data@9}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_11
+    title: Sec11
+    input: { class: subscription, topic: /section/section_timer_array, field: data@10}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: section_12
+    title: Sec12
+    input: { class: subscription, topic: /section/section_timer_array, field: data@11}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: rap_time
+    title: rap_time
+    input: { class: subscription, topic: /section/section_timer_array, field: data@12}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
   # Measured
   - class: Titled
     label: measured_steering_rad
