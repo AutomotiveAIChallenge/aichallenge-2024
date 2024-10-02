@@ -31,17 +31,17 @@ void Pose_cov_transformer::on_gnss_pose_cov(const geometry_msgs::msg::PoseWithCo
         RCLCPP_WARN(get_logger(), "Could not find transformation: %s", ex.what());
         return;
     }
-    auto pose_cov = std::make_shared<geometry_msgs::msg::PoseWithCovarianceStamped>(*msg);
-    tf2::doTransform(*pose_cov, *pose_cov, transform_stamped);
-    pose_cov->header.stamp = now();
+    auto pose_cov = std::make_shared<geometry_msgs::msg::PoseWithCovarianceStamped>();
+    tf2::doTransform(*msg, *pose_cov, transform_stamped);
+    pose_cov->header.stamp = msg->header.stamp;
     pose_cov->header.frame_id = convert_frame_id_;
-    pose_cov->pose.pose.position.x = msg->pose.pose.position.x;
-    pose_cov->pose.pose.position.y = msg->pose.pose.position.y;
-    pose_cov->pose.pose.position.z = msg->pose.pose.position.z;
-    pose_cov->pose.pose.orientation.x = msg->pose.pose.orientation.x;
-    pose_cov->pose.pose.orientation.y = msg->pose.pose.orientation.y;
-    pose_cov->pose.pose.orientation.z = msg->pose.pose.orientation.z;
-    pose_cov->pose.pose.orientation.w = msg->pose.pose.orientation.w;
+    // pose_cov->pose.pose.position.x = msg->pose.pose.position.x;
+    // pose_cov->pose.pose.position.y = msg->pose.pose.position.y;
+    // pose_cov->pose.pose.position.z = msg->pose.pose.position.z;
+    // pose_cov->pose.pose.orientation.x = msg->pose.pose.orientation.x;
+    // pose_cov->pose.pose.orientation.y = msg->pose.pose.orientation.y;
+    // pose_cov->pose.pose.orientation.z = msg->pose.pose.orientation.z;
+    // pose_cov->pose.pose.orientation.w = msg->pose.pose.orientation.w;
     
     pub_gnss_pose_cov_->publish(*pose_cov);
 }
