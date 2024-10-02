@@ -8,7 +8,7 @@
     multi_layered_costmap:
       layers:
         - "cached_lanelet_layer"
-        - "predicted_object_layer"
+        # - "predicted_object_layer"
       cached_lanelet_layer:
         type: "cached_lanelet"
         map_topic: "/map/vector_map"
