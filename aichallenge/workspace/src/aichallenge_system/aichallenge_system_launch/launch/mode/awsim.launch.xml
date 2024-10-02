@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Workaround because the simulator cannot use the service. -->
+    <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
+
+    <!-- Adaptors for AWSIM -->
+    <group>
+        <include file="$(find-pkg-share aichallenge_awsim_adapter)/launch/aichallenge_awsim_adapter.launch.xml"/>
+    </group>
+
+    <node pkg="topic_tools" exec="relay" name="relay_velocity">
+        <param name="input_topic" value="/awsim/velocity_status"/>
+        <param name="output_topic" value="/vehicle/status/velocity_status"/>
+    </node>
+</launch>

@@ -5,6 +5,7 @@
 
     <xacro:arg name="gpu" default="false"/>
     <xacro:arg name="config_dir" default="$(find racing_kart_sensor_kit_description)/config"/>
+    <xacro:arg name="simulation" default="false"/>
 
     <xacro:property name="sensor_kit_base_link" default="sensor_kit_base_link"/>
 
@@ -19,7 +20,10 @@
 
     <!-- sensor -->
     <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/sensor_kit_calibration.yaml')}"/>
-
+    <!-- over write calibration file for simulation -->
+    <xacro:if value="$(arg simulation)">
+      <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/awsim_sensor_kit_calibration.yaml')}"/>
+    </xacro:if>
     <!-- gnss -->
     <xacro:imu_macro
       name="gnss"

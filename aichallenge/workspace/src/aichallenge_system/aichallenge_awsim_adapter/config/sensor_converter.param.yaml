@@ -1,0 +1,18 @@
+/**:
+  ros__parameters:
+    gnss_pose_delay: 500  # [ms]
+    gnss_pose_cov_delay: 500  # [ms]
+    gnss_pose_mean: 0.0
+    gnss_pose_stddev: 0.005
+    gnss_pose_cov_mean: 0.0
+    gnss_pose_cov_stddev: 0.007
+
+    imu_acc_mean: 0.0
+    imu_acc_stddev: 0.001
+    imu_ang_mean: 0.0
+    imu_ang_stddev: 0.0025
+    imu_ori_mean: 0.0
+    imu_ori_stddev: 0.001
+
+    steering_angle_mean: 0.0
+    steering_angle_stddev: 0.0000075

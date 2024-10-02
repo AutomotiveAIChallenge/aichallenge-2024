@@ -9,7 +9,7 @@ class ControlModeAdapterNode(rclpy.node.Node):
     def __init__(self):
         super().__init__("control_mode_adapter")
         self.sub = self.create_service(ControlModeCommand, "/control/control_mode_request", self.callback)
-        self.pub = self.create_publisher(Bool, "/control/control_mode_request_topic", 1)
+        self.pub = self.create_publisher(Bool, "/awsim/control_mode_request_topic", 1)
 
     def callback(self, req, res):
         msg = Bool()
@@ -32,4 +32,7 @@ def main(args=None):
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

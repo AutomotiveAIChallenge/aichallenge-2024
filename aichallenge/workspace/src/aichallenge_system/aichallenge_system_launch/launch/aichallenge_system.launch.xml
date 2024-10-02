@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/autoware.rviz" description="rviz config"/>
-    <log message="This is aichallenge_system_launch."/>
+    <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/debug_sensing.rviz" description="rviz config"/>
     <arg name="simulation" default="true"/>
     <arg name="use_sim_time" default="$(var simulation)"/>
-    <arg name="launch_vehicle_interface" default="false"/>
+    <arg name="run_rviz" default="$(var simulation)"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
-    <log message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)"/>
-    <log message="echo launch param simulation: $(var simulation)"/>
+    <arg name="launch_vehicle_interface" default="true"/>
 
+    <log message="The arguments for aichallenge_system_launch."/>
+    <log message=" - simulation: $(var simulation)"/>
+    <log message=" - use_sim_time: $(var use_sim_time)"/>
+    <log message=" - sensor_model: $(var sensor_model)"/>
+    <log message=" - launch_vehicle_interface: $(var launch_vehicle_interface)"/>
+
+    <!-- Main module of AI challenge 2024. -->
     <include file="$(find-pkg-share aichallenge_submit_launch)/launch/aichallenge_submit.launch.xml" >
-        <arg name="sensor_model" value="$(var sensor_model)"/>
+        <arg name="simulation" value="$(var simulation)"/>
         <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="sensor_model" value="$(var sensor_model)"/>
         <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
     </include>
-    
-    <!-- Workaround because the simulator cannot use the service. -->
-    <group if="$(var simulation)">
-        <node pkg="aichallenge_system_launch" exec="control_mode_adapter.py" output="screen"/>
+
+    <!-- Visualization. -->
+    <group if="$(var run_rviz)">
+        <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
+        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
     </group>
 
-    <!-- RViz -->
-    <group>
-        <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(var rviz_config) -s $(find-pkg-share autoware_launch)/rviz/image/autoware.png"/>
-        <node pkg="aichallenge_system_launch" exec="object_marker.py" output="screen"/>
+    <!-- Initial Pose -->
+    <node pkg="topic_tools" exec="relay" name="initial_pose_relay">
+      <param name="input_topic" value="/initialpose"/>
+      <param name="output_topic" value="/localization/initial_pose3d"/>
+    </node>
+
+    <!-- Adapters for simulation. -->
+    <group if="$(var simulation)">
+        <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/awsim.launch.xml"/>
+    </group>
+
+    <!-- Adapters for real vehicle. -->
+    <group unless="$(var simulation)">
+        <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/real.launch.xml"/>
     </group>
 </launch>

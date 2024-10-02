@@ -6,6 +6,7 @@
 #include <autoware_auto_planning_msgs/msg/trajectory_point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <optional>
 #include <rclcpp/rclcpp.hpp>
@@ -18,6 +19,7 @@ using autoware_auto_control_msgs::msg::AckermannControlCommand;
 using autoware_auto_planning_msgs::msg::Trajectory;
 using autoware_auto_planning_msgs::msg::TrajectoryPoint;
 using geometry_msgs::msg::Pose;
+using geometry_msgs::msg::PointStamped;
 using geometry_msgs::msg::Twist;
 using nav_msgs::msg::Odometry;
 using visualization_msgs::msg::Marker;
@@ -32,6 +34,8 @@ class SimplePurePursuit : public rclcpp::Node {
   
   // publishers
   rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_cmd_;
+  rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_raw_cmd_;
+
   rclcpp::Publisher<Marker>::SharedPtr mkr_cmd_;
   
   // timer
@@ -50,6 +54,7 @@ class SimplePurePursuit : public rclcpp::Node {
   double speed_proportional_gain_;
   bool use_external_target_vel_;
   double external_target_vel_;
+  const double steering_tire_angle_gain_;
   OnSetParametersCallbackHandle::SharedPtr reset_param_handler_;
 
 

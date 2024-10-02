@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <log message="This is aichallenge_submit_launch."/>
-  <include file="$(find-pkg-share booars_launch)/launch/booars.launch.xml" />
+  <arg name="simulation"/>
+  <arg name="use_sim_time"/>
+  <arg name="sensor_model"/>
+  <arg name="launch_vehicle_interface"/>
+
+  <log message="The arguments for aichallenge_submit_launch."/>
+  <log message=" - simulation: $(var simulation)"/>
+  <log message=" - use_sim_time: $(var use_sim_time)"/>
+  <log message=" - sensor_model: $(var sensor_model)"/>
+  <log message=" - launch_vehicle_interface: $(var launch_vehicle_interface)"/>
+
+  <include file="$(find-pkg-share aichallenge_submit_launch)/launch/reference.launch.xml" >
+    <arg name="vehicle_model" value="racing_kart"/>
+    <arg name="sensor_model" value="$(var sensor_model)"/>
+    <arg name="map_path" value="$(find-pkg-share aichallenge_submit_launch)/map"/>
+    <arg name="use_sim_time" value="$(var use_sim_time)"/>
+    <arg name="simulation" value="$(var simulation)"/>
+    <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)"/>
+  </include>
 
   <!-- place a goal pose anywhere you like-->
   <node pkg="goal_pose_setter" exec="goal_pose_setter_node" name="goal_pose_setter" output="screen">
