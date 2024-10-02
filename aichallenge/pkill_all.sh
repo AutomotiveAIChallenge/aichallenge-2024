@@ -1,6 +1,8 @@
 #!/bin/bash
 
+pkill -9 AWSIM.x86_64
 pkill -9 component_conta
+pkill -9 dummy_objects_p
 pkill -9 ekf_localizer
 pkill -9 empty_objects_p
 pkill -9 goal_pose_sette

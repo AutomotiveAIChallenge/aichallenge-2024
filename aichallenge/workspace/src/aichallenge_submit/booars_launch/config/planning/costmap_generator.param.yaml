@@ -1,0 +1,26 @@
+/**:
+  ros__parameters:
+    update_rate: 20.0       # [Hz]
+    map_frame_id: "map"
+    costmap_center_frame_id: "base_link"
+    costmap_width: 50.0     # [m]
+    costmap_resolution: 0.2 # [m/cell]
+    multi_layered_costmap:
+      layers:
+        - "cached_lanelet_layer"
+        - "predicted_object_layer"
+      cached_lanelet_layer:
+        type: "cached_lanelet"
+        map_topic: "/map/vector_map"
+        costmap_topic: "~/debug/cached_costmap"
+        inflation_radius: 1.8 # [m]
+        cached_costmap:
+          min_x: 89607.0  # [m]
+          max_x: 89687.0  # [m]
+          min_y: 43114.0  # [m]
+          max_y: 43194.0  # [m]
+          resolution: 0.1 # [m/cell]
+      predicted_object_layer:
+        type: "predicted_object"
+        predicted_objects_topic: "/perception/object_recognition/objects"
+        distance_threshold: 1.3
