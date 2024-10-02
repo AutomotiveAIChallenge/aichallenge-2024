@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
   <!-- Essential parameters -->
-  <arg name="use_sim_time" default="true"/>
-  
-  <arg name="map_path" default="$(find-pkg-share booars_launch)/map"/>
-
-  <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
-  <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
-
+  <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID" />
+  <arg name="use_sim_time" default="false" />
+  <arg name="map_path" default="$(find-pkg-share booars_launch)/map" />
+  <arg name="vehicle_model" default="racing_kart" description="vehicle model name" />
+  <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name" />
+  <arg name="simulation" description="used for sensor kit param" />
   <!-- Optional parameters -->
-  <arg name="lanelet2_file" default="lanelet2_map_opt.osm" description="lanelet2 map file name"/>
+  <!-- Map -->
+  <arg name="lanelet2_map_file" default="lanelet2_map_opt.osm" description="lanelet2 map file name" />
+  <arg name="pointcloud_map_file" default="pointcloud_map.pcd"
+    description="pointcloud map file name" />
+  <!-- Vehicle -->
+  <arg name="launch_vehicle_interface" default="false" />
+  <log
+    message="echo launch param use_sim_time: $(var use_sim_time) launch_vehicle_interface: $(var launch_vehicle_interface) sensor_model: $(var sensor_model)" />
 
   <!-- Common -->
   <include file="$(find-pkg-share booars_launch)/launch/components/common.launch.xml">
-    <arg name="use_sim_time" value="$(var use_sim_time)"/>
-    <arg name="vehicle_model" value="$(var vehicle_model)"/>
-    <arg name="sensor_model" value="$(var sensor_model)"/>
+    <arg name="use_sim_time" value="$(var use_sim_time)" />
+    <arg name="vehicle_model" value="$(var vehicle_model)" />
+    <arg name="sensor_model" value="$(var sensor_model)" />
   </include>
 
   <!-- Map -->
   <include file="$(find-pkg-share booars_launch)/launch/components/map.launch.xml">
-    <arg name="map_path" value="$(var map_path)"/>
-    <arg name="lanelet2_map_file" value="$(var lanelet2_file)"/>
+    <arg name="map_path" value="$(var map_path)" />
+    <arg name="lanelet2_map_file" value="$(var lanelet2_map_file)" />
   </include>
 
   <!-- Sensing -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/sensing.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/sensing.launch.xml" />
 
   <!-- Perception -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/perception.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/perception.launch.xml" />
 
   <!-- Localization -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/localization.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/localization.launch.xml" />
 
   <!-- Planning -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/planning.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/planning.launch.xml" />
 
   <!-- Control -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/control.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/control.launch.xml" />
 
   <!-- Vehicle -->
-  <include file="$(find-pkg-share booars_launch)/launch/components/vehicle.launch.xml"/>
+  <include file="$(find-pkg-share booars_launch)/launch/components/vehicle.launch.xml">
+    <arg name="launch_vehicle_interface" value="$(var launch_vehicle_interface)" />
+  </include>
 
   <!-- API -->
   <group>

@@ -2,22 +2,27 @@
 <launch>
   <group>
 
-    <push-ros-namespace namespace="sensing"/>
-  
+    <push-ros-namespace namespace="sensing" />
+
     <!-- Vehicle Velocity Converter  -->
-    <include file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
-      <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status"/>
-      <arg name="output_twist_with_covariance" value="/sensing/vehicle_velocity_converter/twist_with_covariance"/>
+    <include
+      file="$(find-pkg-share vehicle_velocity_converter)/launch/vehicle_velocity_converter.launch.xml">
+      <arg name="input_vehicle_velocity_topic" value="/vehicle/status/velocity_status" />
+      <arg name="output_twist_with_covariance"
+        value="/sensing/vehicle_velocity_converter/twist_with_covariance" />
+      <arg name="config_file"
+        value="$(find-pkg-share booars_launch)/config/sensing/vehicle_velocity_converter.param.yaml" />
     </include>
 
     <!-- IMU Corrector -->
     <group>
-      <push-ros-namespace namespace="imu"/>
-      <arg name="imu_corrector_param_file" default="$(find-pkg-share booars_launch)/config/sensing/imu_corrector.param.yaml"/>
+      <push-ros-namespace namespace="imu" />
+      <arg name="imu_corrector_param_file"
+        default="$(find-pkg-share booars_launch)/config/sensing/imu_corrector.param.yaml" />
       <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
-        <arg name="input_topic" value="imu_raw"/>
-        <arg name="output_topic" value="imu_data"/>
-        <arg name="param_file" value="$(var imu_corrector_param_file)"/>
+        <arg name="input_topic" value="imu_raw" />
+        <arg name="output_topic" value="imu_data" />
+        <arg name="param_file" value="$(var imu_corrector_param_file)" />
       </include>
     </group>
 
