@@ -26,6 +26,7 @@ private:
     void on_gnss_pose_cov(const geometry_msgs::msg::PoseWithCovarianceStamped::ConstSharedPtr msg);
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
+    std::string convert_frame_id_;
 };
 
 }
