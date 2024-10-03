@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/debug_sensing.rviz" description="rviz config"/>
-    <arg name="simulation" default="true"/>
-    <arg name="use_sim_time" default="$(var simulation)"/>
-    <arg name="run_rviz" default="$(var simulation)"/>
+    <arg name="simulation"/>
+    <arg name="use_sim_time"/>
+    <arg name="run_rviz"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <arg name="launch_vehicle_interface" default="true"/>
 
