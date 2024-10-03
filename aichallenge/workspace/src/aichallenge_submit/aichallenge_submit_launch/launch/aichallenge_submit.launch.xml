@@ -22,6 +22,6 @@
 
   <!-- place a goal pose anywhere you like-->
   <node pkg="goal_pose_setter" exec="goal_pose_setter_node" name="goal_pose_setter" output="screen">
-    <param from="$(find-pkg-share goal_pose_setter)/config/default_goal_pose.param.yaml" />
+    <param from="$(find-pkg-share booars_launch)/config/planning/goal_pose.param.yaml" />
   </node>
 </launch>

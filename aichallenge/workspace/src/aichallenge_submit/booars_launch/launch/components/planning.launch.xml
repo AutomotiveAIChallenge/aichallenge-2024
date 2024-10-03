@@ -14,7 +14,7 @@
         <remap from="input/vector_map" to="/map/vector_map"/>
         <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
         <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
-        <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
+        <param from="$(find-pkg-share booars_launch)/config/planning/mission_planner.param.yaml"/>
       </node>
 
       <!-- goal_pose_visualizer -->
@@ -98,6 +98,14 @@
       <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
         <remap from="input" to="/planning/scenario_planning/lane_driving/behavior_planning/path_with_lane_id"/>
         <remap from="output" to="/planning/scenario_planning/trajectory"/>
+        <!-- 減速度 -->
+        <param name="deceleration" value="-14.0"/>
+        <!-- ピットの何メートル前で速度を0にするか -->
+        <param name="stop_offset" value="1.5"/>
+        <!-- 最高速度 -->
+        <param name="max_speed" value="30.0"/>
+        <!-- trajectoryの点の間隔 -->
+        <param name="traj_width" value="1.0"/>
       </node>
 
     </group>

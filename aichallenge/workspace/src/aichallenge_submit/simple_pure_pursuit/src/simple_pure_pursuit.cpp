@@ -78,18 +78,9 @@ void SimplePurePursuit::onTimer()
     // get closest trajectory point from current position
     TrajectoryPoint closet_traj_point = trajectory_->points.at(closet_traj_point_idx);
 
-    // calc longitudinal speed and acceleration
-    double target_longitudinal_vel =
-      use_external_target_vel_ ? external_target_vel_ : closet_traj_point.longitudinal_velocity_mps;
-    double current_longitudinal_vel = odometry_->twist.twist.linear.x;
-
-    cmd.longitudinal.speed = target_longitudinal_vel;
-    cmd.longitudinal.acceleration =
-      speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
-
     // calc lateral control
     //// calc lookahead distance
-    double lookahead_distance = lookahead_gain_ * target_longitudinal_vel + lookahead_min_distance_;
+    double lookahead_distance = lookahead_gain_ * closet_traj_point.longitudinal_velocity_mps + lookahead_min_distance_;
     //// calc center coordinate of rear wheel
     double rear_x = odometry_->pose.pose.position.x -
                     wheel_base_ / 2.0 * std::cos(odometry_->pose.pose.orientation.z);
@@ -107,6 +98,15 @@ void SimplePurePursuit::onTimer()
     }
     double lookahead_point_x = lookahead_point_itr->pose.position.x;
     double lookahead_point_y = lookahead_point_itr->pose.position.y;
+
+    // calc longitudinal speed and acceleration
+    double target_longitudinal_vel =
+      use_external_target_vel_ ? external_target_vel_ : lookahead_point_itr->longitudinal_velocity_mps;
+    double current_longitudinal_vel = odometry_->twist.twist.linear.x;
+    
+    cmd.longitudinal.speed = target_longitudinal_vel;
+    cmd.longitudinal.acceleration =
+      speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
     {
       // publish lookahead point marker
       auto marker_msg = Marker();
@@ -133,10 +133,15 @@ void SimplePurePursuit::onTimer()
       mkr_cmd_->publish(marker_msg);
     }
     // calc steering angle for lateral control
-    double alpha = std::atan2(lookahead_point_y - rear_y, lookahead_point_x - rear_x) -
-                   tf2::getYaw(odometry_->pose.pose.orientation);
-    cmd.lateral.steering_tire_angle =
-      steering_tire_angle_gain_ * std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
+    if (std::hypot(lookahead_point_x - rear_x, lookahead_point_y - rear_y) < lookahead_min_distance_) {
+      cmd.lateral.steering_tire_angle = 0.0;
+    } else {
+      double alpha = std::atan2(lookahead_point_y - rear_y, lookahead_point_x - rear_x) -
+                    tf2::getYaw(odometry_->pose.pose.orientation);
+      cmd.lateral.steering_tire_angle =
+        steering_tire_angle_gain_ *
+        std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
+    }
   }
   pub_cmd_->publish(cmd);
   cmd.lateral.steering_tire_angle /=  steering_tire_angle_gain_;

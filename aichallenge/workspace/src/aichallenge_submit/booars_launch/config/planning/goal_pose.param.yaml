@@ -23,8 +23,10 @@
     pit_goal.orientation.y: 0.0
     pit_goal.orientation.z: -0.8788172006607056
     pit_goal.orientation.w: -0.47715866565704346
-
+    # ゴールまでの距離がこの値以下になると次のゴールを配信する
     goal_range: 10.0
-
+    # ピットインを有効化するか
     enable_pit: true
-    pit_in_threshold: 20
+    # このしきい値以下になるとピットイン
+    # pit_in_threshold: 100
+    pit_in_threshold: 700

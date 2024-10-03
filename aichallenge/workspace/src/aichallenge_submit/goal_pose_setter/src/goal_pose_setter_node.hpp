@@ -17,12 +17,18 @@
 
 #include <rclcpp/rclcpp.hpp>
 
+#include <std_msgs/msg/int32.hpp>
+#include <std_msgs/msg/float32.hpp>
+#include <std_msgs/msg/float64_multi_array.hpp>
+
 #include <autoware_adapi_v1_msgs/msg/route_state.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <std_srvs/srv/set_bool.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <tier4_autoware_utils/tier4_autoware_utils.hpp>
+
+
 
 class GoalPosePublisher : public rclcpp::Node
 {
@@ -38,6 +44,11 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr goal_publisher_;
     rclcpp::Subscription<autoware_adapi_v1_msgs::msg::RouteState>::SharedPtr route_state_subscriber_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscriber_;
+
+    rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr pit_position_subscriber_;
+    rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr pit_condition_subscriber_;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr pit_stop_time_subscriber_;
+
     rclcpp::TimerBase::SharedPtr timer_;
     bool stop_initializing_pose_ = false;
     bool stop_streaming_goal_pose_ = false;
@@ -47,6 +58,14 @@ private:
     float goal_range_;
     geometry_msgs::msg::Pose goal_position_;
     geometry_msgs::msg::Pose half_goal_position_;
+
+    geometry_msgs::msg::Pose pit_position_;
+    int pit_condition_;
+    float pit_stop_time_;
+    bool pit_in_flag_ = false;
+
+    bool enable_pit_ = true;
+    int pit_in_threshold_ = 1000;
 };
 
 #endif  // GOAL_POSE_SETTER_NODE_
