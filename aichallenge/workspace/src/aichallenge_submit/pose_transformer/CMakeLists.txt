@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(pose_cov_transformer)
+project(pose_transformer)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -10,8 +10,8 @@ find_package(ament_cmake_auto REQUIRED)
 
 ament_auto_find_build_dependencies()
 
-ament_auto_add_executable(pose_cov_transformer
-  src/pose_cov_transformer.cpp
+ament_auto_add_executable(pose_transformer
+  src/pose_transformer.cpp
 )
 
 ament_auto_package(
