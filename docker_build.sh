@@ -7,7 +7,7 @@ case "${target}" in
     opts="--no-cache"
     ;;
 "dev")
-    opts=""
+    opts="--no-cache"
     ;;
 *)
     echo "invalid argument (use 'dev' or 'eval')"
