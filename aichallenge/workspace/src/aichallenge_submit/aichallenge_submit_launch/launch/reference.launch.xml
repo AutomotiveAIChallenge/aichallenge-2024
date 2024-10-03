@@ -2,11 +2,11 @@
 <launch>
   <!-- Essential parameters -->
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)" description="vehicle specific ID"/>
-  <arg name="use_sim_time" default="false"/>
+  <arg name="simulation" description="used for sensor kit param"/>
+  <arg name="use_sim_time"/>
   <arg name="map_path" default="$(find-pkg-share aichallenge_submit_launch)/map"/>
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
   <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
-  <arg name="simulation" description="used for sensor kit param"/>
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
