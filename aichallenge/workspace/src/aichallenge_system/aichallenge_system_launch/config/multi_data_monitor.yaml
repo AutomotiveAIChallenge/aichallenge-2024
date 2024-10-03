@@ -47,6 +47,8 @@ widgets:
 
           - measured_lateral_vel_mps
           - measured_lateral_vel_kph
+          - measured_acceleration
+          - measured_steering_velocity
 
 
       - class: Simple
@@ -345,6 +347,28 @@ widgets:
     label: measured_heading_rate_deg
     title: Heading Rate[deg/s]?
     input: measured_heading_rate_deg
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_acceleration
+    title: Acceleration[m/ss]
+    input: { class: subscription, topic: /vehicle/status/acceleration, field: data}
+    rules:
+      - { class: Precision, digits: 1 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: measured_steering_velocity
+    title: SteerVel[deg/s]
+    input: { class: subscription, topic: /vehicle/status/angular_velocity, field: data}
     rules:
       - { class: Precision, digits: 1 }
       - class: SetFirstIf
