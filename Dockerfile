@@ -5,9 +5,10 @@ RUN apt-get update
 RUN apt-get -y install libgl1-mesa-glx libgl1-mesa-dri
 RUN apt-get -y install iproute2
 RUN apt-get -y install wmctrl
-RUN apt-get -y install terminator 
+
 RUN apt-get -y install ros-humble-rqt-tf-tree
 RUN apt-get -y install ros-humble-rqt-graph
+RUN apt-get -y install terminator 
 
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
