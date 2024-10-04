@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mode=${1}
+mode=${1:-vehicle}
 
 case "${mode}" in
 "awsim")
