@@ -2,7 +2,6 @@
 
 namespace pose_transformer
 {
-
 Pose_transformer::Pose_transformer() : Node("pose_trasnformer"),
 tf_buffer_(get_clock()),
 tf_listener_(tf_buffer_, this, false)
@@ -13,6 +12,8 @@ tf_listener_(tf_buffer_, this, false)
     // pub, subの初期化
     sub_gnss_pose_ = create_subscription<geometry_msgs::msg::PoseStamped>("/sensing/gnss/pose", 1, std::bind(&Pose_transformer::on_gnss_pose, this, _1));
     pub_gnss_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("/sensing/gnss/base_link/pose", 1);
+    sub_kinematic_state_ = create_subscription<nav_msgs::msg::Odometry>("/localization/kinematic_state", 1, std::bind(&Pose_transformer::on_kinematic_state_, this, _1));
+    pub_kinematic_state_ = create_publisher<nav_msgs::msg::Odometry>("/localization/base_link/kinematic_state", 1);
     convert_frame_id_ = this->declare_parameter<std::string>("frame_id", "base_link");
 }
 
@@ -32,6 +33,29 @@ void Pose_transformer::on_gnss_pose(const geometry_msgs::msg::PoseStamped::Const
     pose_cov->header.frame_id = convert_frame_id_;
     
     pub_gnss_pose_->publish(*pose_cov);
+}
+
+void Pose_transformer::on_kinematic_state_(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
+{
+    geometry_msgs::msg::TransformStamped transform_stamped;
+    try {
+        // mapフレームの値をbase_linkフレームの値に変換するための変換行列の算出
+        transform_stamped = tf_buffer_.lookupTransform(convert_frame_id_, msg->header.frame_id, rclcpp::Time(0), rclcpp::Duration(1, 0));
+    }
+    catch (tf2::TransformException & ex) {
+        RCLCPP_WARN(get_logger(), "Could not find transformation: %s", ex.what());
+    }
+    auto odom_transformed = std::make_shared<nav_msgs::msg::Odometry>();
+    // msgの値を変換してodom_transformedに格納
+    tf2::doTransform(msg->pose.pose, odom_transformed->pose.pose, transform_stamped);
+
+    odom_transformed->header.stamp = msg->header.stamp;
+    odom_transformed->header.frame_id = convert_frame_id_;
+    odom_transformed->child_frame_id = convert_frame_id_;
+    // child_frame_idは元々base_linkで、twistはchild_frame_idで指定された座標フレームで表されるので、twistは変換していない
+    odom_transformed->twist = msg->twist;
+    
+    pub_kinematic_state_->publish(*odom_transformed);
 }
 }// namespace pose_transformer
 int main(int argc, char **argv){
