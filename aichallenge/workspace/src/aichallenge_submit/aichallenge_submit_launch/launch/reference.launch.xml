@@ -7,6 +7,7 @@
   <arg name="vehicle_model" default="racing_kart"  description="vehicle model name"/>
   <arg name="sensor_model" default="racing_kart_sensor_kit" description="sensor model name"/>
   <arg name="simulation" description="used for sensor kit param"/>
+  <arg name="is_rosbag" description="If true, not start controller"/>
   <!-- Optional parameters -->
   <!-- Map -->
   <arg name="lanelet2_map_file" default="lanelet2_map.osm" description="lanelet2 map file name"/>
@@ -107,40 +108,12 @@
   </node>
 
   <!-- Planning -->
-  <group>
+  <group unless="$(var is_rosbag)">
     <push-ros-namespace namespace="planning"/>
-
-    <!-- mission_planning -->
-    <group>
-      <push-ros-namespace namespace="mission_planning"/>
-
-      <!-- mission_planner -->
-      <node pkg="mission_planner" exec="mission_planner" name="mission_planner" output="screen">
-        <remap from="input/modified_goal" to="/planning/scenario_planning/modified_goal"/>
-        <remap from="input/vector_map" to="/map/vector_map"/>
-        <!-- <remap from="/localization/kinematic_state" to="/awsim/ground_truth/localization/kinematic_state"/> -->
-        <remap from="debug/route_marker" to="/planning/mission_planning/route_marker"/>
-        <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
-      </node>
-
-      <!-- goal_pose_visualizer -->
-      <node pkg="mission_planner" exec="goal_pose_visualizer" name="goal_pose_visualizer" output="screen">
-        <remap from="input/route" to="/planning/mission_planning/route"/>
-        <remap from="output/goal_pose" to="/planning/mission_planning/echo_back_goal_pose"/>
-      </node>
-
-    </group> <!-- mission_planning -->
 
     <!-- scenario_planning -->
     <group>
       <push-ros-namespace namespace="scenario_planning"/>
-
-      <!-- scenario_selector -->
-      <group>
-        <arg name="cmd" default="ros2 topic pub /planning/scenario_planning/scenario tier4_planning_msgs/msg/Scenario '{current_scenario: LaneDriving, activating_scenarios: [LaneDriving]}'"/>
-        <executable cmd="$(var cmd)" name="scenario_pub" shell="true"/>
-      </group> <!-- scenario_selector -->
-
       <!-- operation_mode -->
       <group>
         <arg name="cmd" default="ros2 topic pub /system/operation_mode/state autoware_adapi_v1_msgs/msg/OperationModeState '{
@@ -155,51 +128,6 @@
         <executable cmd="$(var cmd)" name="operation_mode_pub" shell="true"/>
       </group> <!-- operation_mode -->
 
-      <!-- lane_driving -->
-      <group>
-        <push-ros-namespace namespace="lane_driving"/>
-
-        <!-- behavior_planning -->
-        <group>
-          <push-ros-namespace namespace="behavior_planning"/>
-
-          <!-- behavior_planning_container -->
-          <node_container pkg="rclcpp_components" exec="component_container" name="behavior_planning_container" namespace="">
-
-            <!-- behavior_path_planner::BehaviorPathPlannerNode -->
-            <composable_node pkg="behavior_path_planner" plugin="behavior_path_planner::BehaviorPathPlannerNode" name="behavior_path_planner" namespace="">
-              <remap from="~/input/route" to="/planning/mission_planning/route" />
-              <remap from="~/input/vector_map" to="/map/vector_map" />
-              <remap from="~/input/perception" to="/perception/object_recognition/objects" /> <!-- autoware_auto_perception_msgs/PredictedObjects -->
-              <remap from="~/input/occupancy_grid_map" to="/perception/occupancy_grid_map/map" />
-              <remap from="~/input/costmap" to="/planning/scenario_planning/parking/costmap_generator/occupancy_grid" />
-              <remap from="~/input/odometry" to="/localization/kinematic_state" />
-              <remap from="~/input/accel" to="/localization/acceleration" />
-              <remap from="~/input/scenario" to="/planning/scenario_planning/scenario" />
-              <remap from="~/output/path" to="path_with_lane_id" />
-              <remap from="~/output/turn_indicators_cmd" to="/planning/turn_indicators_cmd" />
-              <remap from="~/output/hazard_lights_cmd" to="/planning/hazard_lights_cmd" />
-              <remap from="~/output/modified_goal" to="/planning/scenario_planning/modified_goal" />
-              <param name="bt_tree_config_path" value="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner_tree.xml"/>
-              <param name="lane_change.enable_abort_lane_change" value="false"/>
-              <param name="lane_change.enable_collision_check_at_prepare_phase" value="false"/>
-              <param name="lane_change.use_predicted_path_outside_lanelet" value="false"/>
-              <param name="lane_change.use_all_predicted_path" value="false"/>
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/common/nearest_search.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/side_shift/side_shift.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/avoidance/avoidance.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_change/lane_change.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/pull_over/pull_over.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/lane_following/lane_following.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/behavior_path_planner.param.yaml" />
-              <param from="$(find-pkg-share aichallenge_submit_launch)/config/planning/scenario_planning/lane_driving/behavior_planning/behavior_path_planner/drivable_area_expansion.param.yaml" />
-              <extra_arg name="use_intra_process_comms" value="false" />
-            </composable_node>
-
-          </node_container>
-        </group> <!-- behavior_planning -->
-      </group> <!-- lane_driving -->
-
       <!-- Customizable -->
       <node pkg="path_to_trajectory" exec="path_to_trajectory_node" name="path_to_trajectory" output="screen">
         <param from="$(find-pkg-share path_to_trajectory)/config/params.yaml" />
@@ -208,66 +136,52 @@
     </group>
   </group>
 
-  <!-- Pure Pursuit -->
-  <!-- <let name="steering_tire_angle_gain_var" value="1.0" if="$(var simulation)"/>
-  <let name="steering_tire_angle_gain_var" value="1.639" unless="$(var simulation)"/>
 
-  <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node" output="screen">
-    <param name="use_external_target_vel" value="true"/>
-    <param name="external_target_vel" value="4.16667"/>
-    <param name="lookahead_gain" value="0.5"/>
-    <param name="lookahead_min_distance" value="3.5"/>
-    <param name="speed_proportional_gain" value="1.0"/>
-    <param name="steering_tire_angle_gain" value="$(var steering_tire_angle_gain_var)"/>
+  <!-- Control -->
+    <!-- MPC & PID -->
+    <arg name="use_external_target_vel" default="true"/>
+    <arg name="external_target_vel" default="5.0"/>
+    <arg name="lateral_deviation" default="0.0"/>
 
-    <remap from="input/kinematics" to="/localization/kinematic_state"/>
-    <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
-    <remap from="output/control_cmd" to="/control/command/control_cmd"/>
-  </node> -->
+    <!-- engage_transition_manager -->
+    <arg name="enable_obstacle_collision_checker" default="true"/>
+    <arg name="lateral_controller_mode" default="mpc"/>
+    <arg name="longitudinal_controller_mode" default="pid"/>
+    <arg name="enable_autonomous_emergency_braking" default="true"/>
+    <arg name="check_external_emergency_heartbeat" default="true"/>
+    <arg name="trajectory_follower_mode" default="trajectory_follower_node"/>
+    <arg name="nearest_search_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/common/nearest_search.param.yaml"/>
+    <arg name="trajectory_follower_node_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/trajectory_follower_node.param.yaml"/>
+    <arg name="lon_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/lateral/mpc.param.yaml"/>
+    <arg name="lat_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/longitudinal/pid.param.yaml"/>
+    <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
+    <arg name="use_sim_time" default="false"/>
 
-
-  <!-- MPC & PID -->
-  <arg name="use_external_target_vel" default="true"/>
-  <arg name="external_target_vel" default="5.0"/>
-  <arg name="lateral_deviation" default="0.0"/>
-
-  <!-- engage_transition_manager -->
-  <arg name="enable_obstacle_collision_checker" default="true"/>
-  <arg name="lateral_controller_mode" default="mpc"/>
-  <arg name="longitudinal_controller_mode" default="pid"/>
-  <arg name="enable_autonomous_emergency_braking" default="true"/>
-  <arg name="check_external_emergency_heartbeat" default="true"/>
-  <arg name="trajectory_follower_mode" default="trajectory_follower_node"/>
-  <arg name="nearest_search_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/common/nearest_search.param.yaml"/>
-  <arg name="trajectory_follower_node_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/trajectory_follower_node.param.yaml"/>
-  <arg name="lon_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/lateral/mpc.param.yaml"/>
-  <arg name="lat_controller_param_path" default="$(find-pkg-share aichallenge_submit_launch)/config/control/longitudinal/pid.param.yaml"/>
-  <arg name="vehicle_param_file" default="$(find-pkg-share racing_kart_description)/config/vehicle_info.param.yaml"/>
-  <arg name="use_sim_time" default="false"/>
-
-  <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
-    <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
-    <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
-    <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
-    <remap from="~/input/current_accel" to="/localization/acceleration"/>
-    <remap from="~/input/current_operation_mode" to="/system/operation_mode/state"/>
-    <remap from="~/output/predicted_trajectory" to="lateral/predicted_trajectory"/>
-    <remap from="~/output/lateral_diagnostic" to="lateral/diagnostic"/>
-    <remap from="~/output/slope_angle" to="longitudinal/slope_angle"/>
-    <remap from="~/output/longitudinal_diagnostic" to="longitudinal/diagnostic"/>
-    <remap from="~/output/stop_reason" to="longitudinal/stop_reason"/>
-    <remap from="~/output/control_cmd" to="/control/command/control_cmd"/>
-    <param name="lateral_controller_mode" value="$(var lateral_controller_mode)"/>
-    <param name="longitudinal_controller_mode" value="$(var longitudinal_controller_mode)"/>
-    <param from="$(var nearest_search_param_path)"/>
-    <param from="$(var trajectory_follower_node_param_path)"/>
-    <param from="$(var lon_controller_param_path)"/>
-    <param from="$(var lat_controller_param_path)"/>
-    <param from="$(var vehicle_param_file)"/>
-    <remap from="input/kinematics" to="/localization/kinematic_state"/>
-    <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
-    <remap from="output/control_cmd" to="/control/command/control_cmd"/>    
-  </node>
+  <group unless="$(var is_rosbag)">
+    <node pkg="trajectory_follower_node" exec="controller_node_exe" name="controller" output="screen">
+      <remap from="~/input/reference_trajectory" to="/planning/scenario_planning/trajectory"/>
+      <remap from="~/input/current_odometry" to="/localization/kinematic_state"/>
+      <remap from="~/input/current_steering" to="/vehicle/status/steering_status"/>
+      <remap from="~/input/current_accel" to="/localization/acceleration"/>
+      <remap from="~/input/current_operation_mode" to="/system/operation_mode/state"/>
+      <remap from="~/output/predicted_trajectory" to="lateral/predicted_trajectory"/>
+      <remap from="~/output/lateral_diagnostic" to="lateral/diagnostic"/>
+      <remap from="~/output/slope_angle" to="longitudinal/slope_angle"/>
+      <remap from="~/output/longitudinal_diagnostic" to="longitudinal/diagnostic"/>
+      <remap from="~/output/stop_reason" to="longitudinal/stop_reason"/>
+      <remap from="~/output/control_cmd" to="/control/command/control_cmd"/>
+      <param name="lateral_controller_mode" value="$(var lateral_controller_mode)"/>
+      <param name="longitudinal_controller_mode" value="$(var longitudinal_controller_mode)"/>
+      <param from="$(var nearest_search_param_path)"/>
+      <param from="$(var trajectory_follower_node_param_path)"/>
+      <param from="$(var lon_controller_param_path)"/>
+      <param from="$(var lat_controller_param_path)"/>
+      <param from="$(var vehicle_param_file)"/>
+      <remap from="input/kinematics" to="/localization/kinematic_state"/>
+      <remap from="input/trajectory" to="/planning/scenario_planning/trajectory"/>
+      <remap from="output/control_cmd" to="/control/command/control_cmd"/>    
+    </node>
+  </group>
 
   <!-- Map -->
   <group>
