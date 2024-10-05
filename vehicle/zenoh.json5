@@ -54,8 +54,8 @@
       ////               or is not specified at all, it means that ALL such interface are allowed.
       allow: {
         publishers: [
-          "/joy",
           "/vehicle/status/control_mode",
+          "/racing_kart/joy",
           "/racing_kart/debug/delay",
           "/racing_kart/debug/status",
           "/racing_kart/gnss",
@@ -67,8 +67,8 @@
           "/localization/kinematic_state",
         ],
         subscribers: [
-          "/joy",
           "/vehicle/status/control_mode",
+          "/racing_kart/joy",
           "/racing_kart/debug/delay",
           "/racing_kart/debug/status",
           "/racing_kart/gnss",
