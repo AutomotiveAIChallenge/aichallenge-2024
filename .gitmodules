@@ -7,3 +7,6 @@
 [submodule "aichallenge/workspace/src/aichallenge_submit/generic_type_utility"]
 	path = aichallenge/workspace/src/aichallenge_submit/generic_type_utility
 	url = git@github.com:tier4/generic_type_utility.git
+[submodule "trajectory_editor"]
+	path = trajectory_editor
+	url = git@github.com:iASL-Gifu/aichallenge2024-trajectory-editor.git
