@@ -15,7 +15,7 @@ ENV ROS_LOCALHOST_ONLY=0
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ENV CYCLONEDDS_URI=file:///opt/autoware/cyclonedds.xml
 
-COPY cyclonedds.xml /opt/autoware/cyclonedds.xml
+COPY vehicle/cyclonedds.xml /opt/autoware/cyclonedds.xml
 
 FROM common AS dev
 
