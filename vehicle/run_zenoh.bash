@@ -6,6 +6,6 @@ docker run --rm \
   -e CYCLONEDDS_URI=file:///cyclonedds.xml \
   --name zenoh \
   -v ~/aichallenge-2024/vehicle/zenoh.json5:/zenoh.json5 \
-  -v ~/aichallenge-2024/cyclonedds.xml:/cyclonedds.xml \
+  -v ~/aichallenge-2024/vehicle/cyclonedds.xml:/cyclonedds.xml \
   eclipse/zenoh-bridge-ros2dds:latest \
   -c /zenoh.json5
