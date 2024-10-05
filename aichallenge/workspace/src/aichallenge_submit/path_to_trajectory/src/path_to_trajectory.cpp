@@ -35,7 +35,7 @@ PathToTrajectory::PathToTrajectory() : Node("path_to_trajectory_node")
     std::bind(&PathToTrajectory::callback, this)
   );
 
-  set_trajectory_srv_ = this->create_service<custom_msgs::srv::SetTrajectory>(
+  set_trajectory_srv_ = this->create_service<csv_path_changer_msgs::srv::SetTrajectory>(
     "/set_trajectory",
     std::bind(&PathToTrajectory::handle_trajectory, this, std::placeholders::_1, std::placeholders::_2)
   );
@@ -46,8 +46,8 @@ void PathToTrajectory::callback() {
 }
 
 void PathToTrajectory::handle_trajectory(
-  const std::shared_ptr<custom_msgs::srv::SetTrajectory::Request> request,
-  std::shared_ptr<custom_msgs::srv::SetTrajectory::Response> response)
+  const std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Request> request,
+  std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Response> response)
 {
   write_csv(request->csv_path, request->points);
   load_csv(request->csv_path);

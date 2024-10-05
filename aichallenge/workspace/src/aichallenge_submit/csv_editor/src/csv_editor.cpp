@@ -12,7 +12,7 @@ CsvEditor::CsvEditor() : Node("csv_editor")
 
   RCLCPP_INFO(this->get_logger(), "base_path: %s", base_path_.c_str());
 
-  set_trajectory_client_ = this->create_client<custom_msgs::srv::SetTrajectory>("/set_trajectory");
+  set_trajectory_client_ = this->create_client<csv_path_changer_msgs::srv::SetTrajectory>("/set_trajectory");
 
   while (!set_trajectory_client_->wait_for_service(std::chrono::seconds(1))) {
     if (!rclcpp::ok()) {
@@ -73,12 +73,12 @@ void CsvEditor::load_csv(std::string csv_path)
 }
 
 void CsvEditor::set_trajectory_request() {
-  auto request = std::make_shared<custom_msgs::srv::SetTrajectory::Request>();
+  auto request = std::make_shared<csv_path_changer_msgs::srv::SetTrajectory::Request>();
 
   request->csv_path = base_path_;
   request->points = points_;
 
-  using ServiceResponseFuture = rclcpp::Client<custom_msgs::srv::SetTrajectory>::SharedFuture;
+  using ServiceResponseFuture = rclcpp::Client<csv_path_changer_msgs::srv::SetTrajectory>::SharedFuture;
 
   // レスポンス処理
   auto response_callback = [this](ServiceResponseFuture future) {

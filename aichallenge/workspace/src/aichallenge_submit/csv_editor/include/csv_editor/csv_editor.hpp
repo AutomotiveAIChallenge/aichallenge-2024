@@ -2,7 +2,7 @@
 #define CSV_EDITOR__CSV_EDITOR_HPP_
 
 #include "autoware_auto_planning_msgs/msg/trajectory_point.hpp"
-#include "custom_msgs/srv/set_trajectory.hpp"
+#include "csv_path_changer_msgs/srv/set_trajectory.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include <array>
 
@@ -18,7 +18,7 @@ class CsvEditor : public rclcpp::Node {
     // Subscription
 
     // Client
-    rclcpp::Client<custom_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_client_;
+    rclcpp::Client<csv_path_changer_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_client_;
     void set_trajectory_request();
 
     // Server

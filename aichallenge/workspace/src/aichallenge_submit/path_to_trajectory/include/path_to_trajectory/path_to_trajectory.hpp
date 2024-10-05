@@ -18,7 +18,7 @@
 #include "autoware_auto_planning_msgs/msg/trajectory.hpp"
 #include "autoware_auto_planning_msgs/msg/trajectory_point.hpp"
 #include "geometry_msgs/msg/pose.hpp"
-#include "custom_msgs/srv/set_trajectory.hpp"
+#include "csv_path_changer_msgs/srv/set_trajectory.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 class PathToTrajectory : public rclcpp::Node {
@@ -37,9 +37,9 @@ class PathToTrajectory : public rclcpp::Node {
   // Client
 
   // Server
-  rclcpp::Service<custom_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_srv_;
-  void handle_trajectory(const std::shared_ptr<custom_msgs::srv::SetTrajectory::Request> request,
-                        std::shared_ptr<custom_msgs::srv::SetTrajectory::Response> response);
+  rclcpp::Service<csv_path_changer_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_srv_;
+  void handle_trajectory(const std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Request> request,
+                        std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Response> response);
 
   // Param
   std::string base_path_;
