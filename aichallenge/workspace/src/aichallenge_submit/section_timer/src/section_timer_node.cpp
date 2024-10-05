@@ -4,13 +4,13 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <cmath>
 #include <visualization_msgs/msg/marker.hpp>
-#include <std_msgs/msg/float32_multi_array.hpp>  // 追加
+#include <std_msgs/msg/float32_multi_array.hpp>
 
 class SectionTimerNode : public rclcpp::Node
 {
 public:
   SectionTimerNode()
-  : Node("section_timer_node"), is_started_(false)
+  : Node("section_timer_node"), is_started_(false), best_lap_time_(std::numeric_limits<float>::infinity())
   {
     this->declare_parameter<bool>("debug", false);
     this->declare_parameter<double>("radius", 5.0);
@@ -33,11 +33,6 @@ public:
       std::vector<double> end;
 
       if (this->get_parameter(section_name + ".start", start) && this->get_parameter(section_name + ".end", end)) {
-        if (debug_) {
-          RCLCPP_INFO(this->get_logger(), "Section %d:", i);
-          RCLCPP_INFO(this->get_logger(), "  Start: [%.2f, %.2f]", start[0], start[1]);
-          RCLCPP_INFO(this->get_logger(), "  End:   [%.2f, %.2f]", end[0], end[1]);
-        }
         sections_.emplace_back(std::make_pair(start, end));
       } else {
         RCLCPP_ERROR(this->get_logger(), "Failed to get parameters for section %d", i);
@@ -50,9 +45,12 @@ public:
 
     // Float32MultiArrayパブリッシャの作成
     time_publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>("~/output/section_times", 10);
+    time_diff_publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>("~/output/section_time_diffs", 10);
 
-    // セクションタイム配列を初期化（13要素: 12セクション + 1ラップタイム）
+    // セクションタイム配列とベストタイム差分配列を初期化（13要素: 12セクション + 1ラップタイム）
     section_times_.resize(sections_.size() + 1, 0.0);
+    best_times_.resize(sections_.size(), std::numeric_limits<float>::infinity());
+    best_times_diff_.resize(sections_.size() + 1, 0.0);  // 最初は全て0.0で初期化
   }
 
 private:
@@ -67,7 +65,6 @@ private:
         RCLCPP_INFO(this->get_logger(), "Started section %d timer", current_section_ + 1);
         start_time_ = this->now();
 
-        // 最初のセクションに到達したらラップタイマーを開始
         if (current_section_ == 0) {
           lap_start_time_ = this->now();
         }
@@ -84,8 +81,17 @@ private:
         // セクションタイムを更新
         section_times_[current_section_] = duration.seconds();
 
-        // セクションタイムをパブリッシュ
-        publish_section_times(false);  // ラップ終了時でないのでfalse
+        // ベストタイム差分を計算・更新
+        if (duration.seconds() < best_times_[current_section_]) {
+          best_times_diff_[current_section_] = duration.seconds() - best_times_[current_section_];  // 早くなった秒数をマイナス付きで
+          best_times_[current_section_] = duration.seconds();
+        } else {
+          best_times_diff_[current_section_] = duration.seconds() - best_times_[current_section_];
+        }
+
+        // タイムとベストタイムの差をパブリッシュ
+        publish_section_times();
+        publish_time_diffs();
 
         is_started_ = false;
         current_section_++;
@@ -93,13 +99,18 @@ private:
           // 1ラップ終了時に合計タイムを計算して表示
           auto lap_end_time = this->now();
           auto lap_duration = lap_end_time - lap_start_time_;
-          RCLCPP_INFO(this->get_logger(), "Lap completed! Total lap time: %.2f seconds", lap_duration.seconds());
-
-          // ラップタイムを最後のインデックスにセット
           section_times_.back() = lap_duration.seconds();
 
-          // ラップタイムを含めたパブリッシュ
-          publish_section_times(true);  // ラップ終了なのでtrue
+          // ラップタイムのベストとの差を計算
+          if (lap_duration.seconds() < best_lap_time_) {
+            best_times_diff_.back() = lap_duration.seconds() - best_lap_time_;  // 早くなった秒数をマイナスで
+            best_lap_time_ = lap_duration.seconds();
+          } else {
+            best_times_diff_.back() = lap_duration.seconds() - best_lap_time_;
+          }
+
+          publish_section_times();
+          publish_time_diffs();
 
           current_section_ = 0;  // 最初のセクションに戻る
         }
@@ -107,8 +118,16 @@ private:
     }
   }
 
+  // タイム差のパブリッシュ
+  void publish_time_diffs()
+  {
+    std_msgs::msg::Float32MultiArray diff_msg;
+    diff_msg.data = best_times_diff_;  // 差分の配列全体をパブリッシュ
+    time_diff_publisher_->publish(diff_msg);
+  }
+
   // セクションタイムのパブリッシュ
-  void publish_section_times(bool is_lap_completed)
+  void publish_section_times()
   {
     std_msgs::msg::Float32MultiArray msg;
     msg.data = section_times_;  // セクションタイムとラップタイムを含める
@@ -121,10 +140,13 @@ private:
   }
 
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscriber_;
-  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr marker_publisher_;
   rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr time_publisher_;  // タイムパブリッシャ
+  rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr time_diff_publisher_;  // タイム差パブリッシャ
   std::vector<std::pair<std::vector<double>, std::vector<double>>> sections_;
-  std::vector<float> section_times_;  // セクションタイムとラップタイムを保持する配列（サイズは13）
+  std::vector<float> section_times_;  // セクションタイムとラップタイムを保持する配列
+  std::vector<float> best_times_;  // 各セクションのベストタイムを保持する配列
+  std::vector<float> best_times_diff_;  // ベストタイムとの差を保持する配列
+  float best_lap_time_;  // ラップタイムのベストタイム
   rclcpp::Time start_time_;
   rclcpp::Time lap_start_time_;
   bool is_started_;

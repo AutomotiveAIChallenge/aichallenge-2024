@@ -5,6 +5,7 @@
   
     <remap from="~/input/odom" to="/localization/kinematic_state"/>
     <remap from="~/output/section_times" to="/section/section_timer_array"/>
+    <remap from="~/output/section_time_diffs" to="/section/section_timer_difference_from_best"/>
     
   </node>
 </launch>
