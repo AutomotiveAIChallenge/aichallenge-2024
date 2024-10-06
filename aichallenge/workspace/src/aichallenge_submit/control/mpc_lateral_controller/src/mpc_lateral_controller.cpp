@@ -45,20 +45,24 @@ void update_param(
 MpcLateralController::MpcLateralController(rclcpp::Node & node) : node_{&node}
 {
   using std::placeholders::_1;
-
+// trajectory_follower_node parameter
   m_mpc.m_ctrl_period = node_->get_parameter("ctrl_period").as_double();
+// mpc system parameters
+  m_traj_resample_dist = node_->declare_parameter<double>("traj_resample_dist");
+  m_mpc.m_use_steer_prediction = node_->declare_parameter<bool>("use_steer_prediction");
+  m_mpc.m_admissible_position_error = node_->declare_parameter<double>("admissible_position_error");
+  m_mpc.m_admissible_yaw_error_rad = node_->declare_parameter<double>("admissible_yaw_error_rad");
+// mpc path smoothing parameters
   m_enable_path_smoothing = node_->declare_parameter<bool>("enable_path_smoothing");
   m_path_filter_moving_ave_num = node_->declare_parameter<int>("path_filter_moving_ave_num");
   m_curvature_smoothing_num_traj = node_->declare_parameter<int>("curvature_smoothing_num_traj");
-  m_curvature_smoothing_num_ref_steer =
-    node_->declare_parameter<int>("curvature_smoothing_num_ref_steer");
-  m_traj_resample_dist = node_->declare_parameter<double>("traj_resample_dist");
-  m_mpc.m_admissible_position_error = node_->declare_parameter<double>("admissible_position_error");
-  m_mpc.m_admissible_yaw_error_rad = node_->declare_parameter<double>("admissible_yaw_error_rad");
-  m_mpc.m_use_steer_prediction = node_->declare_parameter<bool>("use_steer_prediction");
+  m_curvature_smoothing_num_ref_steer = node_->declare_parameter<int>("curvature_smoothing_num_ref_steer");
+
+  // mpc trajectory extending parameter
+  m_extend_trajectory_for_end_yaw_control = node_->declare_parameter<bool>("extend_trajectory_for_end_yaw_control");
+
+  // mpc vehicle model parameter 1
   m_mpc.m_param.steer_tau = node_->declare_parameter<double>("vehicle_model_steer_tau");
-  m_extend_trajectory_for_end_yaw_control =
-    node_->declare_parameter<bool>("extend_trajectory_for_end_yaw_control");
 
   /* stop state parameters */
   m_stop_state_entry_ego_speed = node_->declare_parameter<double>("stop_state_entry_ego_speed");
@@ -70,7 +74,7 @@ MpcLateralController::MpcLateralController(rclcpp::Node & node) : node_{&node}
   m_new_traj_duration_time = node_->declare_parameter<double>("new_traj_duration_time");  // [s]
   m_new_traj_end_dist = node_->declare_parameter<double>("new_traj_end_dist");            // [m]
 
-  /* mpc parameters */
+  /* mpc vehicle parameter 2 */
   const auto vehicle_info = vehicle_info_util::VehicleInfoUtil(*node_).getVehicleInfo();
   const double wheelbase = vehicle_info.wheel_base_m;
   const double steer_rate_lim_dps = node_->declare_parameter<double>("steer_rate_lim_dps");
