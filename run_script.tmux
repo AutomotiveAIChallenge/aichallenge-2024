@@ -8,6 +8,7 @@ VEHICLE_CD="cd $VEHICLE_DIR"
 
 AIC_DOCKER_RUN_CMD="bash docker_run.sh dev cpu"
 KART_DOCKER_RUN_CMD="bash run_driver.bash "
+ZENOH_DOCKER_RUN_CMD="bash run_zenoh.bash"
 
 AIC_WORKSPACE_CD_CMD="cd /aichallenge"
 
@@ -38,9 +39,8 @@ select-pane -t 0
 send-keys "set -x" C-m
 send-keys "$AIC_CD" C-m
 send-keys "$AIC_DOCKER_RUN_CMD" C-m
-send-keys "sleep 10" C-m
 #send-keys "$AIC_WORKSPACE_CD_CMD" C-m
-send-keys "$SOURCE_CMD" C-m
+#send-keys "$SOURCE_CMD" C-m
 
 select-pane -t 1
 send-keys "set -x" C-m
@@ -48,7 +48,8 @@ send-keys "$AIC_CD" C-m
 send-keys "sleep 2" C-m
 send-keys "$AIC_DOCKER_RUN_CMD" C-m
 #send-keys "$AIC_WORKSPACE_CD_CMD" C-m
-send-keys "$SOURCE_CMD" C-m
+#send-keys "$SOURCE_CMD" C-m
+
 select-pane -t 2
 send-keys "set -x" C-m
 send-keys "$VEHICLE_CD" C-m
@@ -57,4 +58,5 @@ send-keys "$KART_DOCKER_RUN_CMD" C-m
 select-pane -t 3
 send-keys "set -x" C-m
 send-keys "$VEHICLE_CD" C-m
-send-keys "#run_zenoh.bash " C-m
+send-keys "sleep 10" C-m
+send-keys "$ZENOH_DOCKER_RUN_CMD " C-m
