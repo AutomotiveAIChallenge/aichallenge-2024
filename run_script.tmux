@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# docker setup
 AIC_DIR="/home/$USER/aichallenge-2024"
 VEHICLE_DIR="/home/$USER/aichallenge-2024/vehicle"
 
@@ -7,11 +8,10 @@ AIC_CD="cd $AIC_DIR"
 VEHICLE_CD="cd $VEHICLE_DIR"
 
 AIC_DOCKER_RUN_CMD="bash docker_run.sh dev cpu"
-KART_DOCKER_RUN_CMD="bash run_driver.bash "
+KART_DOCKER_RUN_CMD="bash run_driver.bash"
 ZENOH_DOCKER_RUN_CMD="bash run_zenoh.bash"
 
 AIC_WORKSPACE_CD_CMD="cd /aichallenge"
-
 SOURCE_CMD="source install/setup.bash"
 
 # mouse setup
@@ -34,7 +34,7 @@ select-pane -t 1          # 右側のペイン (1) を選択
 split-window -v -p 67     # ペイン 1 を 67% 下で分割し、ペイン 2 を作成
 split-window -v -p 50     # ペイン 2 を 50% 下で分割し、ペイン 3 を作成
 split-window -v -p 50     # ペイン 3 を 50% 下で分割し、ペイン 4 を作成
-# pane 0,1,3 is play rosbag, logsim, rviz
+# pane 0 is used for aic
 select-pane -t 0
 send-keys "set -x" C-m
 send-keys "$AIC_CD" C-m
@@ -42,6 +42,7 @@ send-keys "$AIC_DOCKER_RUN_CMD" C-m
 #send-keys "$AIC_WORKSPACE_CD_CMD" C-m
 #send-keys "$SOURCE_CMD" C-m
 
+# pane 1 is used for aic rosbag record
 select-pane -t 1
 send-keys "set -x" C-m
 send-keys "$AIC_CD" C-m
@@ -50,13 +51,19 @@ send-keys "$AIC_DOCKER_RUN_CMD" C-m
 #send-keys "$AIC_WORKSPACE_CD_CMD" C-m
 #send-keys "$SOURCE_CMD" C-m
 
+# pane 2 is used for racing kart docker
 select-pane -t 2
 send-keys "set -x" C-m
 send-keys "$VEHICLE_CD" C-m
 send-keys "$KART_DOCKER_RUN_CMD" C-m
-# pane 3-9 is useful tools for debug
+
+# pane 3 is used for zenoh docker
 select-pane -t 3
 send-keys "set -x" C-m
 send-keys "$VEHICLE_CD" C-m
 send-keys "sleep 10" C-m
 send-keys "$ZENOH_DOCKER_RUN_CMD " C-m
+
+# pane 4 is used for anything
+select-pane -t 4
+send-keys "set -x" C-m
