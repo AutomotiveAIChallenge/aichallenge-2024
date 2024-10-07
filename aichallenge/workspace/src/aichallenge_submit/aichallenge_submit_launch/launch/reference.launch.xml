@@ -244,7 +244,10 @@
   </group>
 
   <!-- Pose Cov Transformer Node -->
-  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen"/>
+  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen">
+    <param name="publish_gnss_pose_original" value="true"/>
+  </node>
+
   <!-- Acc  culculator Node -->
   <node pkg="vehicle_state_culculator" exec="vehicle_state_culculator_node" name="vehicle_state_culculator_node" output="screen"/>
 
