@@ -904,6 +904,8 @@ Visualization Manager:
         X: 0
         Y: 0
 Window Geometry:
+  AutowareScreenCapturePanel:
+    collapsed: false
   Displays:
     collapsed: false
   Height: 1016

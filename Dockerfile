@@ -15,7 +15,6 @@ RUN apt-get -y install terminator
 ENV XDG_RUNTIME_DIR=/tmp/xdg
 ENV ROS_LOCALHOST_ONLY=0
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-ENV ROS_DOMAIN_ID=71
 ENV CYCLONEDDS_URI=file:///opt/autoware/cyclonedds.xml
 
 COPY cyclonedds.xml /opt/autoware/cyclonedds.xml
