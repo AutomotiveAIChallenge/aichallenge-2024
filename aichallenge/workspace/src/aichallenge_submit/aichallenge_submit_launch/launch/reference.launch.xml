@@ -51,6 +51,11 @@
         <arg name="param_file" value="$(var imu_corrector_param_file)"/>
       </include>
     </group>
+
+    <group>
+      <push-ros-namespace namespace="gnss"/>
+      <include file="$(find-pkg-share gps_module)/launch/gps_module.launch.xml"/>
+    </group>
   </group>
 
     <!-- Localization -->

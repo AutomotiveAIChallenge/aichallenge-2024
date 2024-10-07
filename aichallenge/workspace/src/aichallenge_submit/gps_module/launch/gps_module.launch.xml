@@ -1,0 +1,10 @@
+<launch>
+  <node pkg="gps_module" exec="true_gps_module" name="true_gps_module" output="screen">
+    
+    <param name="debug" value="false"/>
+    <remap from="~/input/pose_with_covariance" to="/sensing/gnss/pose_with_covariance"/>
+    <remap from="~/output/pose_with_covariance" to="/sensing/gnss/gps_module/pose_with_covariance"/>
+    <remap from="~/output/pose" to="/sensing/gnss/gps_module/pose"/>
+
+  </node>
+</launch>
