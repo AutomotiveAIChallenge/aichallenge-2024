@@ -38,18 +38,19 @@ split-window -v -p 50     # ペイン 3 を 50% 下で分割し、ペイン 4 �
 select-pane -t 0
 send-keys "set -x" C-m
 send-keys "$AIC_CD" C-m
+send-keys "echo $AIC_WORKSPACE_CD_CMD" C-m
+send-keys "echo $SOURCE_CMD" C-m
+send-keys "echo run_autoware.bash vehicle" C-m
 send-keys "$AIC_DOCKER_RUN_CMD" C-m
-#send-keys "$AIC_WORKSPACE_CD_CMD" C-m
-#send-keys "$SOURCE_CMD" C-m
 
 # pane 1 is used for aic rosbag record
 select-pane -t 1
 send-keys "set -x" C-m
 send-keys "$AIC_CD" C-m
 send-keys "sleep 2" C-m
+send-keys "echo $AIC_WORKSPACE_CD_CMD" C-m
+send-keys "echo $SOURCE_CMD" C-m
 send-keys "$AIC_DOCKER_RUN_CMD" C-m
-#send-keys "$AIC_WORKSPACE_CD_CMD" C-m
-#send-keys "$SOURCE_CMD" C-m
 
 # pane 2 is used for racing kart docker
 select-pane -t 2
