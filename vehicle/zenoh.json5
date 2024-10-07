@@ -65,6 +65,7 @@
           "/map/vector_map_marker",
           "/planning/scenario_planning/lane_driving/behavior_planning/path",
           "/localization/kinematic_state",
+          "/initialpose",
         ],
         subscribers: [
           "/vehicle/status/control_mode",
@@ -78,6 +79,7 @@
           "/map/vector_map_marker",
           "/planning/scenario_planning/lane_driving/behavior_planning/path",
           "/localization/kinematic_state",
+          "/initialpose",
         ],
         service_servers: [],
         service_clients: [],
