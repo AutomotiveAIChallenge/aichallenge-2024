@@ -16,4 +16,4 @@ case "${target}" in
 esac
 
 # shellcheck disable=SC2086
-docker build ${opts} --target "${target}" -t "aichallenge-2024-${target}" .
+docker build ${opts} --target "${target}" -t "aichallenge-2024-${target}-${USER}" .
