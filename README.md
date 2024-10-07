@@ -15,3 +15,13 @@ Toward the competition, we will update the following pages to provide informatio
 
 - [日本語ページ](https://automotiveaichallenge.github.io/aichallenge-documentation-2024/)
 - [English Page](https://automotiveaichallenge.github.io/aichallenge-documentation-2024/en/)
+
+## エラー対処
+```bash
+ros2: failed to increase socket receive buffer size to at least 10485760 bytes, current is 425984 bytes
+[ERROR] [1728286982.310247407] [rmw_cyclonedds_cpp]: rmw_create_node: failed to create domain, error Error
+```
+```bash
+sudo sysctl -w net.core.rmem_max=10485760
+sudo sysctl -w net.core.rmem_default=10485760
+```
