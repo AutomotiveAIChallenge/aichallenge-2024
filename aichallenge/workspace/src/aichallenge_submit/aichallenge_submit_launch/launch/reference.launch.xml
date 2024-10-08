@@ -73,14 +73,36 @@
       <param from="$(find-pkg-share imu_gnss_poser)/config/imu_gnss_poser.param.yaml"/>
     </node>
 
+    <!-- EKF_Localizer -->
     <include file="$(find-pkg-share ekf_localizer)/launch/ekf_localizer.launch.xml">
+      <arg name="show_debug_info" value="false"/>
       <arg name="enable_yaw_bias_estimation" value="false"/>
+      <arg name="predict_frequency" value="50.0"/>
       <arg name="tf_rate" value="50.0"/>
-      <arg name="twist_smoothing_steps" value="1"/>
-      <arg name="pose_smoothing_steps" value="1"/>
+      <arg name="extend_state_step" value="100"/>
+
       <arg name="input_initial_pose_name" value="/localization/initial_pose3d"/>
+      <arg name="input_trigger_node_service_name" value="trigger_node"/>
+
+      <!-- for Pose measurement -->
       <arg name="input_pose_with_cov_name" value="/localization/imu_gnss_poser/pose_with_covariance"/>
+      <arg name="pose_additional_delay" value="$(var pose_additional_delay_var)"/>
+      <arg name="pose_measure_uncertainty_time" value="0.01"/>
+      <arg name="pose_smoothing_steps" value="1"/>
+      <arg name="pose_gate_dist" value="10000.0"/>
+
+      <!-- for twist measurement -->
       <arg name="input_twist_with_cov_name" value="/localization/twist_estimator/twist_with_covariance"/>
+      <arg name="twist_additional_delay" value="0.0"/>
+      <arg name="twist_smoothing_steps" value="1"/>
+      <arg name="twist_gate_dist" value="10000.0"/>
+
+      <!-- for process model -->
+      <arg name="proc_stddev_yaw_c" value="0.005"/>
+      <arg name="proc_stddev_vx_c" value="10.0"/>
+      <arg name="proc_stddev_wz_c" value="5.0"/>
+
+      <!-- output topic name -->
       <arg name="output_odom_name" value="kinematic_state"/>
       <arg name="output_pose_name" value="pose"/>
       <arg name="output_pose_with_covariance_name" value="/localization/pose_with_covariance"/>
@@ -88,10 +110,6 @@
       <arg name="output_biased_pose_with_covariance_name" value="biased_pose_with_covariance"/>
       <arg name="output_twist_name" value="twist"/>
       <arg name="output_twist_with_covariance_name" value="twist_with_covariance"/>
-      <arg name="proc_stddev_vx_c" value="10.0"/>
-      <arg name="proc_stddev_wz_c" value="5.0"/>
-      <arg name="pose_additional_delay" value="$(var pose_additional_delay_var)"/>
-      <arg name="extend_state_step" value="100"/>
     </include>
 
     <!-- twist2accel -->
