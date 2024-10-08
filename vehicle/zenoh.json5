@@ -52,40 +52,14 @@
       ////               or is not specified at all, it means that NO such interface is allowed.
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
-      allow: {
-        publishers: [
-          "/vehicle/status/control_mode",
-          "/racing_kart/joy",
-          "/racing_kart/debug/delay",
-          "/racing_kart/debug/status",
-          "/racing_kart/gnss",
-          "/tf",
-          "/tf_static",
-          "/control/debug/lookahead_point",
-          "/map/vector_map_marker",
-          "/planning/scenario_planning/lane_driving/behavior_planning/path",
-          "/localization/kinematic_state",
-          "/initialpose",
-        ],
-        subscribers: [
-          "/vehicle/status/control_mode",
-          "/racing_kart/joy",
-          "/racing_kart/debug/delay",
-          "/racing_kart/debug/status",
-          "/racing_kart/gnss",
-          "/tf",
-          "/tf_static",
-          "/control/debug/lookahead_point",
-          "/map/vector_map_marker",
-          "/planning/scenario_planning/lane_driving/behavior_planning/path",
-          "/localization/kinematic_state",
-          "/initialpose",
-        ],
-        service_servers: [],
-        service_clients: [],
-        action_servers: [],
-        action_clients: [],
-      },
+      //allow: {
+      //  publishers: [],
+      //  subscribers: [],
+      //  service_servers: [],
+      //  service_clients: [],
+      //  action_servers: [],
+      //  action_clients: [],
+      //},
       // deny: {
       //   publishers: ["/rosout", "/parameter_events"],
       //   subscribers: ["/rosout"],
