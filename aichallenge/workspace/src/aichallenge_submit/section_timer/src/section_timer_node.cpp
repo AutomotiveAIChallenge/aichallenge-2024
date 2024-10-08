@@ -49,7 +49,7 @@ public:
 
     // セクションタイム配列とベストタイム差分配列を初期化（13要素: 12セクション + 1ラップタイム）
     section_times_.resize(sections_.size() + 1, 0.0);
-    best_times_.resize(sections_.size(), std::numeric_limits<float>::infinity());
+    best_times_.resize(sections_.size(), 999.9);
     best_times_diff_.resize(sections_.size() + 1, 0.0);  // 最初は全て0.0で初期化
   }
 
