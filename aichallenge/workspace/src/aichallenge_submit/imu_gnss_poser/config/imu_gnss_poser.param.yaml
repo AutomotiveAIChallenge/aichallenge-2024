@@ -1,5 +1,8 @@
 /**:
   ros__parameters:
+    # Use true when AWSIM(Simulator) is used
+    # specific_covariance: false
+    # ONLY FOR SPECIFIC COVARIANCE
     position_0_cov: 0.1
     position_1_cov: 0.1
     position_2_cov: 0.1

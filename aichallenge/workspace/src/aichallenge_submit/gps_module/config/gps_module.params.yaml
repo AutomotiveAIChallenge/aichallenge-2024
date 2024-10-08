@@ -1,0 +1,12 @@
+/**:
+  ros__parameters:
+    debug: false
+
+    scale_position_covariance_x: 1.0
+    scale_position_covariance_y: 1.0
+    # Not used 
+    scale_position_covariance_z: 1.0
+
+    scale_orientation_covariance_0: 1.0
+    scale_orientation_covariance_1: 1.0
+    scale_orientation_covariance_2: 1.0

@@ -22,6 +22,7 @@ public:
             "/sensing/imu/imu_raw", qos,
             std::bind(&ImuGnssPoser::imu_callback, this, std::placeholders::_1));
         
+        specific_cov_ = this->declare_parameter<bool>("specific_covariance");
         posi_0_cov_ = this->declare_parameter<float>("position_0_cov");
         posi_1_cov_ = this->declare_parameter<float>("position_1_cov");
         posi_2_cov_ = this->declare_parameter<float>("position_2_cov");
@@ -35,13 +36,14 @@ private:
     void gnss_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
 
         // this covariance means orientation is not reliable
-        msg->pose.covariance[7*0] = posi_0_cov_;
-        msg->pose.covariance[7*1] = posi_1_cov_;
-        msg->pose.covariance[7*2] = posi_2_cov_;
-        msg->pose.covariance[7*3] = ori_0_cov_;
-        msg->pose.covariance[7*4] = ori_1_cov_;
-        msg->pose.covariance[7*5] = ori_2_cov_;
-
+        if (specific_cov_){
+            msg->pose.covariance[7*0] = posi_0_cov_;
+            msg->pose.covariance[7*1] = posi_1_cov_;
+            msg->pose.covariance[7*2] = posi_2_cov_;
+            msg->pose.covariance[7*3] = ori_0_cov_;
+            msg->pose.covariance[7*4] = ori_1_cov_;
+            msg->pose.covariance[7*5] = ori_2_cov_;
+        }
         // Only Simulation
         // insert imu if orientation is nan or empty
         if (std::isnan(msg->pose.pose.orientation.x) ||
@@ -85,6 +87,7 @@ private:
     float ori_0_cov_;
     float ori_1_cov_;
     float ori_2_cov_;
+    bool specific_cov_ = false;
 };
 
 int main(int argc, char *argv[])

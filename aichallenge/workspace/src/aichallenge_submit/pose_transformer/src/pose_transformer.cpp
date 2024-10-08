@@ -12,10 +12,10 @@ tf_listener_(tf_buffer_, this, false)
     pub_gnss_pose_original_= this->declare_parameter<bool>("publish_gnss_pose_original", false);
 
     // pub, subの初期化
-    sub_gnss_pose_cov_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>("/sensing/gnss/pose_with_covariance", 1, std::bind(&Pose_transformer::on_gnss_pose, this, _1));
-    pub_gnss_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("/sensing/gnss/base_link/pose", 1);
+    sub_gnss_pose_cov_ = create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>("/sensing/gnss/gps_module/pose_with_covariance", 1, std::bind(&Pose_transformer::on_gnss_pose, this, _1));
+    pub_gnss_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("/sensing/gnss/gnss_module/base_link/pose", 1);
     if (pub_gnss_pose_original_)
-        pub_orig_gnss_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("/sensing/gnss/pose", 1);
+        pub_orig_gnss_pose_ = create_publisher<geometry_msgs::msg::PoseStamped>("/sensing/gnss/gps_module/pose", 1);
     sub_kinematic_state_ = create_subscription<nav_msgs::msg::Odometry>("/localization/kinematic_state", 1, std::bind(&Pose_transformer::on_kinematic_state, this, _1));
     pub_kinematic_state_ = create_publisher<nav_msgs::msg::Odometry>("/localization/base_link/kinematic_state", 1);
     sub_imu_raw_ = create_subscription<sensor_msgs::msg::Imu>("/sensing/imu/imu_raw", 1, std::bind(&Pose_transformer::on_imu_data, this, _1));

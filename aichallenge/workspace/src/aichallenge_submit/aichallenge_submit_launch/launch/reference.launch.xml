@@ -69,8 +69,12 @@
       <arg name="output_twist_with_covariance_raw_topic" value="/localization/twist_estimator/twist_with_covariance_raw"/>
     </include>
 
+    <!-- Imu Gnss Poser -->
     <node pkg="imu_gnss_poser" exec="imu_gnss_poser_node" name="imu_gnss_poser" output="screen">
+      <remap from="/sensing/gnss/pose_with_covariance" to="/sensing/gnss/gps_module/pose_with_covariance"/>
       <param from="$(find-pkg-share imu_gnss_poser)/config/imu_gnss_poser.param.yaml"/>
+       <!-- Use true when AWSIM(Simulator) is used -->
+      <param name="specific_covariance" value="$(var simulation)"/>
     </node>
 
     <!-- EKF_Localizer -->
@@ -262,7 +266,10 @@
   </group>
 
   <!-- Pose Cov Transformer Node -->
-  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen"/>
+  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen">
+    <!-- To-do, tomoki Only for interfacebag -->
+    <param name="publish_gnss_pose_original" value="$(var is_rosbag)"/>
+  </node>
   <!-- Acc  culculator Node -->
   <node pkg="vehicle_state_culculator" exec="vehicle_state_culculator_node" name="vehicle_state_culculator_node" output="screen"/>
 
