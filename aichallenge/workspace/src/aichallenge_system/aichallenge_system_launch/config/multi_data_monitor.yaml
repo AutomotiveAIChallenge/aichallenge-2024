@@ -32,6 +32,16 @@ widgets:
           - rap_time
 
       - class: Simple
+        value: Sensor Data Covariance
+
+      - class: Matrix
+        cols: 5
+        items:
+          - gnss_pos_cov
+          - fused_gyro_linear_vel_x_cov
+          - fused_gyro_ang_vel_cov
+
+      - class: Simple
         value: Measured
 
       - class: Matrix
@@ -45,8 +55,8 @@ widgets:
           - measured_longitudinal_vel_mps
           - measured_heading_rate_rad
 
-          - measured_lateral_vel_mps
-          - measured_lateral_vel_kph
+          # - measured_lateral_vel_mps
+          # - measured_lateral_vel_kph
           - measured_acceleration
           - measured_steering_velocity
 
@@ -264,6 +274,42 @@ widgets:
         list:
           - { ge: -1000.0, attrs: { back-color: white } }
 
+  # Sesor Data
+  # Measured
+  - class: Titled
+    label: gnss_pos_cov
+    title: GNSS Pos Cov  
+    input: { class: subscription, topic: /sensing/gnss/pose_with_covariance, field: pose.covariance@0}
+    rules:
+      - { class: Precision, digits: 0 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: 200.0, attrs: { back-color: red } }
+          - { ge: -1000.0, attrs: { back-color: white } }
+  
+  - class: Titled
+    label: fused_gyro_linear_vel_x_cov
+    title: Fused Gyro LinVel X
+    input: { class: subscription, topic: /localization/twist_estimator/twist_with_covariance, field: twist.covariance@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+ 
+  - class: Titled
+    label: fused_gyro_ang_vel_cov
+    title: Fused Gyro AngVel
+    input: { class: subscription, topic: /localization/twist_estimator/twist_with_covariance, field: twist.covariance@21}
+    rules:
+      - { class: Precision, digits: 5 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
   # Measured
   - class: Titled
     label: measured_steering_rad
@@ -287,16 +333,16 @@ widgets:
         list:
           - { ge: -1000.0, attrs: { back-color: white } }
 
-  - class: Titled
-    label: measured_lateral_vel_mps
-    title: Lat Vel[m/s]
-    input: measured_lateral_vel_mps
-    rules:
-      - { class: Precision, digits: 1 }
-      - class: SetFirstIf
-        type: real
-        list:
-          - { ge: -1000.0, attrs: { back-color: white } }
+  # - class: Titled
+  #   label: measured_lateral_vel_mps
+  #   title: Lat Vel[m/s]
+  #   input: measured_lateral_vel_mps
+  #   rules:
+  #     - { class: Precision, digits: 1 }
+  #     - class: SetFirstIf
+  #       type: real
+  #       list:
+  #         - { ge: -1000.0, attrs: { back-color: white } }
 
 
   - class: Titled
@@ -310,16 +356,16 @@ widgets:
         list:
           - { ge: -1000.0, attrs: { back-color: white } }
 
-  - class: Titled
-    label: measured_lateral_vel_kph
-    title: Lat Vel[km/h]
-    input: measured_lateral_vel_kph
-    rules:
-      - { class: Precision, digits: 1 }
-      - class: SetFirstIf
-        type: real
-        list:
-          - { ge: -1000.0, attrs: { back-color: white } }
+  # - class: Titled
+  #   label: measured_lateral_vel_kph
+  #   title: Lat Vel[km/h]
+  #   input: measured_lateral_vel_kph
+  #   rules:
+  #     - { class: Precision, digits: 1 }
+  #     - class: SetFirstIf
+  #       type: real
+  #       list:
+  #         - { ge: -1000.0, attrs: { back-color: white } }
 
   - class: Titled
     label: measured_heading_rate_rad
