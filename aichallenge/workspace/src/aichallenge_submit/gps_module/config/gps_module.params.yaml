@@ -10,3 +10,9 @@
     scale_orientation_covariance_0: 1.0
     scale_orientation_covariance_1: 1.0
     scale_orientation_covariance_2: 1.0
+
+    csv_path: "/aichallenge/workspace/src/aichallenge_submit/path_to_trajectory/csv/filtered_columns_csv_file.csv"
+    look_ahead_index: 10
+    margin: 30
+
+    use_node: true

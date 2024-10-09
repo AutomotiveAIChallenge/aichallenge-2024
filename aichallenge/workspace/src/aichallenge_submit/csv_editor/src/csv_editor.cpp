@@ -13,6 +13,7 @@ CsvEditor::CsvEditor() : Node("csv_editor")
   RCLCPP_INFO(this->get_logger(), "base_path: %s", base_path_.c_str());
 
   set_trajectory_client_ = this->create_client<csv_path_changer_msgs::srv::SetTrajectory>("/set_trajectory");
+  set_trajectory_orientation_client_ = this->create_client<csv_path_changer_msgs::srv::SetTrajectory>("/set_trajectory_orientation");
 
   while (!set_trajectory_client_->wait_for_service(std::chrono::seconds(1))) {
     if (!rclcpp::ok()) {
@@ -89,7 +90,16 @@ void CsvEditor::set_trajectory_request() {
     }
   };
 
+  auto response_orientation_callback = [this](ServiceResponseFuture future) {
+    if (future.get()->success) {  // success フィールドを確認
+      RCLCPP_INFO(this->get_logger(), "Set Trajectory Orientation successfully.");
+    } else {
+      RCLCPP_WARN(this->get_logger(), "Failed to set Orientation Trajectory.");
+    }
+  };
+
   set_trajectory_client_->async_send_request(request, response_callback);
+  set_trajectory_orientation_client_->async_send_request(request, response_orientation_callback);
   RCLCPP_INFO(this->get_logger(), "Send Trajectory");
 }
 

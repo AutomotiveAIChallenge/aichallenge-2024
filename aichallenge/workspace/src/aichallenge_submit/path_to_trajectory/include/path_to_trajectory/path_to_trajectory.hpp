@@ -47,8 +47,8 @@ class PathToTrajectory : public rclcpp::Node {
   // function
   void write_csv(const std::string &csv_path, const std::vector<TrajectoryPoint> &points);
   void load_csv(std::string csv_path);
-  void callback()
-;
+  void callback();
+  
   // variable
   Trajectory trajectory_;
   rclcpp::TimerBase::SharedPtr timer_;

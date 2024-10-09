@@ -19,6 +19,7 @@ class CsvEditor : public rclcpp::Node {
 
     // Client
     rclcpp::Client<csv_path_changer_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_client_;
+    rclcpp::Client<csv_path_changer_msgs::srv::SetTrajectory>::SharedPtr set_trajectory_orientation_client_;
     void set_trajectory_request();
 
     // Server
