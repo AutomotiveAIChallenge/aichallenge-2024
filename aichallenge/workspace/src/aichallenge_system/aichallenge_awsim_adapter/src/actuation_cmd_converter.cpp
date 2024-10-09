@@ -22,7 +22,8 @@ ActuationCmdConverter::ActuationCmdConverter(const rclcpp::NodeOptions & node_op
   // Parameters
   const std::string csv_path_accel_map = declare_parameter<std::string>("csv_path_accel_map");
   const std::string csv_path_brake_map = declare_parameter<std::string>("csv_path_brake_map");
-
+  steer_delay_sec_ = this->declare_parameter<double>("steer_delay_sec");
+  delay_ = std::chrono::duration<double>(steer_delay_sec_);
   // Subscriptions
   sub_actuation_ = create_subscription<ActuationCommandStamped>(
     "/control/command/actuation_cmd", 1, std::bind(&ActuationCmdConverter::on_actuation_cmd, this, _1));
@@ -64,12 +65,15 @@ void ActuationCmdConverter::on_actuation_cmd(const ActuationCommandStamped::Cons
 
   const double velocity = std::abs(velocity_report_->longitudinal_velocity);
   const double acceleration = get_acceleration(*msg, velocity);
+  // Add steer_cmd to history. Limit -35 deg to 35 deg
+  steer_cmd_history_.emplace_back(msg->header.stamp, std::clamp(msg->actuation.steer_cmd, -0.61, 0.61));
+
 
   // Publish ControlCommand
   constexpr float nan = std::numeric_limits<double>::quiet_NaN();
   AckermannControlCommand output;
   output.stamp = msg->header.stamp;
-  output.lateral.steering_tire_angle = static_cast<float>(msg->actuation.steer_cmd);
+  output.lateral.steering_tire_angle = get_delayed_steer_cmd(msg->header.stamp);
   output.lateral.steering_tire_rotation_rate = nan;
   output.longitudinal.speed = nan;
   output.longitudinal.acceleration = static_cast<float>(acceleration);
@@ -88,5 +92,15 @@ double ActuationCmdConverter::get_acceleration(const ActuationCommandStamped & c
   return ref_acceleration;
 }
 
+double ActuationCmdConverter::get_delayed_steer_cmd(const rclcpp::Time& current_time)
+{
+  // Delete old steer_cmd
+  while (!steer_cmd_history_.empty() && 
+         (current_time - steer_cmd_history_.front().first).seconds() > delay_.count())
+  {
+    steer_cmd_history_.pop_front();
+  }
+  return steer_cmd_history_.empty() ? 0.0 : steer_cmd_history_.front().second;
+}
 #include <rclcpp_components/register_node_macro.hpp>
 RCLCPP_COMPONENTS_REGISTER_NODE(ActuationCmdConverter)
