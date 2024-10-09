@@ -52,14 +52,14 @@
       ////               or is not specified at all, it means that NO such interface is allowed.
       ////               Use 'deny' to allow all except the specified interfaces. If an interface type is set to an empty list
       ////               or is not specified at all, it means that ALL such interface are allowed.
-      //allow: {
-      //  publishers: [],
-      //  subscribers: [],
-      //  service_servers: [],
-      //  service_clients: [],
-      //  action_servers: [],
-      //  action_clients: [],
-      //},
+      allow: {
+        publishers: [".*"],
+        subscribers: ["/racing_kart/joy", "/initialpose"],
+        service_servers: [],
+        service_clients: [],
+        action_servers: [],
+        action_clients: [],
+      },
       // deny: {
       //   publishers: ["/rosout", "/parameter_events"],
       //   subscribers: ["/rosout"],
@@ -89,7 +89,7 @@
       ////                   The express policy makes Zenoh to to send the message immediately, not waiting for possible further messages
       ////                   to create a bigger batch of messages. This usually has a positive impact on latency for the topic
       ////                   but a negative impact on the general throughput, as more overhead is used for those topics.
-      pub_priorities: ["/joy=1:express"],
+      pub_priorities: ["/racing_kart/joy=1:express"],
 
       ////
       //// reliable_routes_blocking: When true, the publications from a RELIABLE DDS Writer will be
