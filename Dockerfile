@@ -1,17 +1,19 @@
 # FROM osrf/ros:humble-desktop AS common
 FROM ghcr.io/automotiveaichallenge/autoware-universe:humble-latest AS common
 
-RUN apt-get update
+RUN apt-get update && apt-get -y install terminator 
+
 RUN apt-get -y install libgl1-mesa-glx libgl1-mesa-dri
 RUN apt-get -y install iproute2
 RUN apt-get -y install wmctrl
 
 RUN apt-get -y install ros-humble-rqt-tf-tree
 RUN apt-get -y install ros-humble-rqt-graph
-RUN apt-get -y install terminator 
 
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
+COPY --chmod=777 /trajectory_editor/ /editor/
+ENV PATH="/editor/cmd_line/:$PATH"
 ENV XDG_RUNTIME_DIR=/tmp/xdg
 ENV ROS_LOCALHOST_ONLY=0
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
@@ -26,6 +28,9 @@ ENV RCUTILS_COLORIZED_OUTPUT=1
 FROM common AS eval
 
 ENV RCUTILS_COLORIZED_OUTPUT=0
+
+RUN chmod u+x /editor/cmd_line/csv_editor
+RUN chmod u+x /editor/cmd_line/raceline_to_traj
 
 RUN mkdir /ws
 RUN git clone --depth 1 https://github.com/AutomotiveAIChallenge/aichallenge-2024 /ws/repository
