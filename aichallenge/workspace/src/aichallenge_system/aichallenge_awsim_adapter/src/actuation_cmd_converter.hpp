@@ -15,6 +15,8 @@
 #ifndef AUTOWARE_EXTERNAL_CMD_CONVERTER__NODE_HPP_
 #define AUTOWARE_EXTERNAL_CMD_CONVERTER__NODE_HPP_
 
+#include <deque>
+
 #include <raw_vehicle_cmd_converter/accel_map.hpp>
 #include <raw_vehicle_cmd_converter/brake_map.hpp>
 
@@ -50,6 +52,13 @@ private:
   raw_vehicle_cmd_converter::BrakeMap brake_map_;
   GearReport::ConstSharedPtr gear_report_;
   VelocityReport::ConstSharedPtr velocity_report_;
+
+  std::deque<std::pair<rclcpp::Time, double>> steer_cmd_history_;
+  // delay for steering command
+  std::chrono::duration<double> delay_; 
+  double get_delayed_steer_cmd(const rclcpp::Time& current_time);
+  double steer_delay_sec_;
+ 
 };
 
 #endif  // AUTOWARE_EXTERNAL_CMD_CONVERTER__NODE_HPP_
