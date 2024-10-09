@@ -10,6 +10,8 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <optional>
 #include <rclcpp/rclcpp.hpp>
+#include <visualization_msgs/msg/marker.hpp>
+#include <rcl_interfaces/msg/set_parameters_result.hpp>
 
 namespace simple_pure_pursuit {
 
@@ -20,6 +22,7 @@ using geometry_msgs::msg::Pose;
 using geometry_msgs::msg::PointStamped;
 using geometry_msgs::msg::Twist;
 using nav_msgs::msg::Odometry;
+using visualization_msgs::msg::Marker;
 
 class SimplePurePursuit : public rclcpp::Node {
  public:
@@ -32,8 +35,9 @@ class SimplePurePursuit : public rclcpp::Node {
   // publishers
   rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_cmd_;
   rclcpp::Publisher<AckermannControlCommand>::SharedPtr pub_raw_cmd_;
-  rclcpp::Publisher<PointStamped>::SharedPtr pub_lookahead_point_;  
 
+  rclcpp::Publisher<Marker>::SharedPtr mkr_cmd_;
+  
   // timer
   rclcpp::TimerBase::SharedPtr timer_;
 
@@ -44,18 +48,20 @@ class SimplePurePursuit : public rclcpp::Node {
 
 
   // pure pursuit parameters
-  const double wheel_base_;
-  const double lookahead_gain_;
-  const double lookahead_min_distance_;
-  const double speed_proportional_gain_;
-  const bool use_external_target_vel_;
-  const double external_target_vel_;
+  double wheel_base_;
+  double lookahead_gain_;
+  double lookahead_min_distance_;
+  double speed_proportional_gain_;
+  bool use_external_target_vel_;
+  double external_target_vel_;
   const double steering_tire_angle_gain_;
+  OnSetParametersCallbackHandle::SharedPtr reset_param_handler_;
 
 
  private:
   void onTimer();
   bool subscribeMessageAvailable();
+  rcl_interfaces::msg::SetParametersResult parameter_callback(const std::vector<rclcpp::Parameter> &parameters);
 };
 
 }  // namespace simple_pure_pursuit

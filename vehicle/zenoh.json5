@@ -86,7 +86,7 @@
       ////                 - "integer" is a priority value in the range [1-7]. Highest priority is 1, lowest is 7 and default is 5.
       ////                   (see Zenoh Priority definition here: https://docs.rs/zenoh/latest/zenoh/publication/enum.Priority.html)
       ////                - ":express" is an option to indicate that the Zenoh express policy must be used for those publications.
-      ////                   The express policy makes Zenoh to to send the message immediatly, not waiting for possible further messages
+      ////                   The express policy makes Zenoh to to send the message immediately, not waiting for possible further messages
       ////                   to create a bigger batch of messages. This usually has a positive impact on latency for the topic
       ////                   but a negative impact on the general throughput, as more overhead is used for those topics.
       pub_priorities: ["/racing_kart/joy=1:express"],
@@ -96,7 +96,7 @@
       ////                           routed to zenoh using the CongestionControl::Block option.
       ////                           Meaning the routing will be blocked in case of network congestion,
       ////                           blocking the DDS Reader and the RELIABLE DDS Writer in return.
-      ////                           When false (or for BERST_EFFORT DDS Writers), CongestionControl::Drop
+      ////                           When false (or for BEST_EFFORT DDS Writers), CongestionControl::Drop
       ////                           is used, meaning the route might drop some data in case of congestion.
       ////
       // reliable_routes_blocking: true,
@@ -195,7 +195,7 @@
   //},
 
   ////
-  //// Configure the scouting mechanisms and their behaviours
+  //// Configure the scouting mechanisms and their behaviors
   ////
   //scouting: {
   //  /// The UDP multicast scouting configuration.

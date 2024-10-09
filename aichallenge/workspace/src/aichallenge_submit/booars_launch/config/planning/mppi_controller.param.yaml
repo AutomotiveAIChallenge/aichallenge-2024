@@ -1,0 +1,26 @@
+/**:
+  ros__parameters:
+      # mppi
+      horizon : 25
+      num_samples : 5000
+      u_min : [-4.0, -0.25] # accel(m/s2), steer angle(rad)
+      u_max : [2.0, 0.25]
+      sigmas : [2.0, 0.25] # sample range
+      lambda : 1.0 
+      auto_lambda : true
+      # reference path
+      DL : 0.1
+      lookahead_distance : 0.1
+      reference_path_interval : 0.83
+      # cost weights
+      Qc : 20.0
+      Ql : 5.0
+      Qv : 0.5
+      Qo : 1000.0
+      Qin : 0.01
+      Qdin : 0.0
+      # model param
+      delta_t : 0.1
+      vehicle_L : 1.08
+      V_MAX : 8.33
+
