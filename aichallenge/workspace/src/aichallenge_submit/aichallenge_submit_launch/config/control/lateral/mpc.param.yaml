@@ -1,13 +1,14 @@
 /**:
   ros__parameters:
     # -- system --
+    ## コントローラが緊急で止まってしまうときの要因の一つ。大きく予測から外れるとおそらく緊急停止する
     traj_resample_dist: 0.1 # path resampling interval [m]
-    use_steer_prediction: false # flag for using steer prediction (do not use steer measurement)
+    use_steer_prediction: false # default true flag for using steer prediction (do not use steer measurement)
     admissible_position_error: 5.0 # stop mpc calculation when error is larger than the following value
     admissible_yaw_error_rad: 1.57 # stop mpc calculation when error is larger than the following value
 
     # -- path smoothing --
-    enable_path_smoothing: true # flag for path smoothing
+    enable_path_smoothing: true # 基本的に true のほうがスムーズに追従できる。　false　だとカクカクしやすい
     path_filter_moving_ave_num: 25 # param of moving average filter for path smoothing
     curvature_smoothing_num_traj: 15 # point-to-point index distance used in curvature calculation (for trajectory): curvature is calculated from three points p(i-num), p(i), p(i+num)
     curvature_smoothing_num_ref_steer: 15 # point-to-point index distance used in curvature calculation (for steer command reference): curvature is calculated from three points p(i-num), p(i), p(i+num)
@@ -17,42 +18,42 @@
 
     # -- mpc optimization --
     qp_solver_type: "osqp" # optimization solver option (unconstraint_fast or osqp)
-    mpc_prediction_horizon: 30 # prediction horizon step
-    mpc_prediction_dt: 0.1 # prediction horizon period [s]
-    mpc_weight_lat_error: 0.1 # lateral error weight in matrix Q
-    mpc_weight_heading_error: 0.0 # heading error weight in matrix Q
+    mpc_prediction_horizon: 30 # 計算量と精度のトレードオフ　低いと目の前のパスのことしか考えられない
+    mpc_prediction_dt: 0.1 # 予測のタイムステップ　小さくするとより良い解像度で推論ができるが、推論距離は小さくなる
+    mpc_weight_lat_error: 0.1 # default 0.1 memo 0.5 値を大きくしたほうがより追従しようとする。
+    mpc_weight_heading_error: 0.0 # default 0.0 影響力　小　
     mpc_weight_heading_error_squared_vel: 0.3 #0.3 # heading error * velocity weight in matrix Q
-    mpc_weight_steering_input: 1.0  # 1.0# steering error weight in matrix R
-    mpc_weight_steering_input_squared_vel: 0.2 #0.25 # steering error * velocity weight in matrix R
-    mpc_weight_lat_jerk: 0.01 # lateral jerk weight in matrix R
-    mpc_weight_steer_rate: 0.0 # steering rate weight in matrix R
-    mpc_weight_steer_acc: 0.000001 # steering angular acceleration weight in matrix R
-    mpc_low_curvature_weight_lat_error: 0.0 #0.1 # lateral error weight in matrix Q in low curvature point
+    mpc_weight_steering_input: 1.0  # 1.0# なんとなく1.0 のままでよい　大小どちらでも問題があると思います。
+    mpc_weight_steering_input_squared_vel: 0.3  #default 0.25  memo 0.3 大きくすると不安定になる 0.1 ~ 0.5 くらいが良い気がする
+    mpc_weight_lat_jerk: 0.01 # default 0.01 memo 0.01   0.0001とかにすると遅延が大きくなった気がする。 大きくすると内側を通るような経路になり、1.0にすると真っ直ぐな経路になり、蛇行経路のようなカーブに弱い
+    mpc_weight_steer_rate: 0.0 # default 0.0  memo 0.0  0.0が結局良い　1.0にすると壁に衝突
+    mpc_weight_steer_acc: 0.000001 # default 0.000001  # defaultのままがよい気がする　0.0001だとぐちゃぐちゃ defautより大きくすると良くない 
+    mpc_low_curvature_weight_lat_error: 0.1 #0.1 変化小　わからない
     mpc_low_curvature_weight_heading_error: 0.0 # heading error weight in matrix Q in low curvature point
-    mpc_low_curvature_weight_heading_error_squared_vel: 0.0  #0.3 # heading error * velocity weight in matrix Q in low curvature point
-    mpc_low_curvature_weight_steering_input: 0.0 #1.0 # steering error weight in matrix R in low curvature point
-    mpc_low_curvature_weight_steering_input_squared_vel: 0.1 #0.25 # steering error * velocity weight in matrix R in low curvature point
-    mpc_low_curvature_weight_lat_jerk: 0.0 # lateral jerk weight in matrix R in low curvature point
-    mpc_low_curvature_weight_steer_rate: 0.0 # steering rate weight in matrix R in low curvature point
+    mpc_low_curvature_weight_heading_error_squared_vel: 0.0  #0.3 
+    mpc_low_curvature_weight_steering_input: 1.0 #1.0 あまりかわらん
+    mpc_low_curvature_weight_steering_input_squared_vel: 0.25 #0.25 # steering error * velocity weight ほぼ意味なし
+    mpc_low_curvature_weight_lat_jerk: 0.0 # default 0.0 大きくすると外れやすい
+    mpc_low_curvature_weight_steer_rate: 1.0 # default 0.0 あまりかわらない
     mpc_low_curvature_weight_steer_acc: 0.000001 # steering angular acceleration weight in matrix R in low curvature point
-    mpc_low_curvature_thresh_curvature: 0.0 # threshold of curvature to use "low_curvature" parameter (recommend: 0.01~0.03)
-    mpc_weight_terminal_lat_error: 0.0 # 1.0 # terminal lateral error weight in matrix Q to improve mpc stability
-    mpc_weight_terminal_heading_error: 0.1 #0.1 # terminal heading error weight in matrix Q to improve mpc stability
+    mpc_low_curvature_thresh_curvature: 0.0 # default 0.01 (recommend: 0.01~0.03) イメージははじめに膨らんで、その後にインをつくライン取りに近づく。完全追従を目指すなら0でも良い　大きくすると膨らむが増える 
+    mpc_weight_terminal_lat_error: 1.0 # 1.0 # あまりわからん
+    mpc_weight_terminal_heading_error: 0.1 #0.1 # あまりかわらん
     mpc_zero_ff_steer_deg: 0.5 # threshold that feed-forward angle becomes zero
     mpc_acceleration_limit: 3.2 # limit on the vehicle's acceleration
     mpc_velocity_time_constant: 0.3 # time constant used for velocity smoothing
     mpc_min_prediction_length: 5.0 # minimum prediction length
 
-    # -- vehicle model --
+    # -- vehicle model -- ここを調整する必要はないかもしれない
     vehicle_model_type: "kinematics" # vehicle model type for mpc prediction. option is kinematics, kinematics_no_delay, and dynamics
-    input_delay: 0.01 # steering input delay time for delay compensation
+    input_delay: 0.01 # ラインが膨らんでいる場合、このパラメータが原因の可能性がある。
     vehicle_model_steer_tau: 0.10 #0.30 # steering dynamics time constant (1d approximation) [s]
     steer_rate_lim_dps: 600.0 # steering angle rate limit [deg/s]
     acceleration_limit: 3.2 # 2.0 # acceleration limit for trajectory velocity modification [m/ss]
     velocity_time_constant: 0.3 # velocity dynamics time constant  for trajectory velocity modification [s]
 
     # -- lowpass filter for noise reduction --
-    steering_lpf_cutoff_hz: 2.3 #3.0 # cutoff frequency of lowpass filter for steering command [Hz]
+    steering_lpf_cutoff_hz: 3.0 # default 3.0  memo 2.3  0.0にすると直進してぶつかる 10.0でも一周できた
     error_deriv_lpf_cutoff_hz: 5.0
 
     # stop state: steering command is kept in the previous value in the stop state.
