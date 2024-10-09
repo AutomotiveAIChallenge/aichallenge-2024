@@ -95,7 +95,7 @@ void CsvEditor::set_trajectory_request() {
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<CsvEditor>());
+  std::make_shared<CsvEditor>();
   rclcpp::shutdown();
   return 0;
 }
