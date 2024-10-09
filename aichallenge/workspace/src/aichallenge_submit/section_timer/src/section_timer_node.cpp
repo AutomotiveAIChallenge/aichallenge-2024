@@ -10,7 +10,7 @@ class SectionTimerNode : public rclcpp::Node
 {
 public:
   SectionTimerNode()
-  : Node("section_timer_node"), is_started_(false), best_lap_time_(std::numeric_limits<float>::infinity())
+  : Node("section_timer_node"), is_started_(false), best_lap_time_(999.9)
   {
     this->declare_parameter<bool>("debug", false);
     this->declare_parameter<double>("radius", 5.0);
