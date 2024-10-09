@@ -10,20 +10,23 @@
     <let name="steering_tire_angle_gain_var" value="1.0" if="$(var simulation)" />
     <let name="steering_tire_angle_gain_var" value="1.639" unless="$(var simulation)" />
 
-    <!-- <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node"
+    <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node"
       output="screen" unless="$(var use_stanley)">
       <param name="use_external_target_vel" value="false" />
       <param name="external_target_vel" value="8.3" />
-      <param name="lookahead_gain" value="0.24" />
-      <param name="lookahead_min_distance" value="2.0" />
-      <param name="speed_proportional_gain" value="2.0" />
+      <param name="lookahead_gain" value="0.25" />
+      <param name="lookahead_min_distance" value="1.6" />
+      <param name="speed_proportional_gain" value="3.0" />
       <param name="steering_tire_angle_gain" value="$(var steering_tire_angle_gain_var)"/>
-
+      <param name="curve_param_max_steer_angle" value="0.1" />
+      <param name="curve_param_deceleration_vel" value="4.0" />
       <remap from="input/kinematics" to="/localization/kinematic_state" />
-      <remap from="input/trajectory" to="/planning/scenario_planning/trajectory" />
+      <!-- global path or mppi-->
       <remap from="input/trajectory" to="/planning/output/mppi_planned_path" />
+      <!-- <remap from="input/trajectory" to="/planning/scenario_planning/trajectory" /> -->
+      
       <remap from="output/control_cmd" to="/control/command/control_cmd" />
-    </node> -->
+    </node>
 
     <!-- <node pkg="stanley_control" exec="stanley_control" name="stanley_control_node" output="screen"
       if="$(var use_stanley)">
@@ -39,14 +42,14 @@
 
     <!-- Control component -->
     <!-- Longitudinal (speed) control -->
-    <node pkg="simple_pd_speed_control" exec="simple_pd_speed_control_node" name="simple_pd_speed_control" output="screen">
+    <!--<node pkg="simple_pd_speed_control" exec="simple_pd_speed_control_node" name="simple_pd_speed_control" output="screen">
       <param name="speed_proportional_gain" value="2.0" />
       <remap from="input/kinematics" to="/localization/kinematic_state" />
       <remap from="input/trajectory" to="/planning/output/mppi_planned_path" />
-    </node>
+    </node> -->
 
     <!-- Lateral (speed) control -->
-    <node pkg="lateral_pure_pursuit" exec="lateral_pure_pursuit_node" name="lateral_pure_pursuit" 
+    <!-- <node pkg="lateral_pure_pursuit" exec="lateral_pure_pursuit_node" name="lateral_pure_pursuit" 
       output="screen" unless="$(var use_stanley)">
       <param name="wheel_base" value="1.09" />
       <param name="lookahead_gain" value="0.24" />
@@ -61,13 +64,13 @@
       <param name="k_gain_slow" value="1.0" />
       <remap from="input/kinematics" to="/localization/kinematic_state" />
       <remap from="input/trajectory" to="/planning/scenario_planning/trajectory" />
-    </node>
+    </node> -->
 
     <!-- control unifier -->
-    <node pkg="ackermann_control_publisher" exec="ackermann_control_publisher_node" name="ackermann_control_publisher" output="screen">
+    <!-- <node pkg="ackermann_control_publisher" exec="ackermann_control_publisher_node" name="ackermann_control_publisher" output="screen">
       <remap from="input/longitudinal" to="output/target_acc" />
       <remap from="input/lateral" to="output/steer_angle" />
       <remap from="output/ackermann_command" to="/control/command/control_cmd" />
-    </node>
+    </node> -->
   </group>
 </launch>

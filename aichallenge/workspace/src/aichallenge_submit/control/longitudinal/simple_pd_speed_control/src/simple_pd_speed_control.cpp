@@ -45,14 +45,13 @@ namespace simple_speed_pd_control{
             return;
         }
 
-        // size_t closet_traj_point_idx = findNearestIndex(trajectory_->points, odometry_->pose.pose.position);
+        size_t closet_traj_point_idx = findNearestIndex(trajectory_->points, odometry_->pose.pose.position);
 
         // get closest trajectory point from current position
-        // TrajectoryPoint closet_traj_point = trajectory_->points.at(closet_traj_point_idx);
+        TrajectoryPoint closet_traj_point = trajectory_->points.at(closet_traj_point_idx);
 
         // calc longitudinal speed and acceleration
-        // double target_longitudinal_vel = closet_traj_point.longitudinal_velocity_mps;
-        double target_longitudinal_vel = 8.0;
+        double target_longitudinal_vel = closet_traj_point.longitudinal_velocity_mps;
         double current_longitudinal_vel = odometry_->twist.twist.linear.x;
         Float64 msg = Float64();
         msg.data = speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
