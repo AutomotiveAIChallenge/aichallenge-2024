@@ -24,7 +24,7 @@ sleep 20
 
 # Start Autoware
 echo "Start Autoware"
-ros2 launch aichallenge_system_launch aichallenge_system.launch.xml >autoware.log 2>&1 &
+ros2 launch aichallenge_system_launch aichallenge_system.launch.xml simulation:=true use_sim_time:=true run_rviz:=true >autoware.log 2>&1 &
 PID_AUTOWARE=$!
 sleep 10
 
