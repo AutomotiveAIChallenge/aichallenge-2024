@@ -265,14 +265,6 @@
     </include>
   </group>
 
-  <!-- Pose Cov Transformer Node -->
-  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen">
-    <!-- To-do, tomoki Only for interfacebag -->
-    <param name="publish_gnss_pose_original" value="$(var is_rosbag)"/>
-  </node>
-  <!-- Acc  culculator Node -->
-  <node pkg="vehicle_state_culculator" exec="vehicle_state_culculator_node" name="vehicle_state_culculator_node" output="screen"/>
-
   <!-- API -->
   <group>
     <!-- default_ad_api -->
@@ -282,6 +274,17 @@
     <include file="$(find-pkg-share ad_api_adaptors)/launch/rviz_adaptors.launch.xml" />
   </group>
 
+  <!-- IF REAL KART, Please Comment Out -->
+  <!-- Pose Cov Transformer Node -->
+  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen">
+    <!-- To-do, tomoki Only for interfacebag -->
+    <param name="publish_gnss_pose_original" value="$(var is_rosbag)"/>
+  </node>
+
+  <!-- Acc  culculator Node -->
+  <node pkg="vehicle_state_culculator" exec="vehicle_state_culculator_node" name="vehicle_state_culculator_node" output="screen"/>
+
+  <!-- Timer Node -->
   <include file="$(find-pkg-share section_timer)/launch/section_timer.launch.xml"/>
 
 
