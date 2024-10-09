@@ -65,8 +65,8 @@ void ActuationCmdConverter::on_actuation_cmd(const ActuationCommandStamped::Cons
 
   const double velocity = std::abs(velocity_report_->longitudinal_velocity);
   const double acceleration = get_acceleration(*msg, velocity);
-  // Add steer_cmd to history
-  steer_cmd_history_.emplace_back(msg->header.stamp, msg->actuation.steer_cmd);
+  // Add steer_cmd to history. Limit -35 deg to 35 deg
+  steer_cmd_history_.emplace_back(msg->header.stamp, std::clamp(msg->actuation.steer_cmd, -0.61, 0.61));
 
 
   // Publish ControlCommand
