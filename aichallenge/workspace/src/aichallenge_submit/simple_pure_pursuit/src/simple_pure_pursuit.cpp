@@ -23,6 +23,8 @@ SimplePurePursuit::SimplePurePursuit()
   speed_proportional_gain_(declare_parameter<float>("speed_proportional_gain", 1.0)),
   use_external_target_vel_(declare_parameter<bool>("use_external_target_vel", false)),
   external_target_vel_(declare_parameter<float>("external_target_vel", 0.0)),
+  curve_param_max_steer_angle_(declare_parameter<float>("curve_param_max_steer_angle", 0.1)),
+  curve_param_deceleration_vel_(declare_parameter<float>("curve_param_deceleration_vel", 1.0)),
   steering_tire_angle_gain_(declare_parameter<float>("steering_tire_angle_gain", 1.0))
 {
   pub_cmd_ = create_publisher<AckermannControlCommand>("output/control_cmd", 1);
@@ -99,14 +101,6 @@ void SimplePurePursuit::onTimer()
     double lookahead_point_x = lookahead_point_itr->pose.position.x;
     double lookahead_point_y = lookahead_point_itr->pose.position.y;
 
-    // calc longitudinal speed and acceleration
-    double target_longitudinal_vel =
-      use_external_target_vel_ ? external_target_vel_ : lookahead_point_itr->longitudinal_velocity_mps;
-    double current_longitudinal_vel = odometry_->twist.twist.linear.x;
-    
-    cmd.longitudinal.speed = target_longitudinal_vel;
-    cmd.longitudinal.acceleration =
-      speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
     {
       // publish lookahead point marker
       auto marker_msg = Marker();
@@ -142,8 +136,26 @@ void SimplePurePursuit::onTimer()
         steering_tire_angle_gain_ *
         std::atan2(2.0 * wheel_base_ * std::sin(alpha), lookahead_distance);
     }
+
+    // calc longitudinal speed and acceleration
+    double target_longitudinal_vel =
+      use_external_target_vel_ ? external_target_vel_ : lookahead_point_itr->longitudinal_velocity_mps;
+    double current_longitudinal_vel = odometry_->twist.twist.linear.x;
+
+    // ステアリング角度が大きい場合は減速する
+    if (std::abs(cmd.lateral.steering_tire_angle) > curve_param_max_steer_angle_) {
+      target_longitudinal_vel = std::min(target_longitudinal_vel, curve_param_deceleration_vel_);
+    }
+    
+    cmd.longitudinal.speed = target_longitudinal_vel;
+    cmd.longitudinal.acceleration =
+      speed_proportional_gain_ * (target_longitudinal_vel - current_longitudinal_vel);
+
   }
+
   pub_cmd_->publish(cmd);
+
+  // publish real-machine command
   cmd.lateral.steering_tire_angle /=  steering_tire_angle_gain_;
   pub_raw_cmd_->publish(cmd);
 }

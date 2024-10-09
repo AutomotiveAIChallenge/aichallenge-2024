@@ -2,7 +2,7 @@
   ros__parameters:
       # mppi
       horizon : 25
-      num_samples : 5000
+      num_samples : 2500
       u_min : [-4.0, -0.25] # accel(m/s2), steer angle(rad)
       u_max : [2.0, 0.25]
       sigmas : [2.0, 0.25] # sample range
