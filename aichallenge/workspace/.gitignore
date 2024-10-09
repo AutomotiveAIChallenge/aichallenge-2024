@@ -1,3 +1,7 @@
 /build
 /install
 /log
+
+.vscode
+*.code-workspace
+result-details.json
