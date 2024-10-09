@@ -12,8 +12,8 @@
 
     <!-- <node pkg="simple_pure_pursuit" exec="simple_pure_pursuit" name="simple_pure_pursuit_node"
       output="screen" unless="$(var use_stanley)">
-      <param name="use_external_target_vel" value="true" />
-      <param name="external_target_vel" value="8.0" />
+      <param name="use_external_target_vel" value="false" />
+      <param name="external_target_vel" value="8.3" />
       <param name="lookahead_gain" value="0.24" />
       <param name="lookahead_min_distance" value="2.0" />
       <param name="speed_proportional_gain" value="2.0" />

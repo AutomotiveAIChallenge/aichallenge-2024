@@ -59,6 +59,23 @@ class mppi_controller:
         self.reference_path: torch.Tensor = None
         self.cost_map: CostMapTensor = None
 
+    def update_params(self, config):
+        self.config = config
+
+        # model parameter
+        self.delta_t = torch.tensor(self.config["delta_t"], device=self._device, dtype=self._dtype)
+        self.vehicle_L = torch.tensor(self.config["vehicle_L"], device=self._device, dtype=self._dtype)
+        self.V_MAX = torch.tensor(self.config["V_MAX"], device=self._device, dtype=self._dtype)
+        
+        # cost weights
+        self.Qc = self.config["Qc"]
+        self.Ql = self.config["Ql"]
+        self.Qv = self.config["Qv"]
+        self.Qo = self.config["Qo"]
+        self.Qin = self.config["Qin"]
+        self.Qdin = self.config["Qdin"]
+        
+
     def update(self, state: torch.Tensor, racing_center_path: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Update the controller with the current state and reference path.
@@ -170,6 +187,12 @@ class mppi_controller:
         input_cost = self.Qin * action.pow(2).sum(dim=1)
         input_cost += self.Qdin * (action - prev_action).pow(2).sum(dim=1)
 
+        # dtheta cost
+        # steer = action[:, 1]
+        # dtheta = v * torch.tan(steer) / self.vehicle_L
+        # MAX_DTHETA = 1
+        # dtheta_cost = 400*torch.relu(torch.abs(dtheta) - MAX_DTHETA)
+
         cost = path_cost + velocity_cost + obstacle_cost + input_cost
 
         return cost
@@ -218,6 +241,45 @@ class mppi_controller:
                 start_idx += segment_length
 
             return new_path
+        
+        def compute_curvature(path, interval=5):
+            """
+            Compute curvature for each segment of the path at specified intervals and linearly interpolate the skipped points.
+            Args:
+                path (torch.Tensor): path points with shape (N, 4) [x, y, yaw, target_v]
+                interval (int): number of points to skip when computing curvature (the larger the value, the fewer points are used)
+            
+            Returns:
+                torch.Tensor: curvature values for each path point, shape (N,)
+            """
+            # Initialize curvature tensor
+            curvature = torch.zeros(path.shape[0], dtype=path.dtype, device=path.device)
+
+            # Compute curvature at every 'interval' points
+            for i in range(interval, len(path) - interval, interval):
+                # Compute central difference for first derivative (dx, dy)
+                dx = (path[i + interval, 0] - path[i - interval, 0]) / (2.0 * interval)
+                dy = (path[i + interval, 1] - path[i - interval, 1]) / (2.0 * interval)
+
+                # Compute central difference for second derivative (ddx, ddy)
+                ddx = path[i + interval, 0] - 2 * path[i, 0] + path[i - interval, 0]
+                ddy = path[i + interval, 1] - 2 * path[i, 1] + path[i - interval, 1]
+
+                # Curvature formula: k = (x'y'' - y'x'') / (x'^2 + y'^2)^(3/2)
+                curvature[i] = torch.abs(dx * ddy - dy * ddx) / (dx.pow(2) + dy.pow(2)).pow(3 / 2)
+
+            # Linearly interpolate skipped points
+            for i in range(interval, len(path) - interval, interval):
+                if i + interval < len(path):
+                    for j in range(1, interval):
+                        curvature[i + j] = curvature[i] + (curvature[i + interval] - curvature[i]) * (j / interval)
+
+            # Handle the boundary cases (start and end)
+            curvature[:interval] = curvature[interval]
+            curvature[-interval:] = curvature[-interval - 1]
+
+            return curvature
+    
 
         # Resample the path with the specified DL
         path = resample_path(path, DL)
@@ -229,12 +291,29 @@ class mppi_controller:
         # Ensure the index is not less than the current index
         ind = max(cind, ind)
 
+        # Compute curvature along the path
+        # curvature = compute_curvature(path)
+
         # Generate the rest of the reference trajectory
         travel = lookahead_distance
 
         for i in range(horizon + 1):
             travel += reference_path_interval
             dind = int(round(travel / DL))
+
+            # if (ind + dind) < ncourse:
+            #     xref[i] = path[ind + dind]
+
+            #     # Adjust target velocity based on curvature
+            #     if (ind + dind) < len(curvature):
+            #         current_curvature = curvature[ind + dind]
+            #         # Lower the target velocity when curvature is high
+            #         print("curvature:", current_curvature)
+            #         if current_curvature > 2.0:  # Set threshold for high curvature
+            #             xref[i, 3] = 1.0
+
+            # else:
+            #     xref[i] = path[-1]
 
             if (ind + dind) < ncourse:
                 xref[i] = path[ind + dind]

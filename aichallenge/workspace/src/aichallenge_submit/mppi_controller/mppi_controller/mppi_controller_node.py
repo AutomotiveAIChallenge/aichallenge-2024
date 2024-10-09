@@ -1,5 +1,8 @@
 import rclpy
 from rclpy.node import Node
+from rcl_interfaces.msg import ParameterEvent
+from rclpy.parameter import Parameter
+from rcl_interfaces.msg import SetParametersResult
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Pose, Point, Quaternion
 from autoware_auto_planning_msgs.msg import Trajectory, TrajectoryPoint
@@ -40,7 +43,7 @@ class MppiControllerNode(Node):
         self.declare_parameter('vehicle_L', 1.0)
         self.declare_parameter('V_MAX', 8.0)
         # get
-        config = {
+        self.config = {
             "horizon": self.get_parameter('horizon').get_parameter_value().integer_value,
             "num_samples": self.get_parameter('num_samples').get_parameter_value().integer_value,
             "u_min": self.get_parameter('u_min').get_parameter_value().double_array_value,
@@ -61,8 +64,10 @@ class MppiControllerNode(Node):
             "vehicle_L": self.get_parameter('vehicle_L').get_parameter_value().double_value,
             "V_MAX": self.get_parameter('V_MAX').get_parameter_value().double_value,
         }
+        self.get_logger().info(f'config: {self.config}')
 
-        self.get_logger().info(f'config: {config}')
+        # Add parameter change callback
+        self.add_on_set_parameters_callback(self.parameter_callback)
 
         # publisher
         # control command
@@ -100,7 +105,7 @@ class MppiControllerNode(Node):
         self.dtype = torch.float32
         
         # mppi controller
-        self.controller = mppi_controller(config=config, debug=True, device=self.device, dtype=self.dtype)
+        self.controller = mppi_controller(config=self.config, debug=True, device=self.device, dtype=self.dtype)
 
         self.odometry: Odometry = None
         self.trajectory: Trajectory = None
@@ -116,6 +121,25 @@ class MppiControllerNode(Node):
 
     def costmap_callback(self, msg : OccupancyGrid):
         self.costmap = msg
+
+    def parameter_callback(self, params):
+        for param in params:
+            if param.name in self.config:
+                if param.type_ == Parameter.Type.DOUBLE:
+                    self.config[param.name] = param.value
+                elif param.type_ == Parameter.Type.INTEGER:
+                    self.config[param.name] = param.value
+                elif param.type_ == Parameter.Type.BOOL:
+                    self.config[param.name] = param.value
+                elif param.type_ == Parameter.Type.DOUBLE_ARRAY:
+                    self.config[param.name] = param.value
+                self.get_logger().info(f"Parameter {param.name} changed to {param.value}")
+
+        # update controller
+        self.controller.update_params(self.config)
+
+        # Return a success result
+        return SetParametersResult(successful=True)
 
     def zero_ackermann_control_command(self):
         cmd = AckermannControlCommand()
