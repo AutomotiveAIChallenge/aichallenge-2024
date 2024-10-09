@@ -17,8 +17,11 @@ macs = {
 
 def exec_arp_scan():
     arpcmd = ["sudo", "arp-scan", "-l", "-g", "--plain", "--quiet"]
-    result = subprocess.run(arpcmd, capture_output=True, text=True).stdout
-    result = [line.split() for line in result.split("\n") if line]
+    result = subprocess.run(arpcmd, capture_output=True, text=True)
+    if result.returncode:
+        print("invalid target:", result.stderr, file=sys.stderr)
+        sys.exit(result.returncode)
+    result = [line.split() for line in result.stdout.split("\n") if line]
     result = {mac: ip for ip, mac in result}
     return result
 
