@@ -187,6 +187,10 @@ rcl_interfaces::msg::SetParametersResult SimplePurePursuit::parameter_callback(c
       external_target_vel_ = parameter.as_double();
       RCLCPP_INFO(SimplePurePursuit::get_logger(), "external_target_vel changed to %f", external_target_vel_);
     } 
+    else if (parameter.get_name() == "steering_tire_angle_gain") {
+      steering_tire_angle_gain_ = parameter.as_double();
+      RCLCPP_INFO(SimplePurePursuit::get_logger(), "steering_tire_angle_gain changed to %f", steering_tire_angle_gain_);
+    } 
   }
   return result;
 }

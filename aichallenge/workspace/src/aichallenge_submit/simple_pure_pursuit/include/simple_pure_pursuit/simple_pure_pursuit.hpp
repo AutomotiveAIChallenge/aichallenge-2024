@@ -56,7 +56,7 @@ class SimplePurePursuit : public rclcpp::Node {
   double external_target_vel_;
   double curve_param_max_steer_angle_;
   double curve_param_deceleration_vel_;
-  const double steering_tire_angle_gain_;
+  double steering_tire_angle_gain_;
   OnSetParametersCallbackHandle::SharedPtr reset_param_handler_;
 
 
