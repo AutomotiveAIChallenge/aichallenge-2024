@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="rviz_config" default="$(find-pkg-share aichallenge_system_launch)/config/debug_sensing.rviz" description="rviz config"/>
+  <!-- Pose Cov Transformer Node -->
+  <node pkg="pose_transformer" exec="pose_transformer" name="pose_transformer" output="screen">
+    <!-- To-do, tomoki Only for interfacebag -->
+    <param name="publish_gnss_pose_original" value="false"/>
+  </node>
+
+  <!-- Acc  culculator Node -->
+  <node pkg="vehicle_state_culculator" exec="vehicle_state_culculator_node" name="vehicle_state_culculator_node" output="screen"/>
+
+  <!-- Timer -->
+  <include file="$(find-pkg-share section_timer)/launch/section_timer.launch.xml"/>
+
+  <!-- Rviz -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" output="screen" args="-d $(var rviz_config) -s $(find-pkg-share aichallenge_system_launch)/rviz/image/autoware.png"/>
+
+</launch>
