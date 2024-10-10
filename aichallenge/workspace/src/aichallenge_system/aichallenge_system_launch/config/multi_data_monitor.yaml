@@ -138,14 +138,14 @@ widgets:
           - pid_i_contrib
           - pid_d_contrib
 
-      - class: Simple 
-        const: Others
+      # - class: Simple 
+      #   const: Others
 
-      - class: Matrix
-        cols: 3
-        items:
-          - control-mode
-          - emergency
+      # - class: Matrix
+      #   cols: 3
+      #   items:
+          # - control-mode
+          # - emergency
           # - joy-delay
           # - posmode
 
@@ -828,32 +828,32 @@ widgets:
           - { ge: -1000.0, attrs: { back-color: white } }
 
   # Others
-  - class: Titled
-    label: control-mode
-    title: Control Mode
-    input: { class: subscription, topic: /vehicle/status/control_mode, field: mode }
-    rules:
-      class: SetFirstIf
-      type: uint
-      list:
-        - { eq: 0, value: NO_COMMAND,       attrs: { back-color: red } }
-        - { eq: 1, value: AUTONOMOUS,       attrs: { back-color: cyan } }
-        - { eq: 2, value: AUTONOMOUS_STEER_ONLY,   attrs: { back-color: lime } }
-        - { eq: 3, value: AUTONOMOUS_VELOCITY_ONLY,   attrs: { back-color: lime } }
-        - { eq: 4, value: MANUAL,       attrs: { back-color: yellow } }
-        - { eq: 5, value: DISENGAGED,  attrs: { back-color: red } }
-        - { eq: 6, value: NOT_READY,  attrs: { back-color: red } }
+  # - class: Titled
+  #   label: control-mode
+  #   title: Control Mode
+  #   input: { class: subscription, topic: /vehicle/status/control_mode, field: mode }
+  #   rules:
+  #     class: SetFirstIf
+  #     type: uint
+  #     list:
+  #       - { eq: 0, value: NO_COMMAND,       attrs: { back-color: red } }
+  #       - { eq: 1, value: AUTONOMOUS,       attrs: { back-color: cyan } }
+  #       - { eq: 2, value: AUTONOMOUS_STEER_ONLY,   attrs: { back-color: lime } }
+  #       - { eq: 3, value: AUTONOMOUS_VELOCITY_ONLY,   attrs: { back-color: lime } }
+  #       - { eq: 4, value: MANUAL,       attrs: { back-color: yellow } }
+  #       - { eq: 5, value: DISENGAGED,  attrs: { back-color: red } }
+  #       - { eq: 6, value: NOT_READY,  attrs: { back-color: red } }
 
-  - class: Titled
-    label: emergency
-    title: Emergency
-    input: { class: subscription, topic: /racing_kart/debug/status, field: emergency }
-    rules:
-      class: SetFirstIf
-      type: text
-      list:
-        - { eq: false, value: False,       attrs: { back-color: cyan } }
-        - { eq: true, value: True,       attrs: { back-color: red } }
+  # - class: Titled
+  #   label: emergency
+  #   title: Emergency
+  #   input: { class: subscription, topic: /racing_kart/debug/status, field: emergency }
+  #   rules:
+  #     class: SetFirstIf
+  #     type: text
+  #     list:
+  #       - { eq: false, value: False,       attrs: { back-color: cyan } }
+  #       - { eq: true, value: True,       attrs: { back-color: red } }
 
 # Conversion https://github.com/tier4/multi_data_monitor/blob/main/multi_data_monitor/documents/classes/filter/units.md
 streams:
