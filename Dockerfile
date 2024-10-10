@@ -8,6 +8,13 @@ RUN apt-get -y install wmctrl
 RUN apt-get -y install ros-humble-rqt-tf-tree
 RUN apt-get -y install ros-humble-rqt-graph
 
+RUN apt-get update
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | tee -a /etc/apt/sources.list > /dev/null && apt-get update
+RUN apt install zenoh-bridge-ros2dds terminator -y
+RUN apt install arp-scan -y
+
+COPY --chmod=757 /remote /remote 
+
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
 ENV XDG_RUNTIME_DIR=/tmp/xdg
