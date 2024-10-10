@@ -32,6 +32,7 @@ private:
     message.header.stamp = this->now();
     message.actuation.steer_cmd = steering_value_;
     publisher_->publish(message);
+    RCLCPP_INFO(this->get_logger(), "Publishing: steering_angle = %.2f", steering_value_);
   }
 
   rcl_interfaces::msg::SetParametersResult param_callback(
