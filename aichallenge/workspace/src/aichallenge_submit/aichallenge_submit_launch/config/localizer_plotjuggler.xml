@@ -1,22 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <root>
- <tabbed_widget name="Main Window" parent="main_window">
+ <tabbed_widget parent="main_window" name="Main Window">
   <Tab tab_name="Orientation" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
-     <DockSplitter orientation="|" count="2" sizes="0.321101;0.678899">
-      <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
+    <DockSplitter orientation="-" sizes="1" count="1">
+     <DockSplitter orientation="|" sizes="0.5;0.5" count="2">
+      <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
        <DockArea name="Yaw(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="3.292520" left="100.945044" right="105.947210" bottom="-3.298120"/>
-         <limitY max="3.29252" min="-3.29812"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804390" bottom="-3.298120" right="248.795398" top="3.292520"/>
+         <limitY min="-3.29812" max="3.29252"/>
          <curve name="/sensing/imu/imu_data/orientation/yaw" color="#1ac938"/>
          <curve name="/localization/base_link/kinematic_state/pose/pose/orientation/yaw" color="#ff7f0e"/>
         </plot>
        </DockArea>
        <DockArea name="EKF(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="0.023162" left="100.945044" right="105.947210" bottom="-0.019981"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804390" bottom="-0.100000" right="248.795398" top="0.100000"/>
          <limitY/>
          <curve name="/localization/base_link/kinematic_state/pose/pose/orientation/pitch" color="#d62728"/>
          <curve name="/localization/base_link/kinematic_state/pose/pose/orientation/roll" color="#1ac938"/>
@@ -24,11 +24,11 @@
         </plot>
        </DockArea>
       </DockSplitter>
-      <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
-       <DockSplitter orientation="|" count="3" sizes="0.312379;0.331721;0.355899">
+      <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
+       <DockSplitter orientation="|" sizes="0.340426;0.340426;0.319149" count="3">
         <DockArea name="IMU_RAW(imu_link)">
-         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="2.773745" left="100.945044" right="105.947210" bottom="-0.090251"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804390" bottom="0.152253" right="248.795398" top="2.902073"/>
           <limitY/>
           <curve name="/sensing/imu/imu_raw/orientation/pitch" color="#17becf"/>
           <curve name="/sensing/imu/imu_raw/orientation/roll" color="#bcbd22"/>
@@ -36,25 +36,25 @@
          </plot>
         </DockArea>
         <DockArea name="EKF(map)">
-         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="3.292520" left="100.945044" right="105.947210" bottom="-3.298120"/>
-          <limitY max="3.29252" min="-3.29812"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804390" bottom="-3.298120" right="248.795398" top="3.292520"/>
+          <limitY min="-3.29812" max="3.29252"/>
           <curve name="/localization/kinematic_state/pose/pose/orientation/pitch" color="#9467bd"/>
           <curve name="/localization/kinematic_state/pose/pose/orientation/roll" color="#17becf"/>
           <curve name="/localization/kinematic_state/pose/pose/orientation/yaw" color="#f14cc1"/>
          </plot>
         </DockArea>
         <DockArea name="GNSS(map)">
-         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="1.000000" left="0.000000" right="1.000000" bottom="0.000000"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="0.000000" bottom="0.000000" right="1.000000" top="1.000000"/>
           <limitY/>
          </plot>
         </DockArea>
        </DockSplitter>
-       <DockSplitter orientation="|" count="3" sizes="0.323017;0.334623;0.34236">
+       <DockSplitter orientation="|" sizes="0.340426;0.340426;0.319149" count="3">
         <DockArea name="IMU_RAW(base_link)">
-         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="1.195924" left="100.945044" right="105.947210" bottom="-1.373023"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804390" bottom="0.152991" right="248.795398" top="2.871791"/>
           <limitY/>
           <curve name="/sensing/imu/base_link/imu_raw/orientation/pitch" color="#1ac938"/>
           <curve name="/sensing/imu/base_link/imu_raw/orientation/roll" color="#ff7f0e"/>
@@ -62,17 +62,17 @@
          </plot>
         </DockArea>
         <DockArea name="IMU_DATA(base_link)">
-         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="3.298570" left="100.945044" right="105.947210" bottom="-3.296110"/>
-          <limitY max="3.29857" min="-3.29611"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804390" bottom="-3.296110" right="248.795398" top="3.298570"/>
+          <limitY min="-3.29611" max="3.29857"/>
           <curve name="/sensing/imu/imu_data/orientation/pitch" color="#1f77b4"/>
           <curve name="/sensing/imu/imu_data/orientation/roll" color="#d62728"/>
           <curve name="/sensing/imu/imu_data/orientation/yaw" color="#1ac938"/>
          </plot>
         </DockArea>
         <DockArea name="GNSS(base_link)">
-         <plot style="LinesAndDots" flip_y="false" mode="TimeSeries" flip_x="false">
-          <range top="3.220132" left="100.945044" right="105.947210" bottom="-0.078540"/>
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="LinesAndDots">
+          <range left="243.804390" bottom="-0.100000" right="248.795398" top="0.100000"/>
           <limitY/>
           <curve name="/sensing/gnss/gnss_module/base_link/pose/pose/orientation/pitch" color="#d62728"/>
           <curve name="/sensing/gnss/gnss_module/base_link/pose/pose/orientation/roll" color="#1ac938"/>
@@ -87,13 +87,13 @@
   </Tab>
   <Tab tab_name="Position" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="...">
-      <plot style="Lines" flip_y="false" mode="XYPlot" flip_x="false">
-       <range top="43190.700000" left="89572.165630" right="89705.252763" bottom="43118.500000"/>
-       <limitY max="43190.7" min="43118.5"/>
-       <curve name="/localization/kinematic_state/pose/pose/position/[x;y]" curve_y="/localization/kinematic_state/pose/pose/position/y" curve_x="/localization/kinematic_state/pose/pose/position/x" color="#1ac938"/>
-       <curve name="/sensing/gnss/pose_with_covariance/pose/pose/position/[x;y]" curve_y="/sensing/gnss/pose_with_covariance/pose/pose/position/y" curve_x="/sensing/gnss/pose_with_covariance/pose/pose/position/x" color="#f14cc1"/>
+      <plot mode="XYPlot" flip_y="false" flip_x="false" style="Lines">
+       <range left="89613.552468" bottom="43118.500000" right="89651.222033" top="43190.700000"/>
+       <limitY min="43118.5" max="43190.7"/>
+       <curve curve_y="/localization/kinematic_state/pose/pose/position/y" name="/localization/kinematic_state/pose/pose/position/[x;y]" curve_x="/localization/kinematic_state/pose/pose/position/x" color="#1ac938"/>
+       <curve curve_y="/sensing/gnss/pose_with_covariance/pose/pose/position/y" name="/sensing/gnss/pose_with_covariance/pose/pose/position/[x;y]" curve_x="/sensing/gnss/pose_with_covariance/pose/pose/position/x" color="#f14cc1"/>
       </plot>
      </DockArea>
     </DockSplitter>
@@ -101,20 +101,22 @@
   </Tab>
   <Tab tab_name="Position_Each" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
-     <DockSplitter orientation="|" count="2" sizes="0.5;0.5">
+    <DockSplitter orientation="-" sizes="1" count="1">
+     <DockSplitter orientation="|" sizes="0.5;0.5" count="2">
       <DockArea name="X">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="89646.960556" left="100.981539" right="105.946990" bottom="89632.064704"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="89632.371290" right="248.795285" top="89632.403210"/>
         <limitY/>
         <curve name="/localization/kinematic_state/pose/pose/position/x" color="#ff7f0e"/>
+        <curve name="/sensing/gnss/pose_with_covariance/pose/pose/position/x" color="#1ac938"/>
        </plot>
       </DockArea>
       <DockArea name="Y">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="43149.743345" left="100.981539" right="105.946990" bottom="43136.196875"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="43128.972725" right="248.795285" top="43129.010315"/>
         <limitY/>
         <curve name="/localization/kinematic_state/pose/pose/position/y" color="#f14cc1"/>
+        <curve name="/sensing/gnss/pose_with_covariance/pose/pose/position/y" color="#ff7f0e"/>
        </plot>
       </DockArea>
      </DockSplitter>
@@ -123,41 +125,62 @@
   </Tab>
   <Tab tab_name="Ang_Velocity" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
-     <DockSplitter orientation="|" count="3" sizes="0.333115;0.33377;0.333115">
-      <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
-       <DockArea name="Ang_X(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="0.531553" left="100.941751" right="105.946990" bottom="-0.541145"/>
-         <limitY max="0.531553" min="-0.541145"/>
-         <curve name="/sensing/imu/imu_data/angular_velocity/x" color="#f14cc1"/>
-         <curve name="/localization/kinematic_state/twist/twist/angular/x" color="#1ac938"/>
-         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/x" color="#17becf"/>
-        </plot>
-       </DockArea>
-       <DockArea name="IMU_Data(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="1.150374" left="100.941751" right="105.946990" bottom="-0.661447"/>
-         <limitY/>
-         <curve name="/sensing/imu/imu_data/angular_velocity/x" color="#f14cc1"/>
-         <curve name="/sensing/imu/imu_data/angular_velocity/y" color="#9467bd"/>
-         <curve name="/sensing/imu/imu_data/angular_velocity/z" color="#17becf"/>
-        </plot>
-       </DockArea>
+    <DockSplitter orientation="-" sizes="1" count="1">
+     <DockSplitter orientation="|" sizes="0.410492;0.312131;0.277377" count="3">
+      <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
+       <DockSplitter orientation="|" sizes="0.4448;0.5552" count="2">
+        <DockArea name="Odom(base_link)">
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804472" bottom="-0.100000" right="248.795379" top="0.100000"/>
+          <limitY/>
+          <curve name="/sensing/vehicle_velocity_converter/twist_with_covariance/twist/twist/angular/z" color="#f14cc1"/>
+         </plot>
+        </DockArea>
+        <DockArea name="Ang_X(base_link)">
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804472" bottom="-0.541145" right="248.795379" top="0.531553"/>
+          <limitY min="-0.541145" max="0.531553"/>
+          <curve name="/sensing/imu/imu_data/angular_velocity/x" color="#f14cc1"/>
+          <curve name="/localization/kinematic_state/twist/twist/angular/x" color="#1ac938"/>
+          <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/x" color="#17becf"/>
+         </plot>
+        </DockArea>
+       </DockSplitter>
+       <DockSplitter orientation="|" sizes="0.5024;0.4976" count="2">
+        <DockArea name="IMU_Data(base_link)">
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804472" bottom="-0.009343" right="248.795379" top="0.002688"/>
+          <limitY/>
+          <curve name="/sensing/imu/imu_data/angular_velocity/x" color="#f14cc1"/>
+          <curve name="/sensing/imu/imu_data/angular_velocity/y" color="#9467bd"/>
+          <curve name="/sensing/imu/imu_data/angular_velocity/z" color="#17becf"/>
+         </plot>
+        </DockArea>
+        <DockArea name="IMU_RAW(base_link)">
+         <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+          <range left="243.804472" bottom="-0.013756" right="248.795379" top="0.015621"/>
+          <limitY/>
+          <curve name="/sensing/imu/base_link/imu_raw/angular_velocity/x" color="#f14cc1"/>
+          <curve name="/sensing/imu/base_link/imu_raw/angular_velocity/y" color="#9467bd"/>
+          <curve name="/sensing/imu/base_link/imu_raw/angular_velocity/z" color="#17becf"/>
+         </plot>
+        </DockArea>
+       </DockSplitter>
       </DockSplitter>
-      <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
+      <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
        <DockArea name="Ang_Y(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="0.713227" left="100.941751" right="105.946990" bottom="-0.603444"/>
-         <limitY max="0.713227" min="-0.603444"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804472" bottom="-0.603444" right="248.795379" top="0.713227"/>
+         <limitY min="-0.603444" max="0.713227"/>
          <curve name="/sensing/imu/imu_data/angular_velocity/y" color="#9467bd"/>
          <curve name="/localization/kinematic_state/twist/twist/angular/y" color="#ff7f0e"/>
          <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/y" color="#9467bd"/>
+         <curve name="/sensing/vehicle_velocity_converter/twist_with_covariance/twist/twist/angular/y" color="#ff7f0e"/>
         </plot>
        </DockArea>
        <DockArea name="IMU+Odom(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="1.138007" left="100.941751" right="105.946990" bottom="-0.679891"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804472" bottom="-0.100000" right="248.795379" top="0.100000"/>
          <limitY/>
          <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/x" color="#17becf"/>
          <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/y" color="#9467bd"/>
@@ -165,20 +188,21 @@
         </plot>
        </DockArea>
       </DockSplitter>
-      <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
+      <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
        <DockArea name="Ang_Z(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="1.500000" left="100.941751" right="105.946990" bottom="-1.500000"/>
-         <limitY max="1.5" min="-1.5"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804472" bottom="-1.500000" right="248.795379" top="1.500000"/>
+         <limitY min="-1.5" max="1.5"/>
          <curve name="/sensing/imu/imu_data/angular_velocity/z" color="#17becf"/>
          <curve name="/localization/kinematic_state/twist/twist/angular/z" color="#f14cc1"/>
          <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/angular/z" color="#bcbd22"/>
+         <curve name="/sensing/vehicle_velocity_converter/twist_with_covariance/twist/twist/angular/z" color="#f14cc1"/>
         </plot>
        </DockArea>
        <DockArea name="EKF_Localizer(base_link)">
-        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range top="1.437140" left="100.941751" right="105.946990" bottom="-1.377080"/>
-         <limitY max="1.43714" min="-1.37708"/>
+        <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+         <range left="243.804472" bottom="-1.377080" right="248.795379" top="1.437140"/>
+         <limitY min="-1.37708" max="1.43714"/>
          <curve name="/localization/kinematic_state/twist/twist/angular/x" color="#1ac938"/>
          <curve name="/localization/kinematic_state/twist/twist/angular/y" color="#ff7f0e"/>
          <curve name="/localization/kinematic_state/twist/twist/angular/z" color="#f14cc1"/>
@@ -191,43 +215,43 @@
   </Tab>
   <Tab tab_name="Linear_Vel" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="2" sizes="0.5;0.5">
-     <DockSplitter orientation="|" count="3" sizes="0.337705;0.337705;0.32459">
+    <DockSplitter orientation="-" sizes="0.5;0.5" count="2">
+     <DockSplitter orientation="|" sizes="0.337705;0.337705;0.32459" count="3">
       <DockArea name="Linear_X(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="5.456136" left="100.941751" right="105.946990" bottom="5.116680"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="-0.000000" right="248.795379" top="0.000000"/>
         <limitY/>
         <curve name="/localization/kinematic_state/twist/twist/linear/x" color="#ff7f0e"/>
         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/linear/x" color="#1f77b4"/>
        </plot>
       </DockArea>
       <DockArea name="Linear_Y(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="0.100000" left="100.941751" right="105.946990" bottom="-0.100000"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="-0.100000" right="248.795379" top="0.100000"/>
         <limitY/>
         <curve name="/localization/kinematic_state/twist/twist/linear/y" color="#f14cc1"/>
         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/linear/y" color="#d62728"/>
        </plot>
       </DockArea>
       <DockArea name="Linear_Z(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="0.100000" left="100.941751" right="105.946990" bottom="-0.100000"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="-0.100000" right="248.795379" top="0.100000"/>
         <limitY/>
         <curve name="/localization/kinematic_state/twist/twist/linear/z" color="#9467bd"/>
         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/linear/z" color="#1ac938"/>
        </plot>
       </DockArea>
      </DockSplitter>
-     <DockSplitter orientation="|" count="3" sizes="0.337705;0.337705;0.32459">
+     <DockSplitter orientation="|" sizes="0.337705;0.337705;0.32459" count="3">
       <DockArea name="NONE__IMU_Data(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="1.000000" left="0.000000" right="1.000000" bottom="0.000000"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="0.000000" bottom="0.000000" right="1.000000" top="1.000000"/>
         <limitY/>
        </plot>
       </DockArea>
       <DockArea name="IMU+Odom(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="5.584255" left="100.941751" right="105.946990" bottom="-0.136201"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="-0.100000" right="248.795379" top="0.100000"/>
         <limitY/>
         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/linear/x" color="#1f77b4"/>
         <curve name="/localization/twist_estimator/twist_with_covariance/twist/twist/linear/y" color="#d62728"/>
@@ -235,8 +259,8 @@
        </plot>
       </DockArea>
       <DockArea name="EKF_Localizer(base_link)">
-       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range top="5.580938" left="100.941751" right="105.946990" bottom="-0.136120"/>
+       <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+        <range left="243.804472" bottom="-0.000000" right="248.795379" top="0.000000"/>
         <limitY/>
         <curve name="/localization/kinematic_state/twist/twist/linear/x" color="#ff7f0e"/>
         <curve name="/localization/kinematic_state/twist/twist/linear/y" color="#f14cc1"/>
@@ -249,10 +273,10 @@
   </Tab>
   <Tab tab_name="Acc" containers="1">
    <Container>
-    <DockSplitter orientation="-" count="1" sizes="1">
+    <DockSplitter orientation="-" sizes="1" count="1">
      <DockArea name="base_link">
-      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range top="18.833845" left="100.975940" right="105.944170" bottom="-24.472981"/>
+      <plot mode="TimeSeries" flip_y="false" flip_x="false" style="Lines">
+       <range left="243.841664" bottom="-0.040909" right="248.795305" top="1.026138"/>
        <limitY/>
        <curve name="/sensing/imu/imu_data/linear_acceleration/x" color="#ff7f0e"/>
        <curve name="/sensing/imu/imu_data/linear_acceleration/y" color="#f14cc1"/>
@@ -262,7 +286,7 @@
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="0"/>
+  <currentTabIndex index="3"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="1"/>
  <!-- - - - - - - - - - - - - - - -->
@@ -287,7 +311,7 @@
    <max_array_size value="100"/>
    <boolean_strings_to_number value="true"/>
    <remove_suffix_from_strings value="true"/>
-   <selected_topics value="/localization/imu_gnss_poser/pose_with_covariance;/localization/kinematic_state;/sensing/gnss/gnss_module/base_link/pose;/sensing/gnss/pose_with_covariance;/sensing/vehicle_velocity_converter/twist_with_covariance;/localization/base_link/kinematic_state;/localization/twist_estimator/twist_with_covariance;/sensing/gnss/gps_module/pose;/sensing/imu/base_link/imu_raw;/sensing/imu/imu_data;/sensing/imu/imu_raw"/>
+   <selected_topics value="/localization/base_link/kinematic_state;/localization/imu_gnss_poser/pose_with_covariance;/localization/kinematic_state;/localization/twist_estimator/twist_with_covariance;/sensing/gnss/gnss_module/base_link/pose;/sensing/gnss/gps_module/pose;/sensing/gnss/pose_with_covariance;/sensing/imu/base_link/imu_raw;/sensing/imu/imu_data;/sensing/imu/imu_raw;/sensing/vehicle_velocity_converter/twist_with_covariance"/>
   </plugin>
   <plugin ID="UDP Server"/>
   <plugin ID="WebSocket Server"/>

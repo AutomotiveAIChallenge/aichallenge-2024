@@ -32,7 +32,7 @@ widgets:
           - rap_time
 
       - class: Simple
-        value: Timer_Dif
+        value: Timer_Difference
 
       - class: Matrix
         cols: 5
@@ -58,8 +58,20 @@ widgets:
         cols: 5
         items:
           - gnss_pos_cov
-          - fused_gyro_linear_vel_x_cov
-          - fused_gyro_ang_vel_cov
+          - imu_data_angvel_cov
+          - odom_lin_cov_x
+          - odom_ang_cov_z
+
+      - class: Simple
+        value: EKF Input Covariance
+
+      - class: Matrix
+        cols: 5
+        items:
+          - imu_gnss_poser_pos_cov
+          - imu_gnss_poser_orie_cov
+          - gyro_odom_linear_vel_x_cov
+          - gyro_odom_ang_vel_cov
 
       - class: Simple
         value: Measured
@@ -153,7 +165,7 @@ widgets:
   # Section
   - class: Titled
     label: section_1
-    title: Sec01
+    title: { class: subscription, topic: /section/section_timer_array, field: data@0}
     input: { class: subscription, topic: /section/section_timer_array, field: data@0}
     rules:
       - { class: Precision, digits: 2 }
@@ -451,10 +463,66 @@ widgets:
         list:
           - { ge: 200.0, attrs: { back-color: red } }
           - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: imu_data_angvel_cov
+    title: IMU AngVel Cov
+    input: { class: subscription, topic: /sensing/imu/imu_data, field: angular_velocity_covariance@0}
+    rules:
+      - { class: Precision, digits: 4 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: odom_lin_cov_x
+    title: Odom Lin X Cov
+    input: { class: subscription, topic: /sensing/vehicle_velocity_converter/twist_with_covariance, field: twist.covariance@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
   
   - class: Titled
-    label: fused_gyro_linear_vel_x_cov
-    title: Fused Gyro LinVel X
+    label: odom_ang_cov_z
+    title: Odom Ang Z Cov
+    input: { class: subscription, topic: /sensing/vehicle_velocity_converter/twist_with_covariance, field: twist.covariance@35}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  # EKF Input Cov
+  - class: Titled
+    label: imu_gnss_poser_pos_cov
+    title: GNSS Pos Cov
+    input: { class: subscription, topic: /localization/imu_gnss_poser/pose_with_covariance, field: pose.covariance@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: imu_gnss_poser_orie_cov
+    title: GNSS Orie Cov
+    input: { class: subscription, topic: /localization/imu_gnss_poser/pose_with_covariance, field: pose.covariance@21}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: gyro_odom_linear_vel_x_cov
+    title: GyroOdom LinVel X
     input: { class: subscription, topic: /localization/twist_estimator/twist_with_covariance, field: twist.covariance@0}
     rules:
       - { class: Precision, digits: 2 }
@@ -464,16 +532,15 @@ widgets:
           - { ge: -1000.0, attrs: { back-color: white } }
  
   - class: Titled
-    label: fused_gyro_ang_vel_cov
-    title: Fused Gyro AngVel
+    label: gyro_odom_ang_vel_cov
+    title: GyroOdom AngVel
     input: { class: subscription, topic: /localization/twist_estimator/twist_with_covariance, field: twist.covariance@21}
     rules:
-      - { class: Precision, digits: 5 }
+      - { class: Precision, digits: 4 }
       - class: SetFirstIf
         type: real
         list:
           - { ge: -1000.0, attrs: { back-color: white } }
-
   # Measured
   - class: Titled
     label: measured_steering_rad
@@ -827,33 +894,6 @@ widgets:
         list:
           - { ge: -1000.0, attrs: { back-color: white } }
 
-  # Others
-  # - class: Titled
-  #   label: control-mode
-  #   title: Control Mode
-  #   input: { class: subscription, topic: /vehicle/status/control_mode, field: mode }
-  #   rules:
-  #     class: SetFirstIf
-  #     type: uint
-  #     list:
-  #       - { eq: 0, value: NO_COMMAND,       attrs: { back-color: red } }
-  #       - { eq: 1, value: AUTONOMOUS,       attrs: { back-color: cyan } }
-  #       - { eq: 2, value: AUTONOMOUS_STEER_ONLY,   attrs: { back-color: lime } }
-  #       - { eq: 3, value: AUTONOMOUS_VELOCITY_ONLY,   attrs: { back-color: lime } }
-  #       - { eq: 4, value: MANUAL,       attrs: { back-color: yellow } }
-  #       - { eq: 5, value: DISENGAGED,  attrs: { back-color: red } }
-  #       - { eq: 6, value: NOT_READY,  attrs: { back-color: red } }
-
-  # - class: Titled
-  #   label: emergency
-  #   title: Emergency
-  #   input: { class: subscription, topic: /racing_kart/debug/status, field: emergency }
-  #   rules:
-  #     class: SetFirstIf
-  #     type: text
-  #     list:
-  #       - { eq: false, value: False,       attrs: { back-color: cyan } }
-  #       - { eq: true, value: True,       attrs: { back-color: red } }
 
 # Conversion https://github.com/tier4/multi_data_monitor/blob/main/multi_data_monitor/documents/classes/filter/units.md
 streams:
