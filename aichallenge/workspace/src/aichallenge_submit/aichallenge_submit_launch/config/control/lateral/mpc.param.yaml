@@ -4,8 +4,8 @@
     ## コントローラが緊急で止まってしまうときの要因の一つ。大きく予測から外れるとおそらく緊急停止する
     mpc_s_traj_resample_dist: 0.1 # path resampling interval [m]
     mpc_s_use_steer_prediction: false # default true flag for using steer prediction (do not use steer measurement)
-    mpc_s_admissible_position_error: 5.0 # stop mpc calculation when error is larger than the following value
-    mpc_s_admissible_yaw_error_rad: 1.57 # stop mpc calculation when error is larger than the following value
+    mpc_s_admissible_position_error: 100.0 # stop mpc calculation when error is larger than the following value
+    mpc_s_admissible_yaw_error_rad: 100.0 # stop mpc calculation when error is larger than the following value
 
     # -- path smoothing --
     mpc_s_enable_path_smoothing: true # 基本的に true のほうがスムーズに追従できる。　false　だとカクカクしやすい
