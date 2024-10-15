@@ -22,29 +22,41 @@ public:
             "/sensing/imu/imu_raw", qos,
             std::bind(&ImuGnssPoser::imu_callback, this, std::placeholders::_1));
         
+        // AWSIM
         specific_cov_ = this->declare_parameter<bool>("specific_covariance");
-        posi_0_cov_ = this->declare_parameter<float>("position_0_cov");
-        posi_1_cov_ = this->declare_parameter<float>("position_1_cov");
-        posi_2_cov_ = this->declare_parameter<float>("position_2_cov");
-        ori_0_cov_ = this->declare_parameter<float>("orientation_0_cov");
-        ori_1_cov_ = this->declare_parameter<float>("orientation_1_cov");
-        ori_2_cov_ = this->declare_parameter<float>("orientation_2_cov");
+        specific_posi_0_cov_ = this->declare_parameter<float>("position_0_cov");
+        specific_posi_1_cov_ = this->declare_parameter<float>("position_1_cov");
+        specific_posi_2_cov_ = this->declare_parameter<float>("position_2_cov");
+        specific_ori_0_cov_ = this->declare_parameter<float>("orientation_0_cov");
+        specific_ori_1_cov_ = this->declare_parameter<float>("orientation_1_cov");
+        specific_ori_2_cov_ = this->declare_parameter<float>("orientation_2_cov");
+
+        // Real Kart
+        posi_x_cov_scale_ = this->declare_parameter<float>("position_x_cov_scale");
+        posi_y_cov_scale_ = this->declare_parameter<float>("position_y_cov_scale");
+        posi_z_cov_scale_ = this->declare_parameter<float>("position_z_cov_scale");
+        ori_x_cov_scale_ = this->declare_parameter<float>("orientation_x_cov_scale");
+        ori_y_cov_scale_ = this->declare_parameter<float>("orientation_y_cov_scale");
+        ori_z_cov_scale_ = this->declare_parameter<float>("orientation_z_cov_scale");
+
     }
 
 private:
 
     void gnss_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg) {
 
+        // ------------------AWSIM---------------------------
+        // AWSIM pubs 0.0 covariance
         // this covariance means orientation is not reliable
         if (specific_cov_){
-            msg->pose.covariance[7*0] = posi_0_cov_;
-            msg->pose.covariance[7*1] = posi_1_cov_;
-            msg->pose.covariance[7*2] = posi_2_cov_;
-            msg->pose.covariance[7*3] = ori_0_cov_;
-            msg->pose.covariance[7*4] = ori_1_cov_;
-            msg->pose.covariance[7*5] = ori_2_cov_;
+            msg->pose.covariance[7*0] = specific_posi_0_cov_;
+            msg->pose.covariance[7*1] = specific_posi_1_cov_;
+            msg->pose.covariance[7*2] = specific_posi_2_cov_;
+            msg->pose.covariance[7*3] = specific_ori_0_cov_;
+            msg->pose.covariance[7*4] = specific_ori_1_cov_;
+            msg->pose.covariance[7*5] = specific_ori_2_cov_;
         }
-        // Only Simulation
+        // Only AWSIM
         // insert imu if orientation is nan or empty
         if (std::isnan(msg->pose.pose.orientation.x) ||
             std::isnan(msg->pose.pose.orientation.y) ||
@@ -60,7 +72,19 @@ private:
             msg->pose.pose.orientation.z = imu_msg_.orientation.z;
             msg->pose.pose.orientation.w = imu_msg_.orientation.w;
         }
+        // Real Kart
+        else
+        {
+            msg->pose.covariance[7*0] *= posi_x_cov_scale_;
+            msg->pose.covariance[7*1] *= posi_y_cov_scale_;
+            msg->pose.covariance[7*2] *= posi_z_cov_scale_;
+            msg->pose.covariance[7*3] *= ori_x_cov_scale_;
+            msg->pose.covariance[7*4] *= ori_y_cov_scale_;
+            msg->pose.covariance[7*5] *= ori_z_cov_scale_;
+        }
         pub_pose_->publish(*msg);
+
+
         if (!is_ekf_initialized_)
             pub_initial_pose_3d_->publish(*msg);
     }
@@ -81,12 +105,21 @@ private:
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr sub_imu_;
     sensor_msgs::msg::Imu imu_msg_;
     bool is_ekf_initialized_ = {false};
-    float posi_0_cov_;
-    float posi_1_cov_;
-    float posi_2_cov_;
-    float ori_0_cov_;
-    float ori_1_cov_;
-    float ori_2_cov_;
+    // AWSIM
+    float specific_posi_0_cov_;
+    float specific_posi_1_cov_;
+    float specific_posi_2_cov_;
+    float specific_ori_0_cov_;
+    float specific_ori_1_cov_;
+    float specific_ori_2_cov_;
+    // REAL
+    float posi_x_cov_scale_;
+    float posi_y_cov_scale_;
+    float posi_z_cov_scale_;
+    float ori_x_cov_scale_;
+    float ori_y_cov_scale_;
+    float ori_z_cov_scale_;
+
     bool specific_cov_ = false;
 };
 

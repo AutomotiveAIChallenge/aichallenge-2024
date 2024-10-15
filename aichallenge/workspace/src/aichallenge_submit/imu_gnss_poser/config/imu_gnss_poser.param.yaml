@@ -1,5 +1,6 @@
 /**:
   ros__parameters:
+    # -------------AWSIM--------------------
     # Use true when AWSIM(Simulator) is used
     # specific_covariance: false
     # ONLY FOR SPECIFIC COVARIANCE
@@ -9,3 +10,12 @@
     orientation_0_cov: 100000.0 
     orientation_1_cov: 100000.0 
     orientation_2_cov: 100000.0 
+
+    # -------------REAL--------------------
+    # Covariance Scale(original_covariance * scale)
+    position_x_cov_scale: 1.0
+    position_y_cov_scale: 1.0
+    position_z_cov_scale: 1.0
+    orientation_x_cov_scale: 1.0
+    orientation_y_cov_scale: 1.0
+    orientation_z_cov_scale: 1.0
