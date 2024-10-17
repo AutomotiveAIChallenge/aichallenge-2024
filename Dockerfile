@@ -14,6 +14,7 @@ RUN apt install zenoh-bridge-ros2dds terminator -y
 RUN apt install arp-scan -y
 
 COPY --chmod=757 remote /remote 
+COPY --chmod=757 vehicle /vehicle
 
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
