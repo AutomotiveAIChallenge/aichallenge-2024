@@ -13,7 +13,7 @@ RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" |
 RUN apt install zenoh-bridge-ros2dds terminator -y
 RUN apt install arp-scan -y
 
-COPY --chmod=757 /remote /remote 
+COPY --chmod=757 remote /remote 
 
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
