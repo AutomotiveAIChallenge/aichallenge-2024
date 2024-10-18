@@ -1,10 +1,4 @@
 #!/bin/bash
-SCRIPT_DIR=$(readlink -f "$(dirname "$0")")
-docker run --rm \
-    --net=host \
-    -e ROS_DISTRO=humble \
-    -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp \
-    -e CYCLONEDDS_URI=file:///vehicle/cyclonedds.xml \
-    -v "${SCRIPT_DIR}:/vehicle" \
-    --name zenoh \
-    eclipse/zenoh-bridge-ros2dds:latest -c /vehicle/zenoh.json5
+
+# shellcheck disable=SC2086
+rocker --x11 --devices /dev/dri --env ROS_DISTRO=humble --user --net host --privileged --name zenoh --volume aichallenge:/aichallenge -- "aichallenge-2024-dev-${USER}" zenoh-bridge-ros2dds -c /vehicle/zenoh.json5

@@ -15,6 +15,8 @@ AIC_WORKSPACE_CD_CMD="cd /aichallenge"
 SOURCE_CMD="source install/setup.bash"
 
 # mouse setup
+set-option -g default-command "bash --login"
+set-option -g default-terminal "screen-256color"
 set-option -g mouse on
 bind-key -n WheelUpPane if-shell -F -t = "#{mouse_any_flag}" "send-keys -M" "if -Ft= '#{pane_in_mode}' 'send-keys -M' 'select-pane -t=; copy-mode -e; send-keys -M'"
 bind-key -n WheelDownPane select-pane -t= \; send-keys -M
