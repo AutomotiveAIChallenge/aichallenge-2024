@@ -67,6 +67,10 @@ private:
   std::string output_frame_;
   double message_timeout_sec_;
 
+  double scale_gyro_ang_vel_x_;
+  double scale_gyro_ang_vel_y_;
+  double scale_gyro_ang_vel_z_;
+  double scale_vehicle_vel_x_;
   bool vehicle_twist_arrived_;
   bool imu_arrived_;
   std::deque<geometry_msgs::msg::TwistWithCovarianceStamped> vehicle_twist_queue_;

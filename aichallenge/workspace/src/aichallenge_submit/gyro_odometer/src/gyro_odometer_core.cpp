@@ -41,7 +41,7 @@ std::array<double, 9> transformCovariance(const std::array<double, 9> & cov)
 
 geometry_msgs::msg::TwistWithCovarianceStamped concatGyroAndOdometer(
   const std::deque<geometry_msgs::msg::TwistWithCovarianceStamped> & vehicle_twist_queue,
-  const std::deque<sensor_msgs::msg::Imu> & gyro_queue)
+  const std::deque<sensor_msgs::msg::Imu> & gyro_queue, double scale_gyro_ang_vel_x, double scale_gyro_ang_vel_y, double scale_gyro_ang_vel_z, double scale_vehicle_vel_x)
 {
   using COV_IDX_XYZ = tier4_autoware_utils::xyz_covariance_index::XYZ_COV_IDX;
   using COV_IDX_XYZRPY = tier4_autoware_utils::xyzrpy_covariance_index::XYZRPY_COV_IDX;
@@ -51,16 +51,16 @@ geometry_msgs::msg::TwistWithCovarianceStamped concatGyroAndOdometer(
   double vx_covariance_original = 0;
   geometry_msgs::msg::Vector3 gyro_covariance_original{};
   for (const auto & vehicle_twist : vehicle_twist_queue) {
-    vx_mean += vehicle_twist.twist.twist.linear.x;
+    vx_mean += vehicle_twist.twist.twist.linear.x * scale_vehicle_vel_x;
     vx_covariance_original += vehicle_twist.twist.covariance[0 * 6 + 0];
   }
   vx_mean /= vehicle_twist_queue.size();
   vx_covariance_original /= vehicle_twist_queue.size();
 
   for (const auto & gyro : gyro_queue) {
-    gyro_mean.x += gyro.angular_velocity.x;
-    gyro_mean.y += gyro.angular_velocity.y;
-    gyro_mean.z += gyro.angular_velocity.z;
+    gyro_mean.x += gyro.angular_velocity.x * scale_gyro_ang_vel_x;
+    gyro_mean.y += gyro.angular_velocity.y * scale_gyro_ang_vel_y;
+    gyro_mean.z += gyro.angular_velocity.z * scale_gyro_ang_vel_z;
     gyro_covariance_original.x += gyro.angular_velocity_covariance[COV_IDX_XYZ::X_X];
     gyro_covariance_original.y += gyro.angular_velocity_covariance[COV_IDX_XYZ::Y_Y];
     gyro_covariance_original.z += gyro.angular_velocity_covariance[COV_IDX_XYZ::Z_Z];
@@ -104,6 +104,10 @@ GyroOdometer::GyroOdometer(const rclcpp::NodeOptions & options)
 : Node("gyro_odometer", options),
   output_frame_(declare_parameter("base_link", "base_link")),
   message_timeout_sec_(declare_parameter("message_timeout_sec", 0.2)),
+  scale_gyro_ang_vel_x_(declare_parameter("scale_gyro_ang_vel_x", 1.0)),
+  scale_gyro_ang_vel_y_(declare_parameter("scale_gyro_ang_vel_y", 1.0)),
+  scale_gyro_ang_vel_z_(declare_parameter("scale_gyro_ang_vel_z", 1.0)),
+  scale_vehicle_vel_x_(declare_parameter("scale_vehicle_vel_x", 1.0)),
   vehicle_twist_arrived_(false),
   imu_arrived_(false)
 {
@@ -164,7 +168,7 @@ void GyroOdometer::callbackVehicleTwist(
   }
 
   const geometry_msgs::msg::TwistWithCovarianceStamped twist_with_cov_raw =
-    concatGyroAndOdometer(vehicle_twist_queue_, gyro_queue_);
+    concatGyroAndOdometer(vehicle_twist_queue_, gyro_queue_, scale_gyro_ang_vel_x_, scale_gyro_ang_vel_y_, scale_gyro_ang_vel_z_, scale_vehicle_vel_x_);
   publishData(twist_with_cov_raw);
   vehicle_twist_queue_.clear();
   gyro_queue_.clear();
@@ -232,7 +236,7 @@ void GyroOdometer::callbackImu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_m
   }
 
   const geometry_msgs::msg::TwistWithCovarianceStamped twist_with_cov_raw =
-    concatGyroAndOdometer(vehicle_twist_queue_, gyro_queue_);
+    concatGyroAndOdometer(vehicle_twist_queue_, gyro_queue_, scale_gyro_ang_vel_x_, scale_gyro_ang_vel_y_, scale_gyro_ang_vel_z_, scale_vehicle_vel_x_);
   publishData(twist_with_cov_raw);
   vehicle_twist_queue_.clear();
   gyro_queue_.clear();

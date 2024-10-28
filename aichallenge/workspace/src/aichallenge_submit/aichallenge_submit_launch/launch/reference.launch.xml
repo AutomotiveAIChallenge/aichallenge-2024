@@ -67,6 +67,11 @@
       <arg name="input_imu_topic" value="/sensing/imu/imu_data"/>
       <arg name="output_twist_with_covariance_topic" value="/localization/twist_estimator/twist_with_covariance"/>
       <arg name="output_twist_with_covariance_raw_topic" value="/localization/twist_estimator/twist_with_covariance_raw"/>
+      <!-- Scale Value -->
+      <arg name="scale_gyro_ang_vel_x" value="1.0"/>
+      <arg name="scale_gyro_ang_vel_y" value="1.0"/>
+      <arg name="scale_gyro_ang_vel_z" value="1.0"/>
+      <arg name="scale_vehicle_vel_x" value="1.0"/>
     </include>
 
     <!-- Imu Gnss Poser -->
