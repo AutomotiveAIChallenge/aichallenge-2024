@@ -15,7 +15,7 @@ widgets:
         value: Timer
 
       - class: Matrix
-        cols: 5
+        cols: 7
         items:
           - section_1
           - section_2
@@ -35,7 +35,7 @@ widgets:
         value: Timer_Difference
 
       - class: Matrix
-        cols: 5
+        cols: 7
         items:
           - section_1_dif
           - section_2_dif
@@ -74,10 +74,23 @@ widgets:
           - gyro_odom_ang_vel_cov
 
       - class: Simple
+        value: EKF Output Covariance
+
+      - class: Matrix
+        cols: 6
+        items:
+          - ekf_output_x
+          - ekf_output_y
+          - ekf_output_z
+          - ekf_output_ori_x
+          - ekf_output_ori_y
+          - ekf_output_ori_z
+
+      - class: Simple
         value: Measured
 
       - class: Matrix
-        cols: 3
+        cols: 6
         items:
           - measured_steering_deg
           - measured_longitudinal_vel_kph
@@ -537,6 +550,70 @@ widgets:
     input: { class: subscription, topic: /localization/twist_estimator/twist_with_covariance, field: twist.covariance@21}
     rules:
       - { class: Precision, digits: 4 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+  # EKF Output Cov
+  - class: Titled
+    label: ekf_output_x
+    title: X
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@0}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: ekf_output_y
+    title: Y
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@7}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: ekf_output_z
+    title: Z
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@14}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+
+  - class: Titled
+    label: ekf_output_ori_x
+    title: Ori_X
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@21}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+  - class: Titled
+    label: ekf_output_ori_y
+    title: Ori_Y
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@28}
+    rules:
+      - { class: Precision, digits: 2 }
+      - class: SetFirstIf
+        type: real
+        list:
+          - { ge: -1000.0, attrs: { back-color: white } }
+  - class: Titled
+    label: ekf_output_ori_z
+    title: Ori_Z
+    input: { class: subscription, topic: /localization/kinematic_state, field: pose.covariance@35}
+    rules:
+      - { class: Precision, digits: 2 }
       - class: SetFirstIf
         type: real
         list:

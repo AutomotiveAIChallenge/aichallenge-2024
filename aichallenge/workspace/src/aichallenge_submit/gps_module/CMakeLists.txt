@@ -11,7 +11,7 @@ find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
 ament_auto_add_executable(true_gps_module
-  src/true_gps_module.cpp
+  src/gps_module.cpp
 )
 
 ament_auto_package(

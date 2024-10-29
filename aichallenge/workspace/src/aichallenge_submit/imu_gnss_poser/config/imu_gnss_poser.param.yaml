@@ -12,6 +12,8 @@
     orientation_2_cov: 100000.0 
 
     # -------------REAL--------------------
+    # DO NOT TOUCH
+    # このモジュールは初期位置以外はPASS THROUGHです。COV調整はGPS_Moduleで行います。
     # Covariance Scale(original_covariance * scale)
     position_x_cov_scale: 1.0
     position_y_cov_scale: 1.0

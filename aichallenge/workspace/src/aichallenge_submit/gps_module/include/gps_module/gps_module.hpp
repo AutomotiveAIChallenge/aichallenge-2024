@@ -46,7 +46,7 @@ private:
   std::string csv_path_;
   int look_ahead_index_;
   int margin_;
-  bool use_node_;
+  std::string mode_;
 
   // Function
   void compare_poses(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr& old_pose,
@@ -55,6 +55,7 @@ private:
   double calculate_slope_radians(double start_x, double start_y, double end_x, double end_y);
   void euler_to_quaternion(double phi, double theta, double psi, std::vector<double>& result);
   void write_csv(const std::string &csv_path, const std::vector<TrajectoryPoint> &points);
+  void publish_pose(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr& pose);
 
   // Variable
   std::deque<geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr> pose_queue_;

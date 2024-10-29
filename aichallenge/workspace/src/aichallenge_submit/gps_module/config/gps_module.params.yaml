@@ -2,17 +2,19 @@
   ros__parameters:
     debug: false
 
-    scale_position_covariance_x: 1.0
-    scale_position_covariance_y: 1.0
-    # Not used 
+    # Enable all mode exclude original
+    scale_position_covariance_x: 0.001
+    scale_position_covariance_y: 0.001
     scale_position_covariance_z: 1.0
+    # upstream cov_value: 0.1, 0.1, 1.0
+    scale_orientation_covariance_0: 1000000.0
+    scale_orientation_covariance_1: 1000000.0
+    scale_orientation_covariance_2: 100000.0
 
-    scale_orientation_covariance_0: 1.0
-    scale_orientation_covariance_1: 1.0
-    scale_orientation_covariance_2: 1.0
-
+    # CSV Mode
     csv_path: "/aichallenge/workspace/src/aichallenge_submit/path_to_trajectory/csv/filtered_columns_csv_file.csv"
     look_ahead_index: 10
     margin: 30
 
-    use_node: true
+    # original(set fixed-cov), csv, diff, only_csv, pass_through
+    mode: "original"

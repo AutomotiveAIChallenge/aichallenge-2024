@@ -1,4 +1,4 @@
-#include "gps_module/true_gps_module.hpp"
+#include "gps_module/gps_module.hpp"
 
 PoseComparisonNode::PoseComparisonNode() : Node("pose_comparison_node")
 {
@@ -11,57 +11,72 @@ PoseComparisonNode::PoseComparisonNode() : Node("pose_comparison_node")
     scale_ori_cov_0_ = this->declare_parameter<float>("scale_orientation_covariance_0");
     scale_ori_cov_1_ = this->declare_parameter<float>("scale_orientation_covariance_1");
     scale_ori_cov_2_ = this->declare_parameter<float>("scale_orientation_covariance_2");
+    // original, csv, diff, only_cov
+    mode_ = this->declare_parameter<std::string>("mode");
 
-    this->declare_parameter("csv_path", std::string("csv_path"));
-    csv_path_ = this->get_parameter("csv_path").as_string();
-    this->declare_parameter("look_ahead_index", 1);
-    look_ahead_index_ = this->get_parameter("look_ahead_index").as_int();
-    this->declare_parameter("margin", 0);
-    margin_ = this->get_parameter("margin").as_int();
-    this->declare_parameter("use_node", true);
-    use_node_ = this->get_parameter("use_node").as_bool();
-
-    load_csv(csv_path_);
+    // Use Path Yaw Culculation
+    csv_path_ =this->declare_parameter<std::string>("csv_path");
+    look_ahead_index_ = this->declare_parameter<int>("look_ahead_index");
+    margin_ = this->declare_parameter<int>("margin");
+    // If use_node_ is true, load csv file
+    if (mode_ == "csv"){
+        load_csv(csv_path_);
+        index_ = 0;
+        flag_ = false;
+        set_trajectory_srv_ = this->create_service<csv_path_changer_msgs::srv::SetTrajectory>(
+            "/set_trajectory_orientation",
+            std::bind(&PoseComparisonNode::handle_trajectory, this, std::placeholders::_1, std::placeholders::_2)
+        );
+    }
 
     // サブスクリプションの設定
     subscription_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
         "~/input/pose_with_covariance", 10, std::bind(&PoseComparisonNode::pose_callback, this, std::placeholders::_1));
-
     // PoseWithCovarianceStampedメッセージ用のパブリッシャー
     publisher_pose_with_cov_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("~/output/pose_with_covariance", 10);
-    
     // Poseメッセージ用のパブリッシャー
     publisher_pose_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("~/output/pose", 10);
 
-    index_ = 0;
-    flag_ = false;
-
-    set_trajectory_srv_ = this->create_service<csv_path_changer_msgs::srv::SetTrajectory>(
-        "/set_trajectory_orientation",
-        std::bind(&PoseComparisonNode::handle_trajectory, this, std::placeholders::_1, std::placeholders::_2)
-    );
 }
 
-void PoseComparisonNode::handle_trajectory(
-  const std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Request> request,
-  std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Response> response)
-{
-  write_csv(request->csv_path, request->points);
-  load_csv(request->csv_path);
-  response->success = true;
-}
 
 void PoseComparisonNode::pose_callback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr msg)
 {
-    // キューに新しいメッセージを追加し、2つを超える場合は古いメッセージを削除
-    if (pose_queue_.size() >= 2) {
-        pose_queue_.pop_front();
+    // モードがoriginalの場合はPoseWithCovarianceStampedをそのままPublish
+    if (mode_ == "original"|| mode_ == "pass_through")
+    {
+        auto pose_cov_msg = std::make_shared<geometry_msgs::msg::PoseWithCovarianceStamped>(*msg);
+        if (mode_ == "pass_through"){
+            pose_cov_msg->pose.covariance[0] = msg->pose.covariance[0] * scale_pos_cov_x_;
+            pose_cov_msg->pose.covariance[7] = msg->pose.covariance[7] * scale_pos_cov_y_;
+            pose_cov_msg->pose.covariance[14] = msg->pose.covariance[14] * scale_pos_cov_z_;
+            pose_cov_msg->pose.covariance[21] = msg->pose.covariance[21] * scale_ori_cov_0_;
+            pose_cov_msg->pose.covariance[28] = msg->pose.covariance[28] * scale_ori_cov_1_;
+            pose_cov_msg->pose.covariance[35] = msg->pose.covariance[35] * scale_ori_cov_2_;
+        }
+        else if(mode_ == "original"){
+            pose_cov_msg->pose.covariance[0] = 0.1;
+            pose_cov_msg->pose.covariance[7] = 0.1;
+            pose_cov_msg->pose.covariance[14] = 0.1;
+            pose_cov_msg->pose.covariance[21] = 100000.0;
+            pose_cov_msg->pose.covariance[28] = 100000.0;
+            pose_cov_msg->pose.covariance[35] = 100000.0;
+        }
+        publisher_pose_with_cov_->publish(*pose_cov_msg);
+        publish_pose(pose_cov_msg);
+        return;
     }
-    pose_queue_.push_back(msg);
+    else if(mode_ == "diff" || mode_ == "csv"){
+        // キューに新しいメッセージを追加し、2つを超える場合は古いメッセージを削除
+        if (pose_queue_.size() >= 2) {
+            pose_queue_.pop_front();
+        }
+        pose_queue_.push_back(msg);
 
-    // キューに2つのメッセージが揃ったら比較を行う
-    if (pose_queue_.size() == 2) {
-        compare_poses(pose_queue_[0], pose_queue_[1]);
+        // キューに2つのメッセージが揃ったら比較を行う
+        if (pose_queue_.size() == 2) {
+            compare_poses(pose_queue_[0], pose_queue_[1]);
+        }
     }
 }
 
@@ -83,86 +98,87 @@ void PoseComparisonNode::compare_poses(
         old_pose->pose.pose.orientation.w != new_pose->pose.pose.orientation.w;
 
     // 位置または向きが変化した場合にイベントをトリガー
+    // 基本的に新しいPoseをPublish
     if (position_change || orientation_change) {
-        if (debug_) {
+        if (debug_) 
             RCLCPP_INFO(this->get_logger(), "Pose has changed!");
-        }
 
-        double new_x = new_pose->pose.pose.position.x;
-        double new_y = new_pose->pose.pose.position.y;
+        // Publish PoseWithCovarianceStamped
+        auto new_pose_modify_cov = std::make_shared<geometry_msgs::msg::PoseWithCovarianceStamped>(*new_pose);
 
-        double min_dist = std::numeric_limits<double>::infinity();
-        int min_index = 0;
-        int search_index = 0;
-        if (flag_) search_index = index_ + margin_;
-        else search_index = points_;
-        for (int i = index_; i < search_index; i++) {
-            int index = i % points_;
-            double dist = std::sqrt(
-                std::pow(new_x - trajectory_[index].position.x, 2) +
-                std::pow(new_y - trajectory_[index].position.y, 2)
+        if (mode_ == "csv"){
+            double new_x = new_pose->pose.pose.position.x;
+            double new_y = new_pose->pose.pose.position.y;
+
+            double min_dist = std::numeric_limits<double>::infinity();
+            int min_index = 0;
+            int search_index = 0;
+            if (flag_) search_index = index_ + margin_;
+            else search_index = points_;
+            for (int i = index_; i < search_index; i++) {
+                int index = i % points_;
+                double dist = std::sqrt(
+                    std::pow(new_x - trajectory_[index].position.x, 2) +
+                    std::pow(new_y - trajectory_[index].position.y, 2)
+                );
+
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_index = i;
+                }
+            }
+            index_ = min_index;
+            flag_ = true;
+
+            geometry_msgs::msg::Pose look_ahead_pose = trajectory_[(min_index + look_ahead_index_) % points_];
+
+            double angle_radians = calculate_slope_radians(
+                new_x, new_y, look_ahead_pose.position.x, look_ahead_pose.position.y
             );
 
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_index = i;
-            }
-        }
-        index_ = min_index;
-        flag_ = true;
+            std::vector<double> ori_from_path;
+            euler_to_quaternion(0, 0, angle_radians, ori_from_path);
 
-        geometry_msgs::msg::Pose look_ahead_pose = trajectory_[(min_index + look_ahead_index_) % points_];
-
-        double angle_radians = calculate_slope_radians(
-            new_x, new_y, look_ahead_pose.position.x, look_ahead_pose.position.y
-        );
-
-        std::vector<double> orientation;
-        euler_to_quaternion(0, 0, angle_radians, orientation);
-
-        // PoseWithCovarianceStampedメッセージのパブリッシュ
-        auto new_pose_modify_cov = std::make_shared<geometry_msgs::msg::PoseWithCovarianceStamped>(*new_pose);
-        new_pose_modify_cov->header.stamp = this->now();
-
-        if (use_node_) {
-            new_pose_modify_cov->pose.pose.orientation.x = orientation[0];
-            new_pose_modify_cov->pose.pose.orientation.y = orientation[1];
-            new_pose_modify_cov->pose.pose.orientation.z = orientation[2];
-            new_pose_modify_cov->pose.pose.orientation.w = orientation[3];
+            new_pose_modify_cov->pose.pose.orientation.x = ori_from_path[0];
+            new_pose_modify_cov->pose.pose.orientation.y = ori_from_path[1];
+            new_pose_modify_cov->pose.pose.orientation.z = ori_from_path[2];
+            new_pose_modify_cov->pose.pose.orientation.w = ori_from_path[3];
         }
 
-
-        //Pose Cov
+        // Set Pose Cov
         new_pose_modify_cov->pose.covariance[0] = new_pose->pose.covariance[0] * scale_pos_cov_x_;            
         new_pose_modify_cov->pose.covariance[7] = new_pose->pose.covariance[7] * scale_pos_cov_y_;
-        // Keep Z 0.0
-        // new_pose_modify_cov->pose.covariance[14] = new_pose->pose.covariance[14] * scale_pos_cov_z_;
-
+        new_pose_modify_cov->pose.covariance[14] = new_pose->pose.covariance[14] * scale_pos_cov_z_;
         // Orientation Cov, nature 0.1 0.1 1.0
-        new_pose_modify_cov->pose.covariance[22] = new_pose->pose.covariance[22] * scale_ori_cov_0_;       
-        new_pose_modify_cov->pose.covariance[29] = new_pose->pose.covariance[29] * scale_ori_cov_1_;
+        new_pose_modify_cov->pose.covariance[21] = new_pose->pose.covariance[21] * scale_ori_cov_0_;       
+        new_pose_modify_cov->pose.covariance[28] = new_pose->pose.covariance[28] * scale_ori_cov_1_;
         new_pose_modify_cov->pose.covariance[35] = new_pose->pose.covariance[35] * scale_ori_cov_2_;
 
         publisher_pose_with_cov_->publish(*new_pose_modify_cov);
+        // Publish new pose
+        publish_pose(new_pose_modify_cov);
 
-        // Poseメッセージのパブリッシュ
-        auto pose_msg = std::make_shared<geometry_msgs::msg::PoseStamped>();
-        pose_msg->header = new_pose->header;
-        pose_msg->pose = new_pose->pose.pose;
-
-        if (use_node_) {
-            pose_msg->pose.orientation.x = orientation[0];
-            pose_msg->pose.orientation.y = orientation[1];
-            pose_msg->pose.orientation.z = orientation[2];
-            pose_msg->pose.orientation.w = orientation[3];
-        }
-
-        publisher_pose_->publish(*pose_msg);
     } else {
-        if (debug_) {
+        if (debug_) 
             RCLCPP_INFO(this->get_logger(), "Pose not changed!");
-        }
     }
+}
+
+void PoseComparisonNode::publish_pose(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr& pose)
+{
+    auto pose_msg = std::make_shared<geometry_msgs::msg::PoseStamped>();
+    pose_msg->header = pose->header;
+    pose_msg->pose = pose->pose.pose;
+
+    publisher_pose_->publish(*pose_msg);
+}
+
+void PoseComparisonNode::handle_trajectory( const std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Request> request,
+  std::shared_ptr<csv_path_changer_msgs::srv::SetTrajectory::Response> response)
+{
+  write_csv(request->csv_path, request->points);
+  load_csv(request->csv_path);
+  response->success = true;
 }
 
 void PoseComparisonNode::load_csv(std::string csv_path)
