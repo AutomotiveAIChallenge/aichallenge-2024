@@ -20,12 +20,12 @@
     mpc_s_qp_solver_type: "osqp" # optimization solver option (unconstraint_fast or osqp)
     mpc_d_prediction_horizon: 30 # 計算量と精度のトレードオフ　低いと目の前のパスのことしか考えられない
     mpc_d_prediction_dt: 0.1 # 予測のタイムステップ　小さくするとより良い解像度で推論ができるが、推論距離は小さくなる
-    mpc_d_weight_lat_error: 0.5 # default 0.1 memo 0.5 値を大きくしたほうがより追従しようとする。
+    mpc_d_weight_lat_error: 0.1 # default 0.1 memo 0.5 値を大きくしたほうがより追従しようとする。
     mpc_d_weight_heading_error: 0.0 # default 0.0 影響力　小　
     mpc_d_weight_heading_error_squared_vel: 0.3 #0.3 # heading error * velocity weight in matrix Q
     mpc_d_weight_steering_input: 1.0  # 1.0# なんとなく1.0 のままでよい　大小どちらでも問題があると思います。
     mpc_d_weight_steering_input_squared_vel: 0.3  #default 0.25  memo 0.3 大きくすると不安定になる 0.1 ~ 0.5 くらいが良い気がする
-    mpc_d_weight_lat_jerk: 0.01 # 0だと振動する. default 0.01 memo 0.01   0.0001とかにすると遅延が大きくなった気がする。 大きくすると内側を通るような経路になり、1.0にすると真っ直ぐな経路になり、蛇行経路のようなカーブに弱い
+    mpc_d_weight_lat_jerk: 0.01 # default 0.01 memo 0.01   0.0001とかにすると遅延が大きくなった気がする。 大きくすると内側を通るような経路になり、1.0にすると真っ直ぐな経路になり、蛇行経路のようなカーブに弱い
     mpc_d_weight_steer_rate: 0.0 # default 0.0  memo 0.0  0.0が結局良い　1.0にすると壁に衝突
     mpc_d_weight_steer_acc: 0.000001 # default 0.000001  # defaultのままがよい気がする　0.0001だとぐちゃぐちゃ defautより大きくすると良くない 
     mpc_d_low_curvature_weight_lat_error: 0.1 #0.1 変化小　わからない
@@ -46,8 +46,8 @@
 
     # -- vehicle model -- ここを調整する必要はないかもしれない
     mpc_s_vehicle_model_type: "kinematics" # vehicle model type for mpc prediction. option is kinematics, kinematics_no_delay, and dynamics
-    mpc_d_input_delay: 0.01 # よりカーブの手前で切る. ラインが膨らんでいる場合、このパラメータが原因の可能性がある。
-    mpc_s_vehicle_model_steer_tau: 0.10 # 0.30 #小さければ小さいほど、遅れている steering dynamics time constant (1d approximation) [s]
+    mpc_d_input_delay: 0.01 # ラインが膨らんでいる場合、このパラメータが原因の可能性がある。
+    mpc_s_vehicle_model_steer_tau: 0.10 #0.30 # steering dynamics time constant (1d approximation) [s]
     mpc_s_steer_rate_lim_dps: 600.0 # steering angle rate limit [deg/s]
     mpc_s_acceleration_limit: 3.2 # 2.0 # acceleration limit for trajectory velocity modification [m/ss]
     mpc_s_velocity_time_constant: 0.3 # velocity dynamics time constant  for trajectory velocity modification [s]
