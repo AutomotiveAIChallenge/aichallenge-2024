@@ -8,7 +8,7 @@ case "${target}" in
     volume="output:/output"
     ;;
 "dev")
-    volume="output:/output aichallenge:/aichallenge"
+    volume="output:/output aichallenge:/aichallenge remote:/remote vehicle:/vehicle"
     ;;
 *)
     echo "invalid argument (use 'dev' or 'eval')"
@@ -32,4 +32,4 @@ esac
 mkdir -p output
 
 # shellcheck disable=SC2086
-rocker ${opts} --x11 --devices /dev/dri --user --net host --privileged --name aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S") --volume ${volume} -- "aichallenge-2024-${target}-${USER}"
+rocker ${opts} --x11 --devices /dev/dri --user --privileged --name aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S") --volume ${volume} -- "aichallenge-2024-${target}-${USER}"
