@@ -54,11 +54,11 @@
       ////               or is not specified at all, it means that ALL such interface are allowed.
       allow: {
         publishers: [".*"],
-        subscribers: ["/racing_kart/joy", "/initialpose"],
-        service_servers: [],
-        service_clients: [],
-        action_servers: [],
-        action_clients: [],
+        subscribers: [".*"],
+        service_servers: [".*"],
+        service_clients: [".*"],
+        action_servers: [".*"],
+        action_clients: [".*"],
       },
       // deny: {
       //   publishers: ["/rosout", "/parameter_events"],

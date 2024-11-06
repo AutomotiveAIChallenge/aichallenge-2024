@@ -14,12 +14,8 @@ RUN apt-get -y install ros-humble-rosbag2-storage-mcap
 RUN apt install zenoh-bridge-ros2dds terminator -y
 RUN apt install arp-scan -y
 
-COPY --chmod=757 remote /remote 
-COPY --chmod=757 vehicle /vehicle
-
 # PATH="$PATH:/root/.local/bin"
 # PATH="/usr/local/cuda/bin:$PATH"
-COPY --chmod=777 /trajectory_editor/ /editor/
 ENV PATH="/editor/cmd_line/:$PATH"
 ENV XDG_RUNTIME_DIR=/tmp/xdg
 ENV ROS_LOCALHOST_ONLY=0
