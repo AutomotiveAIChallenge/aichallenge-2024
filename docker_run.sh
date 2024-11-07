@@ -8,7 +8,7 @@ case "${target}" in
     volume="output:/output"
     ;;
 "dev")
-    volume="output:/output aichallenge:/aichallenge remote:/remote vehicle:/vehicle"
+    volume="output:/output aichallenge:/aichallenge"
     ;;
 *)
     echo "invalid argument (use 'dev' or 'eval')"
