@@ -19,3 +19,7 @@ pkill -9 rviz2
 pkill -9 simple_pure_pur
 pkill -9 twist2accel
 pkill -9 vehicle_velocit
+pkill -9 actuation_cmd_c
+pkill -9 sensor_converte
+pkill -9 relay
+pkill -9 raw_vehicle_cmd
