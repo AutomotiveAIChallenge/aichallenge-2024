@@ -1,7 +1,7 @@
 #!/bin/bash
 
-target=${1}
-device=${2}
+target="${1}"
+device="${2}"
 
 case "${target}" in
 "eval")
@@ -32,4 +32,4 @@ esac
 mkdir -p output
 
 # shellcheck disable=SC2086
-rocker ${opts} --x11 --devices /dev/dri --user --net host --privileged --name aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S") --volume ${volume} -- "aichallenge-2024-${target}-${USER}"
+rocker "${opts}" --x11 --devices /dev/dri --user --net host --privileged --name "aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S")" --volume "${volume}" -- "aichallenge-2024-${target}-${USER}"
