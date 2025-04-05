@@ -25,17 +25,16 @@ set-window-option -g mode-keys vi
 bind-key -T copy-mode-vi v send -X begin-selection
 bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "xclip -sel clip -i"
 
-
 # split-vertical
 # 1. 初期のペインで左右に分割
-select-pane -t 0          # 最初のペイン (0) を選択
-split-window -h -p 50     # 左右に 50% 分割して、右にペイン 1 を作成
+select-pane -t 0      # 最初のペイン (0) を選択
+split-window -h -p 50 # 左右に 50% 分割して、右にペイン 1 を作成
 
 # 2. 右側のペインを選択して上下に 3 回分割
-select-pane -t 1          # 右側のペイン (1) を選択
-split-window -v -p 67     # ペイン 1 を 67% 下で分割し、ペイン 2 を作成
-split-window -v -p 50     # ペイン 2 を 50% 下で分割し、ペイン 3 を作成
-split-window -v -p 50     # ペイン 3 を 50% 下で分割し、ペイン 4 を作成
+select-pane -t 1      # 右側のペイン (1) を選択
+split-window -v -p 67 # ペイン 1 を 67% 下で分割し、ペイン 2 を作成
+split-window -v -p 50 # ペイン 2 を 50% 下で分割し、ペイン 3 を作成
+split-window -v -p 50 # ペイン 3 を 50% 下で分割し、ペイン 4 を作成
 # pane 0 is used for aic
 select-pane -t 0
 send-keys "set -x" C-m
