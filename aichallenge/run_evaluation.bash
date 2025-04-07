@@ -43,23 +43,12 @@ done
 wmctrl -a "RViz" && wmctrl -r "RViz" -e 0,0,0,1920,1043
 wmctrl -a "AWSIM" && wmctrl -r "AWSIM" -e 0,0,0,900,1043
 
-ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
-sleep 1
-
-# Set initial pose
-echo "Set initial pose"
-bash /aichallenge/publish_initial_pose.sh
-
-# Start driving and wait for the simulation to finish
-echo "Waiting for the simulation"
-
-echo "Start driving"
-bash /aichallenge/publish_control_mode.sh
+bash /aichallenge/publish.sh all
 wait "$PID_AWSIM"
 
 # Stop recording rviz2
 echo "Stop screen capture"
-ros2 service call /debug/service/capture_screen std_srvs/srv/Trigger >/dev/null
+bash /aichallenge/publish.sh screen
 sleep 10
 
 # Stop recording rosbag
