@@ -21,6 +21,6 @@ echo "--------------------------------------"
 echo ""
 
 # Ask user to select a container by number
-echo "Enter the number of the container you want to execute a command in:"
-read SELECTED_CONTAINER
-docker exec -it $SELECTED_CONTAINER bash
+echo "Enter the ID of the container you want to execute a command in:"
+read -r SELECTED_CONTAINER
+docker exec -it "$SELECTED_CONTAINER" bash

@@ -23,4 +23,4 @@ ros2 topic pub -1 /initialpose geometry_msgs/msg/PoseWithCovarianceStamped "{
   }
 }" >/dev/null
 echo "Initial pose set successfully"
-sleep 1 
+sleep 1
