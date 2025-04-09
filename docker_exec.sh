@@ -33,7 +33,6 @@ if [ "$CONTAINER_COUNT" -eq 1 ]; then
     exit 0
 fi
 
-
 # Ask user to select a container by number
 echo "Enter the number of the container you want to execute a command in:"
 read -r CONTAINER_NUM

@@ -59,29 +59,29 @@ fi
 
 # Process based on provided argument
 case "$1" in
-    screen)
-        capture_screen
-        ;;
-    control)
-        request_control
-        ;;
-    initial)
-        set_initial_pose
-        ;;
-    all)
-        capture_screen
-        sleep 1
-        set_initial_pose
-        sleep 1
-        request_control
-        ;;
-    help)
-        usage
-        ;;
-    *)
-        echo "Error: Invalid option '$1'"
-        usage
-        ;;
+screen)
+    capture_screen
+    ;;
+control)
+    request_control
+    ;;
+initial)
+    set_initial_pose
+    ;;
+all)
+    capture_screen
+    sleep 1
+    set_initial_pose
+    sleep 1
+    request_control
+    ;;
+help)
+    usage
+    ;;
+*)
+    echo "Error: Invalid option '$1'"
+    usage
+    ;;
 esac
 
 exit 0
