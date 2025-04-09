@@ -25,6 +25,7 @@ COPY vehicle/cyclonedds.xml /opt/autoware/cyclonedds.xml
 
 FROM common AS dev
 
+RUN echo 'export PS1="\[\e]0;(AIC_DEV) ${debian_chroot:+($debian_chroot)}\u@\h: \w\a\](AIC_DEV) ${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "' >> /etc/skel/.bashrc
 ENV RCUTILS_COLORIZED_OUTPUT=1
 
 FROM common AS eval
