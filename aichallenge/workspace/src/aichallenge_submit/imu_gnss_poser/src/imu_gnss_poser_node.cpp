@@ -9,17 +9,19 @@ class ImuGnssPoser : public rclcpp::Node
 public:
     ImuGnssPoser() : Node("imu_gnss_poser")
     {
-        auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-        pub_pose_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/imu_gnss_poser/pose_with_covariance", qos);
-        pub_initial_pose_3d_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/initial_pose3d", qos);
+        const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
+        const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local();
+
+        pub_pose_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/imu_gnss_poser/pose_with_covariance", rv_qos);
+        pub_initial_pose_3d_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/initial_pose3d", rt_qos);
         sub_twist_ = this->create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
-            "/localization/twist_with_covariance", qos,
+            "/localization/twist_with_covariance", rv_qos,
             std::bind(&ImuGnssPoser::twist_callback, this, std::placeholders::_1));
         sub_gnss_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-            "/sensing/gnss/pose_with_covariance", qos,
+            "/sensing/gnss/pose_with_covariance", rv_qos,
             std::bind(&ImuGnssPoser::gnss_callback, this, std::placeholders::_1));
         sub_imu_ = this->create_subscription<sensor_msgs::msg::Imu>(
-            "/sensing/imu/imu_raw", qos,
+            "/sensing/imu/imu_raw", rv_qos,
             std::bind(&ImuGnssPoser::imu_callback, this, std::placeholders::_1));
     }
 

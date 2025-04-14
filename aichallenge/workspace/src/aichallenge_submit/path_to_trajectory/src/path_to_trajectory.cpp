@@ -16,10 +16,10 @@
 
 PathToTrajectory::PathToTrajectory() : Node("path_to_trajectory_node") {
   using std::placeholders::_1;
-
-  pub_ = this->create_publisher<Trajectory>("output", 1);
+  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
+  pub_ = this->create_publisher<Trajectory>("output", rv_qos);
   sub_ = this->create_subscription<PathWithLaneId>(
-      "input", 1, std::bind(&PathToTrajectory::callback, this, _1));
+      "input", rv_qos, std::bind(&PathToTrajectory::callback, this, _1));
 }
 
 void PathToTrajectory::callback(const PathWithLaneId::SharedPtr msg) {

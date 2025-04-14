@@ -2,15 +2,17 @@
 
 GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 {
-    const auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
+    const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local();
+    const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
     ekf_trigger_client_ = this->create_client<std_srvs::srv::SetBool>("/localization/trigger_node");
-    goal_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/planning/mission_planning/goal", qos);
+    goal_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/planning/mission_planning/goal", rv_qos);
     route_state_subscriber_ = this->create_subscription<autoware_adapi_v1_msgs::msg::RouteState>(
         "/planning/mission_planning/route_state",
-        rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local(),
+        rt_qos,
         std::bind(&GoalPosePublisher::route_state_callback, this, std::placeholders::_1));
     odometry_subscriber_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        "/localization/kinematic_state", 1,
+        "/localization/kinematic_state",
+        rv_qos,
         std::bind(&GoalPosePublisher::odometry_callback, this, std::placeholders::_1));
     timer_ = this->create_wall_timer(
         std::chrono::milliseconds(300),
