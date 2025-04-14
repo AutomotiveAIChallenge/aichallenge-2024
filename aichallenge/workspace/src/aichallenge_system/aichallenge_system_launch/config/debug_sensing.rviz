@@ -9,6 +9,7 @@ Panels:
         - /System1/Vehicle1/VelocityHistory1/Topic1
         - /Map1
         - /Map1/Lanelet2VectorMap1
+        - /Map1/Lanelet2VectorMap1/Namespaces1
         - /Sensing1
         - /Sensing1/LiDAR1/ConcatenatePointCloud1/Autocompute Value Bounds1
         - /Sensing1/GNSS1
@@ -97,7 +98,7 @@ Visualization Manager:
               Text Color: 25; 255; 240
               Top: 30
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Reliable
@@ -113,7 +114,7 @@ Visualization Manager:
               Text Color: 25; 255; 240
               Top: 35
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Reliable
@@ -214,7 +215,7 @@ Visualization Manager:
               Name: TurnSignal
               Top: 373
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Reliable
@@ -231,7 +232,13 @@ Visualization Manager:
           Enabled: true
           Name: Lanelet2VectorMap
           Namespaces:
-            {}
+            center_lane_line: false
+            center_line_arrows: false
+            lane_start_bound: false
+            lanelet_id: false
+            left_lane_bound: true
+            right_lane_bound: true
+            road_lanelets: false
           Topic:
             Depth: 1
             Durability Policy: Transient Local
@@ -270,7 +277,7 @@ Visualization Manager:
               Size (m): 0.019999999552965164
               Style: Points
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -285,7 +292,7 @@ Visualization Manager:
               Enabled: false
               Name: MeasurementRange
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -402,7 +409,7 @@ Visualization Manager:
               Shaft Radius: 0.30000001192092896
               Shape: Arrow
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -437,7 +444,7 @@ Visualization Manager:
               Shaft Radius: 0.30000001192092896
               Shape: Arrow
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -454,7 +461,7 @@ Visualization Manager:
                 Width: 0.10000000149011612
               Name: PoseHistory
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -486,7 +493,7 @@ Visualization Manager:
               Size (m): 0.5
               Style: Squares
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -520,7 +527,7 @@ Visualization Manager:
               Size (m): 0.5
               Style: Squares
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -535,7 +542,7 @@ Visualization Manager:
               Namespaces:
                 {}
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Reliable
@@ -745,7 +752,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_LaneChange
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -791,7 +798,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_ExternalRequestLaneChangeRight
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -837,7 +844,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_ExternalRequestLaneChangeLeft
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -883,7 +890,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_Avoidance
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -929,7 +936,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_PullOut
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -975,7 +982,7 @@ Visualization Manager:
                       Enabled: false
                       Name: PathChangeCandidate_PullOver
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -1023,7 +1030,7 @@ Visualization Manager:
                         left_bound: true
                         right_bound: true
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         History Policy: Keep Last
                         Reliability Policy: Reliable
@@ -1037,7 +1044,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1049,7 +1056,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1061,7 +1068,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1073,7 +1080,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1085,7 +1092,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1097,7 +1104,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1109,7 +1116,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1121,7 +1128,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1133,7 +1140,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1145,7 +1152,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1157,7 +1164,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1169,7 +1176,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1181,7 +1188,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1197,7 +1204,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1209,7 +1216,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1221,7 +1228,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1233,7 +1240,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1245,7 +1252,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1257,7 +1264,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1269,7 +1276,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1281,7 +1288,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1293,7 +1300,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1305,7 +1312,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1317,7 +1324,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1329,7 +1336,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1341,7 +1348,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1353,7 +1360,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1365,7 +1372,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1377,7 +1384,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1389,7 +1396,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1401,7 +1408,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1418,7 +1425,7 @@ Visualization Manager:
                       Enabled: false
                       Name: Trajectory
                       Topic:
-                        Depth: 5
+                        Depth: 1
                         Durability Policy: Volatile
                         Filter size: 10
                         History Policy: Keep Last
@@ -1462,7 +1469,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1474,7 +1481,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1486,7 +1493,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1498,7 +1505,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1516,7 +1523,7 @@ Visualization Manager:
                               Namespaces:
                                 {}
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 History Policy: Keep Last
                                 Reliability Policy: Reliable
@@ -1528,7 +1535,7 @@ Visualization Manager:
                               Enabled: false
                               Name: Footprint
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 Filter size: 10
                                 History Policy: Keep Last
@@ -1541,7 +1548,7 @@ Visualization Manager:
                               Enabled: false
                               Name: FootprintOffset
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 Filter size: 10
                                 History Policy: Keep Last
@@ -1554,7 +1561,7 @@ Visualization Manager:
                               Enabled: false
                               Name: FootprintRecoverOffset
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 Filter size: 10
                                 History Policy: Keep Last
@@ -1569,7 +1576,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1583,7 +1590,7 @@ Visualization Manager:
                               Namespaces:
                                 {}
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 History Policy: Keep Last
                                 Reliability Policy: Reliable
@@ -1595,7 +1602,7 @@ Visualization Manager:
                               Namespaces:
                                 {}
                               Topic:
-                                Depth: 5
+                                Depth: 1
                                 Durability Policy: Volatile
                                 History Policy: Keep Last
                                 Reliability Policy: Reliable
@@ -1609,7 +1616,7 @@ Visualization Manager:
                           Namespaces:
                             {}
                           Topic:
-                            Depth: 5
+                            Depth: 1
                             Durability Policy: Volatile
                             History Policy: Keep Last
                             Reliability Policy: Reliable
@@ -1630,14 +1637,14 @@ Visualization Manager:
                   Enabled: false
                   Name: Costmap
                   Topic:
-                    Depth: 5
+                    Depth: 1
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
                     Reliability Policy: Reliable
                     Value: /planning/scenario_planning/parking/costmap_generator/occupancy_grid
                   Update Topic:
-                    Depth: 5
+                    Depth: 1
                     Durability Policy: Volatile
                     History Policy: Keep Last
                     Reliability Policy: Reliable
@@ -1658,7 +1665,7 @@ Visualization Manager:
                   Shaft Radius: 0.05000000074505806
                   Shape: Arrow (3D)
                   Topic:
-                    Depth: 5
+                    Depth: 1
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
@@ -1679,7 +1686,7 @@ Visualization Manager:
                   Shaft Radius: 0.05000000074505806
                   Shape: Arrow (Flat)
                   Topic:
-                    Depth: 5
+                    Depth: 1
                     Durability Policy: Volatile
                     Filter size: 10
                     History Policy: Keep Last
@@ -1694,7 +1701,7 @@ Visualization Manager:
               Name: ModifiedGoal
               Radius: 0.5
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 Filter size: 10
                 History Policy: Keep Last
@@ -1714,7 +1721,7 @@ Visualization Manager:
               Namespaces:
                 {}
               Topic:
-                Depth: 5
+                Depth: 1
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Best Effort
@@ -1781,7 +1788,7 @@ Visualization Manager:
       Name: PointStamped
       Radius: 1
       Topic:
-        Depth: 5
+        Depth: 1
         Durability Policy: Volatile
         Filter size: 10
         History Policy: Keep Last
@@ -1807,14 +1814,14 @@ Visualization Manager:
       Covariance y: 0.25
       Covariance yaw: 0.06853891909122467
       Topic:
-        Depth: 5
+        Depth: 1
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /initialpose
     - Class: rviz_default_plugins/SetGoal
       Topic:
-        Depth: 5
+        Depth: 1
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
