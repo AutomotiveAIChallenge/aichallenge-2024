@@ -9,8 +9,8 @@ class ImuGnssPoser : public rclcpp::Node
 public:
     ImuGnssPoser() : Node("imu_gnss_poser")
     {
-        const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
-        const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local();
+        const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable();
+        const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().transient_local();
 
         pub_pose_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/imu_gnss_poser/pose_with_covariance", rv_qos);
         pub_initial_pose_3d_ = this->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>("/localization/initial_pose3d", rt_qos);

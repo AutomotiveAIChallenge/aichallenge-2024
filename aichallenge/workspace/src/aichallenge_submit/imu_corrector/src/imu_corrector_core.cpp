@@ -74,7 +74,7 @@ ImuCorrector::ImuCorrector(const rclcpp::NodeOptions & node_options)
 
   accel_stddev_imu_link_ = declare_parameter<double>("acceleration_stddev", 10000.0);
 
-  auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
+  auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
   imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
     "input", rv_qos, std::bind(&ImuCorrector::callbackImu, this, std::placeholders::_1));
 

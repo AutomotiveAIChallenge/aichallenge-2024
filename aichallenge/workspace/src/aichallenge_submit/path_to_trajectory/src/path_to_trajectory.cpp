@@ -16,7 +16,7 @@
 
 PathToTrajectory::PathToTrajectory() : Node("path_to_trajectory_node") {
   using std::placeholders::_1;
-  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
+  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
   pub_ = this->create_publisher<Trajectory>("output", rv_qos);
   sub_ = this->create_subscription<PathWithLaneId>(
       "input", rv_qos, std::bind(&PathToTrajectory::callback, this, _1));

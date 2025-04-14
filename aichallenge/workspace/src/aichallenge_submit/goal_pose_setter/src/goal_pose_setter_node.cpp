@@ -2,8 +2,8 @@
 
 GoalPosePublisher::GoalPosePublisher() : Node("goal_pose_publisher")
 {
-    const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local();
-    const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
+    const auto rt_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().transient_local();
+    const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
     ekf_trigger_client_ = this->create_client<std_srvs::srv::SetBool>("/localization/trigger_node");
     goal_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>("/planning/mission_planning/goal", rv_qos);
     route_state_subscriber_ = this->create_subscription<autoware_adapi_v1_msgs::msg::RouteState>(

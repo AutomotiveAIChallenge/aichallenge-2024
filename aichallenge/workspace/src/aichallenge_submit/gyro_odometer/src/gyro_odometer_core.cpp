@@ -107,7 +107,7 @@ GyroOdometer::GyroOdometer(const rclcpp::NodeOptions & options)
   vehicle_twist_arrived_(false),
   imu_arrived_(false)
 {
-  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().durability_volatile();
+  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
   transform_listener_ = std::make_shared<tier4_autoware_utils::TransformListener>(this);
 
   vehicle_twist_sub_ = create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
