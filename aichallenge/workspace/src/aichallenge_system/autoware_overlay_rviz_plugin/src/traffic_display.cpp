@@ -48,7 +48,7 @@ TrafficDisplay::TrafficDisplay()
 }
 
 void TrafficDisplay::updateTrafficLightData(
-  const autoware_perception_msgs::msg::TrafficLightGroup::ConstSharedPtr & msg)
+  const autoware_perception_msgs::msg::TrafficLightElement::ConstSharedPtr & msg)
 {
   current_traffic_ = *msg;
 }
@@ -68,8 +68,8 @@ void TrafficDisplay::drawTrafficLightIndicator(QPainter & painter, const QRectF 
     backgroundRect.height() / 2 - circleRect.height() / 2));
   painter.drawEllipse(circleRect);
 
-  if (!current_traffic_.elements.empty()) {
-    switch (current_traffic_.elements[0].color) {
+  // if (!current_traffic_.elements.empty()) {
+    switch (current_traffic_.color) {
       case 1:
         painter.setBrush(QBrush(tl_red_));
         painter.drawEllipse(circleRect);
@@ -88,7 +88,7 @@ void TrafficDisplay::drawTrafficLightIndicator(QPainter & painter, const QRectF 
         painter.drawEllipse(circleRect);
         break;
     }
-  }
+  // }
 
   // Scaling factor (e.g., 1.5 for 150% size)
   float scaleFactor = 0.75;

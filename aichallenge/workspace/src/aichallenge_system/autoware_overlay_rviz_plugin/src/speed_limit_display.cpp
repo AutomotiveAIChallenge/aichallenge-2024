@@ -52,13 +52,13 @@ SpeedLimitDisplay::SpeedLimitDisplay() : current_limit(0.0), current_speed_(0.0)
 }
 
 void SpeedLimitDisplay::updateSpeedLimitData(
-  const autoware_internal_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg)
+  const tier4_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg)
 {
   current_limit = msg->max_velocity;
 }
 
 void SpeedLimitDisplay::updateSpeedData(
-  const autoware_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg)
+  const autoware_auto_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg)
 {
   try {
     float speed = msg->longitudinal_velocity;

@@ -57,7 +57,7 @@ SteeringWheelDisplay::SteeringWheelDisplay()
 }
 
 void SteeringWheelDisplay::updateSteeringData(
-  const autoware_vehicle_msgs::msg::SteeringReport::ConstSharedPtr & msg)
+  const autoware_auto_vehicle_msgs::msg::SteeringReport::ConstSharedPtr & msg)
 {
   try {
     last_msg_ptr_ = msg;

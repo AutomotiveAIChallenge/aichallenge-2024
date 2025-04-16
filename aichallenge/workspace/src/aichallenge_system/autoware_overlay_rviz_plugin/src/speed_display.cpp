@@ -51,7 +51,7 @@ SpeedDisplay::SpeedDisplay() : current_speed_(0.0)
 }
 
 void SpeedDisplay::updateSpeedData(
-  const autoware_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg)
+  const autoware_auto_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg)
 {
   try {
     // Assuming msg->state.longitudinal_velocity_mps is the field you're interested in
@@ -65,7 +65,7 @@ void SpeedDisplay::updateSpeedData(
 }
 
 // void SpeedDisplay::processMessage(const
-// autoware_vehicle_msgs::msg::VelocityReport::ConstSharedPtr msg)
+// autoware_auto_vehicle_msgs::msg::VelocityReport::ConstSharedPtr msg)
 // {
 //     try
 //     {

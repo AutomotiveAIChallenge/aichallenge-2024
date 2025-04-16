@@ -106,30 +106,30 @@ private:
   std::unique_ptr<TrafficDisplay> traffic_display_;
   std::unique_ptr<SpeedLimitDisplay> speed_limit_display_;
 
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::GearReport>::SharedPtr gear_sub_;
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::SteeringReport>::SharedPtr steering_sub_;
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::VelocityReport>::SharedPtr speed_sub_;
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::TurnIndicatorsReport>::SharedPtr
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::GearReport>::SharedPtr gear_sub_;
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::SteeringReport>::SharedPtr steering_sub_;
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::VelocityReport>::SharedPtr speed_sub_;
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::TurnIndicatorsReport>::SharedPtr
     turn_signals_sub_;
-  rclcpp::Subscription<autoware_vehicle_msgs::msg::HazardLightsReport>::SharedPtr
+  rclcpp::Subscription<autoware_auto_vehicle_msgs::msg::HazardLightsReport>::SharedPtr
     hazard_lights_sub_;
-  rclcpp::Subscription<autoware_perception_msgs::msg::TrafficLightGroup>::SharedPtr traffic_sub_;
-  rclcpp::Subscription<autoware_internal_planning_msgs::msg::VelocityLimit>::SharedPtr
+  rclcpp::Subscription<autoware_perception_msgs::msg::TrafficLightElement>::SharedPtr traffic_sub_;
+  rclcpp::Subscription<tier4_planning_msgs::msg::VelocityLimit>::SharedPtr
     speed_limit_sub_;
 
   std::mutex property_mutex_;
 
-  void updateGearData(const autoware_vehicle_msgs::msg::GearReport::ConstSharedPtr & msg);
-  void updateSteeringData(const autoware_vehicle_msgs::msg::SteeringReport::ConstSharedPtr & msg);
-  void updateSpeedData(const autoware_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg);
+  void updateGearData(const autoware_auto_vehicle_msgs::msg::GearReport::ConstSharedPtr & msg);
+  void updateSteeringData(const autoware_auto_vehicle_msgs::msg::SteeringReport::ConstSharedPtr & msg);
+  void updateSpeedData(const autoware_auto_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg);
   void updateTurnSignalsData(
-    const autoware_vehicle_msgs::msg::TurnIndicatorsReport::ConstSharedPtr & msg);
+    const autoware_auto_vehicle_msgs::msg::TurnIndicatorsReport::ConstSharedPtr & msg);
   void updateHazardLightsData(
-    const autoware_vehicle_msgs::msg::HazardLightsReport::ConstSharedPtr & msg);
+    const autoware_auto_vehicle_msgs::msg::HazardLightsReport::ConstSharedPtr & msg);
   void updateSpeedLimitData(
-    const autoware_internal_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg);
+    const tier4_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg);
   void updateTrafficLightData(
-    const autoware_perception_msgs::msg::TrafficLightGroup::ConstSharedPtr msg);
+    const autoware_perception_msgs::msg::TrafficLightElement::ConstSharedPtr msg);
   void drawWidget(QImage & hud);
 };
 }  // namespace autoware_overlay_rviz_plugin

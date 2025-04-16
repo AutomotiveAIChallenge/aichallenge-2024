@@ -23,8 +23,8 @@
 #include <rviz_common/properties/int_property.hpp>
 #include <rviz_common/ros_topic_display.hpp>
 
-#include "autoware_vehicle_msgs/msg/velocity_report.hpp"
-#include <autoware_internal_planning_msgs/msg/velocity_limit.hpp>
+#include "autoware_auto_vehicle_msgs/msg/velocity_report.hpp"
+#include <tier4_planning_msgs/msg/velocity_limit.hpp>
 
 #include <OgreColourValue.h>
 #include <OgreMaterial.h>
@@ -42,8 +42,8 @@ public:
     const QColor & light_color, const QColor & dark_color, const QColor & bg_color,
     const float bg_alpha);
   void updateSpeedLimitData(
-    const autoware_internal_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg);
-  void updateSpeedData(const autoware_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg);
+    const tier4_planning_msgs::msg::VelocityLimit::ConstSharedPtr msg);
+  void updateSpeedData(const autoware_auto_vehicle_msgs::msg::VelocityReport::ConstSharedPtr & msg);
 
 private:
   float current_limit;   // Internal variable to store current gear
