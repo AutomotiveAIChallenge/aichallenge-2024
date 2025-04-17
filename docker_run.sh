@@ -1,14 +1,13 @@
 #!/bin/bash
 
 target="${1}"
-device="${2}"
 
 case "${target}" in
 "eval")
     volume="output:/output"
     ;;
 "dev")
-    volume="output:/output aichallenge:/aichallenge"
+    volume="output:/output aichallenge:/aichallenge remote:/remote vehicle:/vehicle"
     ;;
 *)
     echo "invalid argument (use 'dev' or 'eval')"
@@ -16,18 +15,13 @@ case "${target}" in
     ;;
 esac
 
-case "${device}" in
-"cpu")
-    opts=""
-    ;;
-"gpu")
+if command -v nvidia-smi &>/dev/null && [[ -e /dev/nvidia0 ]]; then
     opts="--nvidia"
-    ;;
-*)
-    echo "invalid argument (use 'gpu' or 'cpu')"
-    exit 1
-    ;;
-esac
+    echo "[INFO] NVIDIA GPU detected → enabling --nvidia"
+else
+    opts=""
+    echo "[INFO] No NVIDIA GPU detected → running on CPU"
+fi
 
 mkdir -p output
 
