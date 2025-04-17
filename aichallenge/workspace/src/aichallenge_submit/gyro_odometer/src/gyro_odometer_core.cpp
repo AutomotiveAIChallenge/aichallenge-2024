@@ -107,22 +107,23 @@ GyroOdometer::GyroOdometer(const rclcpp::NodeOptions & options)
   vehicle_twist_arrived_(false),
   imu_arrived_(false)
 {
+  const auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
   transform_listener_ = std::make_shared<tier4_autoware_utils::TransformListener>(this);
 
   vehicle_twist_sub_ = create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
-    "vehicle/twist_with_covariance", rclcpp::QoS{100},
+    "vehicle/twist_with_covariance", rv_qos,
     std::bind(&GyroOdometer::callbackVehicleTwist, this, std::placeholders::_1));
 
   imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
-    "imu", rclcpp::QoS{100}, std::bind(&GyroOdometer::callbackImu, this, std::placeholders::_1));
+    "imu", rv_qos, std::bind(&GyroOdometer::callbackImu, this, std::placeholders::_1));
 
-  twist_raw_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist_raw", rclcpp::QoS{10});
+  twist_raw_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist_raw", rv_qos);
   twist_with_covariance_raw_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
-    "twist_with_covariance_raw", rclcpp::QoS{10});
+    "twist_with_covariance_raw", rv_qos);
 
-  twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist", rclcpp::QoS{10});
+  twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist", rv_qos);
   twist_with_covariance_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
-    "twist_with_covariance", rclcpp::QoS{10});
+    "twist_with_covariance", rv_qos);
 
   // TODO(YamatoAndo) createTimer
 }
@@ -194,8 +195,8 @@ void GyroOdometer::callbackImu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_m
   geometry_msgs::msg::TransformStamped::ConstSharedPtr tf_imu2base_ptr =
     transform_listener_->getLatestTransform(imu_msg_ptr->header.frame_id, output_frame_);
   if (!tf_imu2base_ptr) {
-    RCLCPP_ERROR(
-      this->get_logger(), "Please publish TF %s to %s", output_frame_.c_str(),
+    RCLCPP_ERROR_THROTTLE(
+      this->get_logger(), *this->get_clock(), 2000, "Please publish TF %s to %s", output_frame_.c_str(),
       (imu_msg_ptr->header.frame_id).c_str());
     vehicle_twist_queue_.clear();
     gyro_queue_.clear();

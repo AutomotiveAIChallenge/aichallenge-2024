@@ -7,24 +7,6 @@
         </Fallback>
     </BehaviorTree>
     <!-- ////////// -->
-    <BehaviorTree ID="a">
-        <ReactiveFallback>
-            <Condition ID="LaneChange_CheckApproval"/>
-            <KeepRunningUntilFailure>
-                <Action ID="LaneChange_PlanCandidate" output="{output}"/>
-            </KeepRunningUntilFailure>
-        </ReactiveFallback>
-    </BehaviorTree>
-    <!-- ////////// -->
-    <BehaviorTree ID="b">
-        <ReactiveFallback>
-            <Condition ID="Avoidance_CheckApproval"/>
-            <KeepRunningUntilFailure>
-                <Action ID="Avoidance_PlanCandidate" output="{output}"/>
-            </KeepRunningUntilFailure>
-        </ReactiveFallback>
-    </BehaviorTree>
-    <!-- ////////// -->
     <TreeNodesModel>
         <Condition ID="Avoidance_CheckApproval"/>
         <Action ID="Avoidance_Plan">

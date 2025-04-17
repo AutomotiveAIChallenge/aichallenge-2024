@@ -74,10 +74,11 @@ ImuCorrector::ImuCorrector(const rclcpp::NodeOptions & node_options)
 
   accel_stddev_imu_link_ = declare_parameter<double>("acceleration_stddev", 10000.0);
 
+  auto rv_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
   imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
-    "input", rclcpp::QoS{1}, std::bind(&ImuCorrector::callbackImu, this, std::placeholders::_1));
+    "input", rv_qos, std::bind(&ImuCorrector::callbackImu, this, std::placeholders::_1));
 
-  imu_pub_ = create_publisher<sensor_msgs::msg::Imu>("output", rclcpp::QoS{10});
+  imu_pub_ = create_publisher<sensor_msgs::msg::Imu>("output", rv_qos);
 }
 
 void ImuCorrector::callbackImu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_msg_ptr)
@@ -105,9 +106,9 @@ void ImuCorrector::callbackImu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_m
   geometry_msgs::msg::TransformStamped::ConstSharedPtr tf_imu2base_ptr =
     transform_listener_->getLatestTransform(imu_msg.header.frame_id, output_frame_);
   if (!tf_imu2base_ptr) {
-    RCLCPP_ERROR(
-      this->get_logger(), "Please publish TF %s to %s", output_frame_.c_str(),
-      (imu_msg.header.frame_id).c_str());
+    RCLCPP_ERROR_THROTTLE(
+      this->get_logger(), *this->get_clock(), 2000, "Please publish TF %s to %s", output_frame_.c_str(),
+    (imu_msg.header.frame_id).c_str());
     return;
   }
 
