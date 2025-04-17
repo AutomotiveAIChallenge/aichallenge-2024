@@ -5,10 +5,10 @@ mode="${1}"
 
 case "${mode}" in
 "endless")
-    opts=("--endless true")
+    opts=("--endless")
     ;;
 *)
-    opts=("--endless false")
+    opts=("")
     ;;
 esac
 
