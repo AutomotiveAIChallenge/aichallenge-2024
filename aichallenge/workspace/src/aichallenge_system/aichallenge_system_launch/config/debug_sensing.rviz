@@ -89,39 +89,29 @@ Visualization Manager:
           Value: true
         - Class: rviz_common/Group
           Displays:
-            - Class: rviz_plugins/SteeringAngle
+            - Background Alpha: 0.30000001192092896
+              Background Color: 0; 0; 0
+              Class: autoware_overlay_rviz_plugin/SignalDisplay
+              Dark Traffic Color: 255; 51; 51
               Enabled: true
-              Left: 50
-              Length: 100
-              Name: SteeringAngle
-              Scale: 3
-              Text Color: 25; 255; 240
-              Top: 30
-              Topic:
-                Depth: 1
-                Durability Policy: Volatile
-                History Policy: Keep Last
-                Reliability Policy: Reliable
-                Value: /vehicle/status/steering_status
+              Gear Topic Test: /vehicle/status/gear_status
+              Handle Angle Scale: 17
+              Hazard Lights Topic: /vehicle/status/hazard_lights_status
+              Height: 100
+              Left: 0
+              Light Traffic Color: 255; 153; 153
+              Name: SignalDisplay
+              Primary Color: 174; 174; 174
+              Signal Blinking Mode: Static
+              Signal Color: 0; 230; 120
+              Speed Limit Topic: /planning/scenario_planning/current_max_velocity
+              Speed Topic: /vehicle/status/velocity_status
+              Steering Topic: /vehicle/status/steering_status
+              Top: 10
+              Traffic Topic: /planning/scenario_planning/lane_driving/behavior_planning/debug/traffic_signal
+              Turn Signals Topic: /vehicle/status/turn_indicators_status
               Value: true
-              Value Scale: 0.14999249577522278
-              Value height offset: 0
-            - Class: rviz_plugins/ConsoleMeter
-              Enabled: true
-              Left: 200
-              Length: 100
-              Name: ConsoleMeter
-              Text Color: 25; 255; 240
-              Top: 35
-              Topic:
-                Depth: 1
-                Durability Policy: Volatile
-                History Policy: Keep Last
-                Reliability Policy: Reliable
-                Value: /vehicle/status/velocity_status
-              Value: true
-              Value Scale: 0.14999249577522278
-              Value height offset: 0
+              Width: 550
             - Alpha: 0.9990000128746033
               Class: rviz_plugins/VelocityHistory
               Color Border Vel Max: 10
