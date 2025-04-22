@@ -54,7 +54,7 @@ graceful_shutdown() {
 
         # wait for the process to terminate
         local count=0
-        while kill -0 "$pid" 2>/dev/null && [ $count -lt $timeout ]; do
+        while kill -0 "$pid" 2>/dev/null && [ $count -lt $((timeout * 10)) ]; do
             sleep 0.1
             ((count++))
         done
