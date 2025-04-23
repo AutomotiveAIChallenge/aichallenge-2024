@@ -153,7 +153,7 @@ sleep 3
 
 # Start Autoware with nohup
 echo "Start Autoware"
-nohup ros2 launch aichallenge_system_launch aichallenge_system.launch.xml simulation:=true use_sim_time:=true run_rviz:=true >autoware.log 2>&1 &
+nohup /aichallenge/run_autoware.bash awsim >autoware.log 2>&1 &
 PID_AUTOWARE=$!
 echo "Autoware PID: $PID_AUTOWARE"
 echo "$PID_AUTOWARE" >>"$PID_FILE"

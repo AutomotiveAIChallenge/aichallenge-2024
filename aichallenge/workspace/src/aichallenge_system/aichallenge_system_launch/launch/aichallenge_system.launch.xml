@@ -6,6 +6,10 @@
     <arg name="run_rviz"/>
     <arg name="sensor_model" default="racing_kart_sensor_kit"/>
     <arg name="launch_vehicle_interface" default="true"/>
+    <arg name="cpu_monitor_config_file" default="$(find-pkg-share aichallenge_system_launch)/config/system_monitor/cpu_monitor.param.yaml"/>
+    <arg name="mem_monitor_config_file" default="$(find-pkg-share aichallenge_system_launch)/config/system_monitor/mem_monitor.param.yaml"/>
+    <arg name="process_monitor_config_file" default="$(find-pkg-share aichallenge_system_launch)/config/system_monitor/process_monitor.param.yaml"/>
+    <arg name="voltage_monitor_config_file" default="$(find-pkg-share aichallenge_system_launch)/config/system_monitor/voltage_monitor.param.yaml"/>
 
     <log message="The arguments for aichallenge_system_launch."/>
     <log message=" - simulation: $(var simulation)"/>
@@ -41,5 +45,23 @@
     <!-- Adapters for real vehicle. -->
     <group unless="$(var simulation)">
         <include file="$(find-pkg-share aichallenge_system_launch)/launch/mode/real.launch.xml"/>
+    </group>
+
+    <!-- System monitor. -->
+    <group>
+      <node_container pkg="rclcpp_components" exec="component_container_mt" name="system_monitor_container" namespace="system_monitor" output="screen">
+        <composable_node pkg="system_monitor" plugin="CPUMonitor" name="cpu_monitor">
+          <param from="$(var cpu_monitor_config_file)"/>
+        </composable_node>
+        <composable_node pkg="system_monitor" plugin="MemMonitor" name="mem_monitor">
+          <param from="$(var mem_monitor_config_file)"/>
+        </composable_node>
+        <composable_node pkg="system_monitor" plugin="ProcessMonitor" name="process_monitor">
+          <param from="$(var process_monitor_config_file)"/>
+        </composable_node>
+        <composable_node pkg="system_monitor" plugin="VoltageMonitor" name="voltage_monitor">
+          <param from="$(var voltage_monitor_config_file)"/>
+        </composable_node>
+      </node_container>
     </group>
 </launch>
