@@ -49,6 +49,7 @@
 
     <!-- System monitor. -->
     <group>
+      <push-ros-namespace namespace="system/system_monitor"/>
       <node_container pkg="rclcpp_components" exec="component_container_mt" name="system_monitor_container" namespace="system_monitor" output="screen">
         <composable_node pkg="system_monitor" plugin="CPUMonitor" name="cpu_monitor">
           <param from="$(var cpu_monitor_config_file)"/>
