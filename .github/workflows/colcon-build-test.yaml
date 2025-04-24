@@ -1,0 +1,46 @@
+name: colcon-build-test
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  schedule:
+    - cron: 0 0 * * 0
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution:
+          - humble
+        include:
+          - docker_image: ghcr.io/automotiveaichallenge/autoware-universe:humble-latest
+            ros_distribution: humble
+            ros_version: 2
+    container:
+      image: ${{ matrix.docker_image }}
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Setup ROS environment
+        uses: ros-tooling/setup-ros@0.7.1
+        with:
+          required-ros-distributions: ${{ matrix.ros_distribution }}
+
+      - name: build and test
+        uses: ros-tooling/action-ros-ci@0.3.6
+        with:
+          target-ros2-distro: ${{ matrix.ros_distribution }}
+          import-token: ${{ secrets.GITHUB_TOKEN }}
+          skip-tests: true
