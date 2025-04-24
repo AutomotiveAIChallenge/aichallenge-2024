@@ -22,11 +22,11 @@ update_process_list() {
     local main_pids=("$PID_AWSIM" "$PID_AUTOWARE" "$PID_ROSBAG")
 
     # clear the PID file
-    >"$PID_FILE"
+    : >"$PID_FILE"
 
     # record main process PIDs
     for pid in "${main_pids[@]}"; do
-        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+        if [[ -n $pid ]] && kill -0 "$pid" 2>/dev/null; then
             echo "$pid" >>"$PID_FILE"
             get_child_pids "$pid"
         fi
@@ -48,7 +48,7 @@ graceful_shutdown() {
     local pid=$1
     local timeout=${2:-30} # timeout in seconds, default is 30 seconds
 
-    if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+    if [[ -n $pid ]] && kill -0 "$pid" 2>/dev/null; then
         echo "Sending SIGTERM to PID $pid"
         kill "$pid"
 
@@ -77,7 +77,7 @@ cleanup() {
 
     # Stop recording rosbag
     echo "Stop rosbag"
-    if [[ -n "$PID_ROSBAG" ]] && kill -0 "$PID_ROSBAG" 2>/dev/null; then
+    if [[ -n $PID_ROSBAG ]] && kill -0 "$PID_ROSBAG" 2>/dev/null; then
         graceful_shutdown "$PID_ROSBAG" 15
     fi
 
@@ -92,13 +92,13 @@ cleanup() {
 
     # Stop Autoware
     echo "Stop Autoware"
-    if [[ -n "$PID_AUTOWARE" ]] && kill -0 "$PID_AUTOWARE" 2>/dev/null; then
+    if [[ -n $PID_AUTOWARE ]] && kill -0 "$PID_AUTOWARE" 2>/dev/null; then
         graceful_shutdown "$PID_AUTOWARE" 20
     fi
 
     # Stop AWSIM
     echo "Stop AWSIM"
-    if [[ -n "$PID_AWSIM" ]] && kill -0 "$PID_AWSIM" 2>/dev/null; then
+    if [[ -n $PID_AWSIM ]] && kill -0 "$PID_AWSIM" 2>/dev/null; then
         graceful_shutdown "$PID_AWSIM" 10
     fi
 
@@ -111,7 +111,7 @@ cleanup() {
 
     # check for remaining processes
     echo "Checking for remaining processes..."
-    if [[ -f "$PID_FILE" ]]; then
+    if [[ -f $PID_FILE ]]; then
         while read -r pid; do
             if kill -0 "$pid" 2>/dev/null; then
                 echo "Attempting graceful shutdown of remaining PID $pid"
@@ -153,7 +153,7 @@ sleep 3
 
 # Start Autoware with nohup
 echo "Start Autoware"
-nohup ros2 launch aichallenge_system_launch aichallenge_system.launch.xml simulation:=true use_sim_time:=true run_rviz:=true >autoware.log 2>&1 &
+nohup /aichallenge/run_autoware.bash awsim >autoware.log 2>&1 &
 PID_AUTOWARE=$!
 echo "Autoware PID: $PID_AUTOWARE"
 echo "$PID_AUTOWARE" >>"$PID_FILE"
@@ -177,7 +177,7 @@ sleep 5
         sleep 5
 
         # update if the main process is still running
-        if [[ -n "$PID_AWSIM" ]] && kill -0 "$PID_AWSIM" 2>/dev/null; then
+        if [[ -n $PID_AWSIM ]] && kill -0 "$PID_AWSIM" 2>/dev/null; then
             update_process_list
         else
             # if the main process is not running, exit the loop
