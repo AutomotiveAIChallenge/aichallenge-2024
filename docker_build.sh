@@ -15,6 +15,9 @@ case "${target}" in
     ;;
 esac
 
+sudo modprobe msr
+sudo setfacl -m u:"$(whoami)":r /dev/cpu/*/msr
+
 LOG_DIR="output/latest"
 mkdir -p $LOG_DIR
 LOG_FILE="$LOG_DIR/docker_build.log"
