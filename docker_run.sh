@@ -31,5 +31,9 @@ fi
 
 mkdir -p output
 
+LOG_FILE="output/latest/docker_run.log"
+touch $LOG_FILE
+echo "A rocker run log is stored at : file://$LOG_FILE"
+
 # shellcheck disable=SC2086
-rocker ${opts} --x11 --devices /dev/dri --user --net host --privileged --name "aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S")" --volume ${volume} -- "aichallenge-2024-${target}-${USER}"
+rocker ${opts} --x11 --devices /dev/dri --user --net host --privileged --name "aichallenge-2024-$(date "+%Y-%m-%d-%H-%M-%S")" --volume ${volume} -- "aichallenge-2024-${target}-${USER}" 2>&1 | tee "$LOG_FILE"
