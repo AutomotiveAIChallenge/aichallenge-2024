@@ -31,8 +31,9 @@ fi
 
 mkdir -p output
 
-LOG_FILE="output/latest/docker_run.log"
-touch $LOG_FILE
+LOG_DIR="output/latest"
+mkdir -p $LOG_DIR
+LOG_FILE="$LOG_DIR/docker_run.log"
 echo "A rocker run log is stored at : file://$LOG_FILE"
 
 # shellcheck disable=SC2086

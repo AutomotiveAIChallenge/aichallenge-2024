@@ -15,8 +15,9 @@ case "${target}" in
     ;;
 esac
 
-LOG_FILE="output/latest/docker_build.log"
-touch $LOG_FILE
+LOG_DIR="output/latest"
+mkdir -p $LOG_DIR
+LOG_FILE="$LOG_DIR/docker_build.log"
 echo "A build log is stored at : file://$LOG_FILE"
 
 # shellcheck disable=SC2086
